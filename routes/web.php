@@ -9,9 +9,11 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeUserController; 
 
 Route::get('/', function () {
+    $companyName = 'Electronika Tp-Link'; 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'companyName' => $companyName,
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
