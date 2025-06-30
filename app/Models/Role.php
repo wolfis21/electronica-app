@@ -13,6 +13,12 @@ class Role extends Model
         'description',
     ];
 
+    // Un rol tiene muchos usuarios
+    public function users()
+    {
+        return $this->hasMany(User::class, 'role_id'); // Asegúrate que 'role_id' es la FK en users
+    }
+
     // Opcional: Definir relación con permisos
     public function permissions()
     {

@@ -5,9 +5,17 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3'; // <--- ¡Asegúrate de que usePage esté importado aquí!
 
 const showingNavigationDropdown = ref(false);
+
+// Primero define 'page' y 'user'
+const page = usePage();
+const user = page.props.auth.user;
+
+const canManageRoles = user && user.can.manage_roles; 
+const canManageCompanies = user && user.can.manage_companies;
+const canViewEmployeesUsers = user && user.can.view_users;
 </script>
 
 <template>
@@ -16,11 +24,9 @@ const showingNavigationDropdown = ref(false);
             <nav
                 class="border-b border-gray-100 bg-white"
             >
-                <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between">
                         <div class="flex">
-                            <!-- Logo -->
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
@@ -29,7 +35,6 @@ const showingNavigationDropdown = ref(false);
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
@@ -39,11 +44,19 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink v-if="canManageRoles" :href="route('roles.index')" :active="route().current('roles.index')">
+                                    Gestión de Roles
+                                </NavLink>
+                                <NavLink v-if="canManageCompanies" :href="route('companies.index')" :active="route().current('companies.index')">
+                                    Gestión de Empresas
+                                </NavLink>
+                                <NavLink v-if="canViewEmployeesUsers" :href="route('employees_users.index')" :active="route().current('employees_users.index')">
+                                    Gestión de Empleados/Usuarios
+                                </NavLink>
                             </div>
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                            <!-- Settings Dropdown -->
                             <div class="relative ms-3">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -88,7 +101,6 @@ const showingNavigationDropdown = ref(false);
                             </div>
                         </div>
 
-                        <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
                                 @click="
@@ -131,7 +143,6 @@ const showingNavigationDropdown = ref(false);
                     </div>
                 </div>
 
-                <!-- Responsive Navigation Menu -->
                 <div
                     :class="{
                         block: showingNavigationDropdown,
@@ -146,9 +157,17 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="canManageRoles" :href="route('roles.index')" :active="route().current('roles.index')">
+                            Gestión de Roles
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="canManageCompanies" :href="route('companies.index')" :active="route().current('companies.index')">
+                            Gestión de Empresas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="canViewEmployeesUsers" :href="route('employees_users.index')" :active="route().current('employees_users.index')">
+                            Gestión de Empleados/Usuarios
+                        </ResponsiveNavLink>
                     </div>
 
-                    <!-- Responsive Settings Options -->
                     <div
                         class="border-t border-gray-200 pb-1 pt-4"
                     >
@@ -179,7 +198,6 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </nav>
 
-            <!-- Page Heading -->
             <header
                 class="bg-white shadow"
                 v-if="$slots.header"
@@ -189,7 +207,6 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </header>
 
-            <!-- Page Content -->
             <main>
                 <slot />
             </main>

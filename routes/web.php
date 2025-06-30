@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeUserController; 
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -22,6 +25,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Rutas para Roles y Permisos
+    Route::resource('roles', RolePermissionController::class);
+
+    // Rutas para Companies
+    Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index'); // Para ver la info
+    Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.edit'); // Para el formulario de edición
+    Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update'); // Para guardar cambios
+
+    // Rutas para Empleados y Usuarios
+    Route::resource('employees_users', EmployeeUserController::class);
+
 });
 
 require __DIR__.'/auth.php';

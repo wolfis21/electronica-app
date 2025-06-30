@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,22 +54,30 @@ class User extends Authenticatable
         return $this->belongsTo(Employee::class, 'employees_id');
     }
 
-    // Relación con Role
+    // Relación con Role (un usuario tiene un rol)
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id'); // Asegúrate de que 'role_id' sea la FK en users
     }
 
     // Método para verificar si el usuario tiene un permiso
     public function hasPermissionTo($permissionName)
     {
         // Asume que el rol del usuario tiene una relación many-to-many con permisos
-        return $this->role->permissions->contains('name', $permissionName);
+        // Asegúrate de que tu modelo Role tenga una relación 'permissions'
+        // y que Permission tenga una relación 'roles' (many-to-many)
+        if ($this->role) {
+            return $this->role->permissions->contains('name', $permissionName);
+        }
+        return false;
     }
 
     // Método para verificar si el usuario tiene un rol específico
     public function hasRole($roleName)
     {
-        return $this->role->name === $roleName;
+        if ($this->role) {
+            return $this->role->name === $roleName;
+        }
+        return false;
     }
 }

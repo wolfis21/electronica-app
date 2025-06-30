@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('fullname', 45);
             $table->string('phone', 45)->nullable();
             $table->string('dni', 45)->unique()->nullable();
-            $table->string('address', 45)->nullable();
+            $table->text('address')->nullable();
             $table->foreignId('companies_id')->constrained('companies')->onDelete('restrict'); // NOT NULL, FK a 'companies'
             $table->timestamps();
         });
