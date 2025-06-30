@@ -7,9 +7,13 @@ use Inertia\Inertia;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeUserController; 
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController; 
+use App\Http\Controllers\UserController;
+
 
 Route::get('/', function () {
-    $companyName = 'Electronika Tp-Link'; 
+    $companyName = 'Electronica Tp-Link'; 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -38,6 +42,13 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Empleados y Usuarios
     Route::resource('employees_users', EmployeeUserController::class);
+
+        // Ruta específica para buscar cliente por DNI (API endpoint)
+    Route::resource('customers', CustomerController::class); 
+    Route::get('/customers/search-by-dni/{dni}', [CustomerController::class, 'searchByDni'])->name('customers.searchByDni');
+
+    // Rutas para Órdenes
+    Route::resource('orders', OrderController::class);
 
 });
 

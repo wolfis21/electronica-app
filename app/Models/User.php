@@ -80,4 +80,9 @@ class User extends Authenticatable
         }
         return false;
     }
+        // Un usuario puede ser responsable de muchas órdenes
+    public function responsibleForOrders()
+    {
+        return $this->hasMany(Order::class, 'users_id'); // Usamos 'users_id' como clave foránea
+    }
 }

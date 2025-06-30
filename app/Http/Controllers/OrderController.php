@@ -1,0 +1,205 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Order;
+use App\Models\Customer;
+use App\Models\User; // Para asignar usuarios responsables
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
+class OrderController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('can:view_all_orders')->only('index', 'show'); // Cambiado a view_all_orders
+        $this->middleware('can:create_orders')->only(['create', 'store']);
+        $this->middleware('can:edit_all_orders')->only(['edit', 'update']); // Cambiado a edit_all_orders
+        $this->middleware('can:delete_orders')->only('destroy');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        // Carga las relaciones customer y user (responsable)
+        $orders = Order::with('customer', 'user')
+                       ->paginate(10);
+
+        return Inertia::render('Orders/Index', [
+            'orders' => $orders,
+            'can' => [
+                'create_orders' => auth()->user()->hasPermissionTo('create_orders'),
+                'edit_orders' => auth()->user()->hasPermissionTo('edit_orders'),
+                'delete_orders' => auth()->user()->hasPermissionTo('delete_orders'),
+            ],
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // Carga solo los usuarios que pueden ser responsables de órdenes (ej. aquellos con rol "Técnico" o "Administrador")
+        // Aquí obtengo todos los usuarios, pero puedes filtrar por rol si lo necesitas.
+        $responsibleUsers = User::all()->map(fn ($user) => [
+            'id' => $user->id,
+            'name' => $user->name,
+        ]);
+
+        return Inertia::render('Orders/Create', [
+            'responsibleUsers' => $responsibleUsers, // Cambiado de 'users' a 'responsibleUsers' para claridad
+            'currentUserId' => auth()->id(), // Para preseleccionar al usuario actual como responsable
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            // Validación de Cliente
+            'customer_dni' => ['required', 'string', 'max:255'],
+            // 'customer_found' no es un campo de la DB, solo un indicador frontend.
+            // Usamos required_if para los campos del cliente si no fue encontrado.
+            'customer_fullname' => ['required_if:customer_found,false', 'string', 'max:255'],
+            'customer_phone' => ['nullable', 'string', 'max:255'],
+            'customer_address' => ['nullable', 'string', 'max:255'],
+            'customer_email' => ['nullable', 'email', 'max:255'],
+
+            // Validación de Orden
+            'name_equip' => ['required', 'string', 'max:255'],
+            'serial' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'accessories' => ['nullable', 'string'],
+            'extra_notes' => ['nullable', 'string'],
+            'status' => ['required', 'string', Rule::in(['pending', 'in_progress', 'completed', 'canceled'])],
+            'users_id' => ['required', 'exists:users,id'], // Usuario responsable
+        ]);
+
+        DB::transaction(function () use ($request) {
+            $customer = Customer::where('dni', $request->customer_dni)->first();
+
+            if (!$customer) {
+                // Si el cliente no existe, lo creamos
+                $customer = Customer::create([
+                    'fullname' => $request->customer_fullname,
+                    'dni' => $request->customer_dni,
+                    'phone' => $request->customer_phone,
+                    'address' => $request->customer_address,
+                    'email' => $request->customer_email,
+                ]);
+            }
+
+            Order::create([
+                'customers_id' => $customer->id, // Usa customers_id
+                'users_id' => $request->users_id, // Usa users_id para el responsable
+                'name_equip' => $request->name_equip,
+                'serial' => $request->serial,
+                'description' => $request->description,
+                'accessories' => $request->accessories,
+                'extra_notes' => $request->extra_notes,
+                'status' => $request->status,
+            ]);
+        });
+
+        return redirect()->route('orders.index')->with('success', 'Orden y cliente (si es nuevo) creados exitosamente.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Order $order)
+    {
+        $order->load('customer', 'user'); // Carga las relaciones customer y user
+        return Inertia::render('Orders/Show', [
+            'order' => $order,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Order $order)
+    {
+        $order->load('customer', 'user'); // Carga las relaciones
+        $responsibleUsers = User::all()->map(fn ($user) => [
+            'id' => $user->id,
+            'name' => $user->name,
+        ]);
+
+        return Inertia::render('Orders/Edit', [
+            'order' => $order,
+            'responsibleUsers' => $responsibleUsers, // Cambiado de 'users' a 'responsibleUsers'
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Order $order)
+    {
+        $request->validate([
+            // Validación de Cliente (actualizamos los datos del cliente existente)
+            'customer_fullname' => ['required', 'string', 'max:255'],
+            'customer_phone' => ['nullable', 'string', 'max:255'],
+            'customer_address' => ['nullable', 'string', 'max:255'],
+            'customer_email' => ['nullable', 'email', 'max:255'],
+
+            // Validación de Orden
+            'name_equip' => ['required', 'string', 'max:255'],
+            'serial' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'accessories' => ['nullable', 'string'],
+            'extra_notes' => ['nullable', 'string'],
+            'status' => ['required', 'string', Rule::in(['pending', 'in_progress', 'completed', 'canceled'])],
+            'users_id' => ['required', 'exists:users,id'], // Usuario responsable
+        ]);
+
+        DB::transaction(function () use ($request, $order) {
+            // Actualizar el cliente asociado a la orden
+            $order->customer->update([
+                'fullname' => $request->customer_fullname,
+                'phone' => $request->customer_phone,
+                'address' => $request->customer_address,
+                'email' => $request->customer_email,
+            ]);
+
+            // Actualizar la orden
+            $order->update([
+                'users_id' => $request->users_id, // Usa users_id
+                'name_equip' => $request->name_equip,
+                'serial' => $request->serial,
+                'description' => $request->description,
+                'accessories' => $request->accessories,
+                'extra_notes' => $request->extra_notes,
+                'status' => $request->status,
+            ]);
+        });
+
+        return redirect()->route('orders.index')->with('success', 'Orden y cliente actualizados exitosamente.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Order $order)
+    {
+        DB::transaction(function () use ($order) {
+            $order->delete();
+            // Nota: El cliente no se elimina automáticamente por defecto con onDelete('cascade')
+            // en la FK de orders. Si quieres eliminar el cliente si ya no tiene órdenes,
+            // necesitarías lógica adicional aquí:
+            // if ($order->customer && $order->customer->orders()->count() === 0) {
+            //     $order->customer->delete();
+            // }
+        });
+
+        return redirect()->route('orders.index')->with('success', 'Orden eliminada exitosamente.');
+    }
+}
