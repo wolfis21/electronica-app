@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('dni', 45)->unique()->nullable(); // DNI como UNIQUE y opcional
             $table->string('phone', 45)->nullable();
             $table->string('email', 45)->nullable();
-            $table->string('address', 45)->nullable();
+            $table->text('address')->nullable();
             $table->timestamps();
         });
     }

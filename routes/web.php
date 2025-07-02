@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeUserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController; 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 
 
 Route::get('/', function () {
@@ -49,6 +50,9 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Órdenes
     Route::resource('orders', OrderController::class);
+
+    // Rutas para productos
+     Route::resource('products', ProductController::class);
 
 });
 

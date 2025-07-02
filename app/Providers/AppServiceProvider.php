@@ -119,14 +119,17 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Permisos de Productos/Servicios
-        Gate::define('register_products_services', function (User $user) {
-            return $user->hasPermissionTo('register_products_services');
+        Gate::define('view_products', function (User $user) {
+            return $user->hasPermissionTo('view_products');
         });
-        Gate::define('edit_products_services', function (User $user) {
-            return $user->hasPermissionTo('edit_products_services');
+        Gate::define('create_products', function (User $user) {
+            return $user->hasPermissionTo('create_products');
         });
-        Gate::define('delete_products_services', function (User $user) {
-            return $user->hasPermissionTo('delete_products_services');
+        Gate::define('edit_products', function (User $user) {
+            return $user->hasPermissionTo('edit_products');
+        });
+        Gate::define('delete_products', function (User $user) {
+            return $user->hasPermissionTo('delete_products');
         });
 
         // Otros

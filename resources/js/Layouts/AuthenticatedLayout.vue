@@ -18,6 +18,7 @@ const canManageCompanies = user && user.can.manage_companies;
 const canViewEmployeesUsers = user && user.can.view_users;
 const canViewOrders = user && user.can.view_all_orders;
 const canViewCustomers = user && user.can.view_customers;
+const canViewProducts = user && user.can.view_products;
 
 </script>
 
@@ -61,6 +62,9 @@ const canViewCustomers = user && user.can.view_customers;
                                 </NavLink>
                                 <NavLink v-if="canViewCustomers" :href="route('customers.index')" :active="route().current('customers.*')">
                                     Clientes
+                                </NavLink>
+                                <NavLink v-if="canViewProducts" :href="route('products.index')" :active="route().current('products.*')">
+                                    Productos/Servicios
                                 </NavLink>
 
                             </div>
@@ -181,6 +185,9 @@ const canViewCustomers = user && user.can.view_customers;
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="canViewCustomers" :href="route('customers.index')" :active="route().current('customers.*')">
                             Clientes
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="canViewProducts" :href="route('products.index')" :active="route().current('products.*')">
+                            Productos/Servicios
                         </ResponsiveNavLink>
                     </div>
 

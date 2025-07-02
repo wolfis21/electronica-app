@@ -65,6 +65,12 @@ class HandleInertiaRequests extends Middleware
                         'delete_customers' => $request->user()->hasPermissionTo('delete_customers'),
                         'view_customers' => $request->user()->hasPermissionTo('view_customers'),
                         //'manage_customers' => $request->user()->hasPermissionTo('manage_customers'),
+
+                        // Permisos de Clientes
+                        'create_products' => $request->user()->hasPermissionTo('create_products'),
+                        'edit_products' => $request->user()->hasPermissionTo('edit_products'),
+                        'delete_products' => $request->user()->hasPermissionTo('delete_products'),
+                        'view_products' => $request->user()->hasPermissionTo('view_products'),
                     ] : [],
                 ] : null,
             ],

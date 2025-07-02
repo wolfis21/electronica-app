@@ -55,9 +55,10 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view_payments', 'description' => 'Ver pagos recibidos']);
 
         // Permisos de Productos/Servicios
-        Permission::create(['name' => 'register_products_services', 'description' => 'Registrar nuevos productos/servicios']);
-        Permission::create(['name' => 'edit_products_services', 'description' => 'Editar productos/servicios']);
-        Permission::create(['name' => 'delete_products_services', 'description' => 'Eliminar productos/servicios']);
+        Permission::create(['name' => 'create_products', 'description' => 'Crear productos/servicios']);
+        Permission::create(['name' => 'view_products', 'description' => 'Ver productos/servicios']);
+        Permission::create(['name' => 'edit_products', 'description' => 'Editar productos/servicios']);
+        Permission::create(['name' => 'delete_products', 'description' => 'Eliminar productos/servicios']);
 
         // Otros
         Permission::create(['name' => 'initiate_session', 'description' => 'Iniciar sesión en el sistema']); // Aunque esto es básico, puede ser útil para un control granular.

@@ -7,6 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'code', // Nuevo campo
+        'description',
+        'price', // Ahora nullable en la BD
+        'price_sale', // Nuevo campo
+        'is_service',
+        'stock',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',      // Mantiene el cast a decimal
+        'price_sale' => 'decimal:2', // Nuevo cast a decimal
+        'is_service' => 'boolean',
+    ];
 }
