@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController; 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 
 
 Route::get('/', function () {
@@ -54,6 +55,15 @@ Route::middleware('auth')->group(function () {
     // Rutas para productos
      Route::resource('products', ProductController::class);
 
+        // Rutas anidadas para Reviews
+    Route::prefix('orders/{order}')->group(function () {
+        Route::get('reviews/create', [ReviewController::class, 'create'])->name('orders.reviews.create');
+        Route::post('reviews', [ReviewController::class, 'store'])->name('orders.reviews.store');
+        Route::get('reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+        Route::get('reviews/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+        Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+        Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

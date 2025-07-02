@@ -44,11 +44,11 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view_customers', 'description' => 'Ver lista de clientes']);
 
         // Permisos de Revisiones y Presupuestos
-        Permission::create(['name' => 'register_review_all_orders', 'description' => 'Registrar revisión en todas las órdenes']);
-        Permission::create(['name' => 'register_budget_reviews', 'description' => 'Registrar presupuesto en revisiones']);
-        Permission::create(['name' => 'view_all_reviews', 'description' => 'Ver todas las revisiones de órdenes']);
-        Permission::create(['name' => 'edit_all_reviews', 'description' => 'Editar las revisiones de todas las órdenes']);
-
+        Permission::create(['name' => 'view_reviews', 'description' => 'Ver todas las revisiones de órdenes']);
+        Permission::create(['name' => 'create_reviews', 'description' => 'Registrar revisión en todas las órdenes']);
+        Permission::create(['name' => 'edit_reviews', 'description' => 'Editar las revisiones de todas las órdenes']);
+        Permission::create(['name' => 'delete_reviews', 'description' => 'Registrar presupuesto en revisiones']);
+        
 
         // Permisos de Pagos
         Permission::create(['name' => 'register_payments', 'description' => 'Registrar pagos recibidos de órdenes']);

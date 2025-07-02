@@ -26,8 +26,9 @@ class Review extends Model
     }
 
     // Relación: Muchas revisiones pueden usar muchos productos/servicios
-    public function productsServices()
+    public function products() // Cambiado a 'products' para que coincida con el modelo Product
     {
-        return $this->belongsToMany(ProductService::class, 'reviews_products_services', 'review_id', 'product_service_id');
+        return $this->belongsToMany(Product::class, 'product_review', 'review_id', 'product_id')
+                    ->withPivot('quantity', 'price_at_time_of_review'); // Añadir campos extra para el pivote
     }
 }

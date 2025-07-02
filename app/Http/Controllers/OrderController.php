@@ -116,12 +116,25 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load('customer', 'user'); // Carga las relaciones customer y user
+        // Carga las relaciones necesarias para la vista de detalles
+        $order->load(['customer', 'user', 'reviews']); // Carga la relación 'reviews'
+
         return Inertia::render('Orders/Show', [
             'order' => $order,
+            'customer' => $order->customer,
+            'user' => $order->user,
+            'can' => [
+                'edit_all_orders' => auth()->user()->can('edit_all_orders'),
+                'edit_own_orders' => auth()->user()->can('edit_own_orders'),
+                'delete_orders' => auth()->user()->can('delete_orders'),
+                // Pasar los permisos de revisión también
+                'create_reviews' => auth()->user()->can('create_reviews'),
+                'view_reviews' => auth()->user()->can('view_reviews'),
+                'edit_reviews' => auth()->user()->can('edit_reviews'),
+                'delete_reviews' => auth()->user()->can('delete_reviews'),
+            ],
         ]);
     }
-
     /**
      * Show the form for editing the specified resource.
      */

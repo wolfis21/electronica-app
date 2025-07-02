@@ -24,4 +24,11 @@ class Product extends Model
         'price_sale' => 'decimal:2', // Nuevo cast a decimal
         'is_service' => 'boolean',
     ];
+
+        // Relación inversa para la tabla pivote product_review
+    public function reviews()
+    {
+        return $this->belongsToMany(Review::class, 'product_review', 'product_id', 'review_id')
+                    ->withPivot('quantity', 'price_at_time_of_review');
+    }
 }

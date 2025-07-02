@@ -71,7 +71,13 @@ class HandleInertiaRequests extends Middleware
                         'edit_products' => $request->user()->hasPermissionTo('edit_products'),
                         'delete_products' => $request->user()->hasPermissionTo('delete_products'),
                         'view_products' => $request->user()->hasPermissionTo('view_products'),
-                    ] : [],
+                    
+                        // Permisos de Revisiones
+                        'create_reviews' => $request->user()->hasPermissionTo('create_reviews'),
+                        'edit_reviews' => $request->user()->hasPermissionTo('edit_reviews'),
+                        'delete_reviews' => $request->user()->hasPermissionTo('delete_reviews'),
+                        'view_reviews' => $request->user()->hasPermissionTo('view_reviews'),
+                        ] : [],
                 ] : null,
             ],
             'ziggy' => function () use ($request) {

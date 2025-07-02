@@ -110,6 +110,23 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasPermissionTo('edit_all_reviews');
         });
 
+                // Gates para Gestión de Revisiones v2
+        Gate::define('view_reviews', function (User $user) {
+            return $user->hasRole('Administrador') || $user->hasPermissionTo('view_reviews');
+        });
+
+        Gate::define('create_reviews', function (User $user) {
+            return $user->hasRole('Administrador') || $user->hasPermissionTo('create_reviews');
+        });
+
+        Gate::define('edit_reviews', function (User $user) {
+            return $user->hasRole('Administrador') || $user->hasPermissionTo('edit_reviews');
+        });
+
+        Gate::define('delete_reviews', function (User $user) {
+            return $user->hasRole('Administrador') || $user->hasPermissionTo('delete_reviews');
+        });
+
         // Permisos de Pagos
         Gate::define('register_payments', function (User $user) {
             return $user->hasPermissionTo('register_payments');
