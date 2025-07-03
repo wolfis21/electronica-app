@@ -170,7 +170,7 @@ class OrderController extends Controller
             'description' => ['nullable', 'string'],
             'accessories' => ['nullable', 'string'],
             'extra_notes' => ['nullable', 'string'],
-            'status' => ['required', 'string', Rule::in(['pending', 'in_progress', 'completed', 'canceled'])],
+            'status' => ['required', 'string', Rule::in(['Pendiente', 'En proceso', 'Completado', 'Cancelado'])],
             'users_id' => ['required', 'exists:users,id'], // Usuario responsable
         ]);
 

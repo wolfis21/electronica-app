@@ -169,10 +169,10 @@ const submit = () => {
                                     class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                     required
                                 >
-                                    <option value="pending">Pendiente</option>
-                                    <option value="in_progress">En Progreso</option>
-                                    <option value="completed">Completada</option>
-                                    <option value="canceled">Cancelada</option>
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="En proceso">En Progreso</option>
+                                    <option value="Completado">Completada</option>
+                                    <option value="Cancelado">Cancelada</option>
                                 </select>
                                 <InputError class="mt-2" :message="form.errors.status" />
                             </div>
