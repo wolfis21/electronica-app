@@ -128,11 +128,17 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Permisos de Pagos
-        Gate::define('register_payments', function (User $user) {
-            return $user->hasPermissionTo('register_payments');
+        Gate::define('create_payments', function (User $user) {
+            return $user->hasPermissionTo('create_payments');
         });
         Gate::define('view_payments', function (User $user) {
             return $user->hasPermissionTo('view_payments');
+        });
+        Gate::define('edit_payments', function (User $user) {
+            return $user->hasPermissionTo('edit_payments');
+        });
+        Gate::define('delete_payments', function (User $user) {
+            return $user->hasPermissionTo('delete_payments');
         });
 
         // Permisos de Productos/Servicios

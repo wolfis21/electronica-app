@@ -12,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PaymentController; 
 
 
 Route::get('/', function () {
@@ -64,6 +65,10 @@ Route::middleware('auth')->group(function () {
         Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
+
+        // Rutas para pagos
+        Route::get('/payments/search-orders-live', [PaymentController::class, 'searchOrdersLive'])->name('payments.searchOrdersLive');
+        Route::resource('payments', PaymentController::class);
 });
 
 require __DIR__.'/auth.php';

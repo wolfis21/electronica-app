@@ -77,6 +77,13 @@ class HandleInertiaRequests extends Middleware
                         'edit_reviews' => $request->user()->hasPermissionTo('edit_reviews'),
                         'delete_reviews' => $request->user()->hasPermissionTo('delete_reviews'),
                         'view_reviews' => $request->user()->hasPermissionTo('view_reviews'),
+
+                        // Permisos de Pagos
+                        'create_payments' => $request->user()->hasPermissionTo('create_payments'),
+                        'edit_payments' => $request->user()->hasPermissionTo('edit_payments'),
+                        'delete_payments' => $request->user()->hasPermissionTo('delete_payments'),
+                        'view_payments' => $request->user()->hasPermissionTo('view_payments'),
+
                         ] : [],
                 ] : null,
             ],

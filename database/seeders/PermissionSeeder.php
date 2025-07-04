@@ -51,8 +51,10 @@ class PermissionSeeder extends Seeder
         
 
         // Permisos de Pagos
-        Permission::create(['name' => 'register_payments', 'description' => 'Registrar pagos recibidos de órdenes']);
+        Permission::create(['name' => 'create_payments', 'description' => 'Registrar pagos recibidos de órdenes']);
         Permission::create(['name' => 'view_payments', 'description' => 'Ver pagos recibidos']);
+        Permission::create(['name' => 'edit_payments', 'description' => 'Editar pagos']);
+        Permission::create(['name' => 'delete_payments', 'description' => 'Eliminar pagos']);
 
         // Permisos de Productos/Servicios
         Permission::create(['name' => 'create_products', 'description' => 'Crear productos/servicios']);

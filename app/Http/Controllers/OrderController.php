@@ -23,19 +23,43 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request) // <-- Añadimos Request $request
     {
-        // Carga las relaciones customer y user (responsable)
+        $search = $request->input('search'); // <-- Obtenemos el término de búsqueda
+
         $orders = Order::with('customer', 'user')
-                       ->paginate(10);
+                        ->when($search, function ($query, $search) {
+                            $query->where('id', 'like', "%{$search}%")
+                                ->orWhere('name_equip', 'like', "%{$search}%")
+                                ->orWhere('serial', 'like', "%{$search}%")
+                                ->orWhere('description', 'like', "%{$search}%")
+                                ->orWhere('accessories', 'like', "%{$search}%") // <-- Añadido
+                                ->orWhere('extra_notes', 'like', "%{$search}%") // <-- Añadido
+                                ->orWhere('status', 'like', "%{$search}%")
+                                ->orWhereHas('customer', function ($q) use ($search) {
+                                    $q->where('fullname', 'like', "%{$search}%")
+                                        ->orWhere('dni', 'like', "%{$search}%")
+                                        ->orWhere('phone', 'like', "%{$search}%")
+                                        ->orWhere('address', 'like', "%{$search}%")
+                                        ->orWhere('email', 'like', "%{$search}%");
+                                })
+                                ->orWhereHas('user', function ($q) use ($search) {
+                                    $q->where('name', 'like', "%{$search}%")
+                                        ->orWhere('email', 'like', "%{$search}%");
+                                });
+                        })
+                        ->paginate(10)
+                        ->withQueryString(); // <-- Para mantener los parámetros de búsqueda en la paginación
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
             'can' => [
+                'view_orders' => auth()->user()->hasPermissionTo('view_orders'),
                 'create_orders' => auth()->user()->hasPermissionTo('create_orders'),
                 'edit_orders' => auth()->user()->hasPermissionTo('edit_orders'),
                 'delete_orders' => auth()->user()->hasPermissionTo('delete_orders'),
             ],
+            'filters' => $request->only('search'), // <-- Pasamos el filtro actual a la vista
         ]);
     }
 
@@ -117,7 +141,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         // Carga las relaciones necesarias para la vista de detalles
-        $order->load(['customer', 'user', 'reviews']); // Carga la relación 'reviews'
+        $order->load(['customer', 'user', 'reviews.products']); // Carga la relación 'reviews'
 
         return Inertia::render('Orders/Show', [
             'order' => $order,

@@ -19,6 +19,7 @@ const canViewEmployeesUsers = user && user.can.view_users;
 const canViewOrders = user && user.can.view_all_orders;
 const canViewCustomers = user && user.can.view_customers;
 const canViewProducts = user && user.can.view_products;
+const canViewPayments = user && user.can.view_payments;
 
 </script>
 
@@ -66,7 +67,9 @@ const canViewProducts = user && user.can.view_products;
                                 <NavLink v-if="canViewProducts" :href="route('products.index')" :active="route().current('products.*')">
                                     Productos/Servicios
                                 </NavLink>
-
+                                <NavLink v-if="canViewPayments" :href="route('payments.index')" :active="route().current('payments.*')">
+                                    Gestión de Pagos
+                                </NavLink>
                             </div>
                         </div>
 
@@ -188,6 +191,9 @@ const canViewProducts = user && user.can.view_products;
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="canViewProducts" :href="route('products.index')" :active="route().current('products.*')">
                             Productos/Servicios
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="canViewPayments" :href="route('payments.index')" :active="route().current('payments.*')">
+                            Gestión de Pagos
                         </ResponsiveNavLink>
                     </div>
 
