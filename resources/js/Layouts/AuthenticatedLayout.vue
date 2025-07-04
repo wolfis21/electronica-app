@@ -16,7 +16,7 @@ const user = page.props.auth.user;
 const canManageRoles = user && user.can.manage_roles; 
 const canManageCompanies = user && user.can.manage_companies;
 const canViewEmployeesUsers = user && user.can.view_users;
-const canViewOrders = user && user.can.view_all_orders;
+//const canViewOrders = user && user.can.view_orders;
 const canViewCustomers = user && user.can.view_customers;
 const canViewProducts = user && user.can.view_products;
 const canViewPayments = user && user.can.view_payments;
@@ -58,7 +58,7 @@ const canViewPayments = user && user.can.view_payments;
                                 <NavLink v-if="canViewEmployeesUsers" :href="route('employees_users.index')" :active="route().current('employees_users.index')">
                                     Gestión de Empleados/Usuarios
                                 </NavLink>
-                                 <NavLink v-if="canViewOrders" :href="route('orders.index')" :active="route().current('orders.*')">
+                                 <NavLink :href="route('orders.index')" :active="route().current('orders.*')">
                                     Órdenes
                                 </NavLink>
                                 <NavLink v-if="canViewCustomers" :href="route('customers.index')" :active="route().current('customers.*')">
@@ -183,8 +183,8 @@ const canViewPayments = user && user.can.view_payments;
                         <ResponsiveNavLink v-if="canViewEmployeesUsers" :href="route('employees_users.index')" :active="route().current('employees_users.index')">
                             Gestión de Empleados/Usuarios
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="canViewOrders" :href="route('orders.index')" :active="route().current('orders.*')">
-                            Gestión de Órdenes
+                        <ResponsiveNavLink :href="route('orders.index')" :active="route().current('orders.*')">
+                            Órdenes
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="canViewCustomers" :href="route('customers.index')" :active="route().current('customers.*')">
                             Clientes

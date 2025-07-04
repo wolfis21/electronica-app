@@ -75,7 +75,7 @@ const confirmDelete = (productId) => {
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Costo</th> <!-- Cambiado de Precio a Costo -->
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Venta</th> <!-- Nueva columna -->
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                        <th v-if="can.edit_products || can.delete_products" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -91,7 +91,7 @@ const confirmDelete = (productId) => {
                                         <td class="px-6 py-4 whitespace-nowrap">{{ product.price !== null ? parseFloat(product.price).toFixed(2) + ' $' : 'N/A' }}</td> <!-- Mostrar costo -->
                                         <td class="px-6 py-4 whitespace-nowrap">{{ parseFloat(product.price_sale).toFixed(2) }} $</td> <!-- Mostrar precio venta -->
                                         <td class="px-6 py-4 whitespace-nowrap">{{ product.stock !== null ? product.stock : 'N/A' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-2">
+                                        <td  v-if="can.edit_products || can.delete_products" class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-2">
                                             <Link v-if="can.edit_products" :href="route('products.edit', product.id)" class="text-indigo-600 hover:text-indigo-900" title="Editar">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />

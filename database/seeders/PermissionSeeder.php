@@ -30,10 +30,10 @@ class PermissionSeeder extends Seeder
 
         // Permisos de Órdenes
         Permission::create(['name' => 'create_orders', 'description' => 'Crear nuevas órdenes de servicio']);
-        Permission::create(['name' => 'edit_all_orders', 'description' => 'Editar todas las órdenes (cualquier usuario)']);
+        Permission::create(['name' => 'edit_orders', 'description' => 'Editar todas las órdenes (cualquier usuario)']);
         Permission::create(['name' => 'edit_own_orders', 'description' => 'Editar órdenes creadas por el propio usuario']);
         Permission::create(['name' => 'delete_orders', 'description' => 'Eliminar órdenes de servicio']);
-        Permission::create(['name' => 'view_all_orders', 'description' => 'Ver todas las órdenes de servicio']);
+        Permission::create(['name' => 'view_orders', 'description' => 'Ver todas las órdenes de servicio']);
         Permission::create(['name' => 'view_own_orders', 'description' => 'Ver órdenes creadas por el propio usuario']);
         Permission::create(['name' => 'print_order', 'description' => 'Imprimir detalles de una orden']);
 

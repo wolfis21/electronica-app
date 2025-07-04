@@ -63,8 +63,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create_orders', function (User $user) {
             return $user->hasPermissionTo('create_orders');
         });
-        Gate::define('edit_all_orders', function (User $user) {
-            return $user->hasPermissionTo('edit_all_orders');
+        Gate::define('edit_orders', function (User $user) {
+            return $user->hasPermissionTo('edit_orders');
         });
         Gate::define('edit_own_orders', function (User $user) {
             return $user->hasPermissionTo('edit_own_orders');
@@ -72,8 +72,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('delete_orders', function (User $user) {
             return $user->hasPermissionTo('delete_orders');
         });
-        Gate::define('view_all_orders', function (User $user) {
-            return $user->hasPermissionTo('view_all_orders');
+        Gate::define('view_orders', function (User $user) {
+            return $user->hasPermissionTo('view_orders');
         });
         Gate::define('view_own_orders', function (User $user) {
             return $user->hasPermissionTo('view_own_orders');

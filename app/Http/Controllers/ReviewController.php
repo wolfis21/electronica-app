@@ -18,7 +18,7 @@ class ReviewController extends Controller
         $this->middleware('can:create_reviews')->only(['create', 'store']);
         $this->middleware('can:edit_reviews')->only(['edit', 'update']);
         $this->middleware('can:delete_reviews')->only('destroy');
-        $this->middleware('can:view_all_orders'); // Necesario para acceder a la orden padre
+        $this->middleware('can:view_orders'); // Necesario para acceder a la orden padre
     }
 
     // No hay index global de revisiones, se acceden desde la orden.

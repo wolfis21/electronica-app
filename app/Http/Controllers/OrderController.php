@@ -12,13 +12,13 @@ use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
-    public function __construct()
+/*     public function __construct()
     {
-        $this->middleware('can:view_all_orders')->only('index', 'show'); // Cambiado a view_all_orders
+        $this->middleware('can:view_orders')->only('index', 'show'); // Cambiado a view_all_orders
         $this->middleware('can:create_orders')->only(['create', 'store']);
-        $this->middleware('can:edit_all_orders')->only(['edit', 'update']); // Cambiado a edit_all_orders
+        $this->middleware('can:edit_orders')->only(['edit', 'update']); // Cambiado a edit_all_orders
         $this->middleware('can:delete_orders')->only('destroy');
-    }
+    } */
 
     /**
      * Display a listing of the resource.
@@ -150,7 +150,7 @@ class OrderController extends Controller
             'customer' => $order->customer,
             'user' => $order->user,
             'can' => [
-                'edit_all_orders' => auth()->user()->can('edit_all_orders'),
+                'edit_orders' => auth()->user()->can('edit_orders'),
                 'edit_own_orders' => auth()->user()->can('edit_own_orders'),
                 'delete_orders' => auth()->user()->can('delete_orders'),
                 // Pasar los permisos de revisión también

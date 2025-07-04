@@ -1,4 +1,27 @@
+<script setup>
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { useForm, Link } from '@inertiajs/vue3';
+import { defineProps } from 'vue'; // Importa defineProps
+
+// Definimos las props que este componente espera recibir
+const props = defineProps({
+    all_permissions: Array, // Todos los permisos disponibles, ahora pasados desde el controlador
+});
+
+const form = useForm({
+    name: '',
+    description: '',
+    permissions: [], // Inicializamos como un array vacío para un nuevo rol
+});
+
+const submit = () => {
+    form.post(route('roles.store'));
+};
+</script>
+
 <template>
+    <Head title="Crear Nuevo Rol" />
+
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Crear Nuevo Rol</h2>
@@ -21,6 +44,16 @@
                                 <div v-if="form.errors.description" class="text-red-600 mt-1">{{ form.errors.description }}</div>
                             </div>
 
+                            <h4 class="text-lg font-medium text-gray-900 mt-6 mb-3">Asignar Permisos</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                                <!-- Iteramos sobre all_permissions para mostrar los checkboxes -->
+                                <div v-for="permission in all_permissions" :key="permission.id" class="flex items-center">
+                                    <input type="checkbox" :id="`perm-${permission.id}`" :value="permission.id" v-model="form.permissions" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                    <label :for="`perm-${permission.id}`" class="ml-2 block text-sm text-gray-900">{{ permission.name }}</label>
+                                </div>
+                            </div>
+                            <div v-if="form.errors.permissions" class="text-red-600 mt-1">{{ form.errors.permissions }}</div>
+
                             <div class="flex items-center justify-end mt-4">
                                 <Link :href="route('roles.index')" class="text-gray-600 hover:text-gray-900 mr-4">Cancelar</Link>
                                 <button type="submit" :disabled="form.processing" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" :class="{ 'opacity-25': form.processing }">
@@ -34,17 +67,3 @@
         </div>
     </AuthenticatedLayout>
 </template>
-
-<script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useForm, Link } from '@inertiajs/vue3';
-
-const form = useForm({
-    name: '',
-    description: '',
-});
-
-const submit = () => {
-    form.post(route('roles.store'));
-};
-</script>

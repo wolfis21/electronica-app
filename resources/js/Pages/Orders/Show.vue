@@ -103,15 +103,12 @@ const confirmDeleteReview = (orderId, reviewId) => {
                             <p v-else class="text-gray-700 mt-2">No hay productos/servicios asociados a esta revisión.</p>
 
                             <div class="mt-4 flex justify-end space-x-2">
-                                <Link v-if="can.view_reviews" :href="route('reviews.show', [order.id, order.reviews[0].id])" class="inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <Link v-if="can.view_reviews && can.edit_reviews" :href="route('reviews.show', [order.id, order.reviews[0].id])" class="inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     Ver Detalles de Revisión
                                 </Link>
                                 <Link v-if="can.edit_reviews" :href="route('reviews.edit', [order.id, order.reviews[0].id])" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 focus:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     Editar Revisión
                                 </Link>
-                                <DangerButton v-if="can.delete_reviews" @click="confirmDeleteReview(order.id, order.reviews[0].id)">
-                                    Eliminar Revisión
-                                </DangerButton>
                             </div>
                         </template>
                         <template v-else>
@@ -123,7 +120,7 @@ const confirmDeleteReview = (orderId, reviewId) => {
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-2">
-                        <Link v-if="can.edit_all_orders || (can.edit_own_orders && order.users_id === $page.props.auth.user.id)" :href="route('orders.edit', order.id)" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 focus:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <Link v-if="can.edit_orders" :href="route('orders.edit', order.id)" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 focus:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Editar Orden
                         </Link>
                         <DangerButton v-if="can.delete_orders" @click="confirmDelete(order.id)">
