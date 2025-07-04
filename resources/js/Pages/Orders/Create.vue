@@ -18,6 +18,7 @@ const form = useForm({
     customer_phone: '',
     customer_address: '',
     customer_email: '',
+    customer_name_company: '',
     name_equip: '',
     serial: '',
     description: '',
@@ -43,12 +44,14 @@ const searchCustomerByDni = async () => {
                 form.customer_phone = data.customer.phone;
                 form.customer_address = data.customer.address;
                 form.customer_email = data.customer.email;
+                form.customer_name_company = data.customer.name_company;
             } else {
                 customerFoundInDb.value = false;
                 form.customer_fullname = '';
                 form.customer_phone = '';
                 form.customer_address = '';
                 form.customer_email = '';
+                form.customer_name_company = '';
             }
         } catch (error) {
             console.error('Error al buscar cliente por DNI:', error);
@@ -57,6 +60,7 @@ const searchCustomerByDni = async () => {
             form.customer_phone = '';
             form.customer_address = '';
             form.customer_email = '';
+            form.customer_name_company = '';
         } finally {
             customerDniLoading.value = false;
         }
@@ -66,6 +70,7 @@ const searchCustomerByDni = async () => {
         form.customer_phone = '';
         form.customer_address = '';
         form.customer_email = '';
+        form.customer_name_company = '';
     }
 };
 
@@ -82,12 +87,13 @@ watch(() => form.customer_dni, (newDni) => {
         form.customer_phone = '';
         form.customer_address = '';
         form.customer_email = '';
+        form.customer_name_company = '';
     }
 });
 
 const submit = () => {
     form.post(route('orders.store'), {
-        onFinish: () => form.reset('customer_dni', 'customer_fullname', 'customer_phone', 'customer_address', 'customer_email'),
+        onFinish: () => form.reset('customer_dni', 'customer_fullname', 'customer_phone', 'customer_address', 'customer_email', 'customer_name_company'),
     });
 };
 </script>
@@ -175,6 +181,16 @@ const submit = () => {
                                     :disabled="customerFoundInDb"
                                 />
                                 <InputError class="mt-2" :message="form.errors.customer_email" />
+                            </div>
+                            <div>
+                                <InputLabel for="customer_name_company" value="Nombre de la Empresa (Opcional)" />
+                                <TextInput
+                                    id="customer_name_company"
+                                    v-model="form.customer_name_company"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    :disabled="customerFoundInDb"
+                                />
                             </div>
                         </div>
 

@@ -18,6 +18,7 @@ const form = useForm({
     customer_phone: props.order.customer.phone,
     customer_address: props.order.customer.address,
     customer_email: props.order.customer.email,
+    customer_name_company: props.order.customer.name_company,
 
     // Datos de la orden
     name_equip: props.order.name_equip,
@@ -99,6 +100,16 @@ const submit = () => {
                                     class="mt-1 block w-full"
                                 />
                                 <InputError class="mt-2" :message="form.errors.customer_email" />
+                            </div>
+                            <div>
+                                <InputLabel for="customer_name_company" value="Nombre de la Empresa (Opcional)" />
+                                <TextInput
+                                    id="customer_name_company"
+                                    v-model="form.customer_name_company"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                />
+                                <InputError class="mt-2" :message="form.errors.customer_name_company" />
                             </div>
                         </div>
 

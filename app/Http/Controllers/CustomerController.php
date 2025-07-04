@@ -34,7 +34,10 @@ class CustomerController extends Controller
         if ($search) {
             $query->where('fullname', 'like', '%' . $search . '%')
                   ->orWhere('dni', 'like', '%' . $search . '%')
-                  ->orWhere('phone', 'like', '%' . $search . '%');
+                  ->orWhere('phone', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('address', 'like', '%' . $search . '%')
+                  ->orWhere('name_company', 'like', '%' . $search . '%'); // <-- Nuevo campo en la búsqueda
         }
 
         $customers = $query->paginate(10)->withQueryString(); // Mantener parámetros de búsqueda en paginación
@@ -69,6 +72,7 @@ class CustomerController extends Controller
             'phone' => ['nullable', 'string', 'max:45'],
             'address' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:45'], // Asegurarse de que sea nullable
+            'name_company' => ['nullable', 'string', 'max:255'], // <-- Nuevo campo opcional
         ]);
 
         Customer::create($request->all());
@@ -111,6 +115,7 @@ class CustomerController extends Controller
             'phone' => ['nullable', 'string', 'max:45'],
             'address' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:45'],
+            'name_company' => ['nullable', 'string', 'max:255'], // <-- Nuevo campo opcional
         ]);
 
         $customer->update($request->all());

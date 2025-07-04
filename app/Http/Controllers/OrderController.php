@@ -95,6 +95,7 @@ class OrderController extends Controller
             'customer_phone' => ['nullable', 'string', 'max:255'],
             'customer_address' => ['nullable', 'string', 'max:255'],
             'customer_email' => ['nullable', 'email', 'max:255'],
+            'customer_name_company' => ['nullable', 'string', 'max:255'],
 
             // Validación de Orden
             'name_equip' => ['required', 'string', 'max:255'],
@@ -117,6 +118,7 @@ class OrderController extends Controller
                     'phone' => $request->customer_phone,
                     'address' => $request->customer_address,
                     'email' => $request->customer_email,
+                    'name_company' => $request->customer_name_company,
                 ]);
             }
 
@@ -187,6 +189,7 @@ class OrderController extends Controller
             'customer_phone' => ['nullable', 'string', 'max:255'],
             'customer_address' => ['nullable', 'string', 'max:255'],
             'customer_email' => ['nullable', 'email', 'max:255'],
+            'customer_name_company' => ['nullable', 'string', 'max:255'],
 
             // Validación de Orden
             'name_equip' => ['required', 'string', 'max:255'],
@@ -205,6 +208,7 @@ class OrderController extends Controller
                 'phone' => $request->customer_phone,
                 'address' => $request->customer_address,
                 'email' => $request->customer_email,
+                'name_company' => $request->customer_name_company,
             ]);
 
             // Actualizar la orden

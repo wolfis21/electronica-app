@@ -74,6 +74,7 @@ const confirmDelete = (customerId) => {
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                                     </tr>
                                 </thead>
@@ -84,6 +85,7 @@ const confirmDelete = (customerId) => {
                                         <td class="px-6 py-4 whitespace-nowrap">{{ customer.dni }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ customer.phone || 'N/A' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ customer.email || 'N/A' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ customer.name_company || 'N/A' }}</td> 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-2">
                                             <Link v-if="can.edit_customers" :href="route('customers.edit', customer.id)" class="text-indigo-600 hover:text-indigo-900" title="Editar">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">

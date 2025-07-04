@@ -53,10 +53,10 @@ const confirmDeleteReview = (orderId, reviewId) => {
                         <p class="text-gray-700"><strong>Notas Extra:</strong> {{ order.extra_notes }}</p>
                         <p class="text-gray-700"><strong>Estado:</strong>
                             <span :class="{
-                                'bg-blue-100 text-blue-800': order.status === 'in_progress',
-                                'bg-green-100 text-green-800': order.status === 'completed',
-                                'bg-red-100 text-red-800': order.status === 'cancelled',
-                                'bg-yellow-100 text-yellow-800': order.status === 'pending_review',
+                                'bg-blue-100 text-blue-800': order.status === 'En proceso',
+                                'bg-green-100 text-green-800': order.status === 'Completado',
+                                'bg-red-100 text-red-800': order.status === 'Cancelado',
+                                'bg-yellow-100 text-yellow-800': order.status === 'Pendiente',
                                 'bg-purple-100 text-purple-800': order.status === 'waiting_for_parts',
                             }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize">
                                 {{ order.status.replace(/_/g, ' ') }}
@@ -69,6 +69,7 @@ const confirmDeleteReview = (orderId, reviewId) => {
                     <div class="mb-6 border-b pb-4">
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Información del Cliente</h3>
                         <p class="text-gray-700"><strong>Nombre:</strong> {{ customer.fullname }}</p>
+                        <p class="text-gray-700"><strong>Empresa:</strong> {{ customer.name_company || 'N/A' }}</p>
                         <p class="text-gray-700"><strong>DNI:</strong> {{ customer.dni }}</p>
                         <p class="text-gray-700"><strong>Teléfono:</strong> {{ customer.phone }}</p>
                         <p class="text-gray-700"><strong>Email:</strong> {{ customer.email }}</p>

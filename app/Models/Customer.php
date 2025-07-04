@@ -15,6 +15,7 @@ class Customer extends Model
         'phone',
         'email',
         'address',
+        'name_company',
     ];
 
     // Relación: Un cliente puede tener muchas órdenes

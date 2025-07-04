@@ -70,6 +70,7 @@ watch(search, debounce((value) => {
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI Cliente</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responsable</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serial</th>
@@ -87,6 +88,7 @@ watch(search, debounce((value) => {
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.customer.fullname }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.customer.dni }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ order.customer.name_company || 'N/A'}}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.user.name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.name_equip }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.serial }}</td>
