@@ -50,7 +50,7 @@ class HandleInertiaRequests extends Middleware
                         'delete_users' => $request->user()->hasPermissionTo('delete_users'),
                         'view_users' => $request->user()->hasPermissionTo('view_users'),
 
-                                                // Permisos de Órdenes
+                        // Permisos de Órdenes
                         'create_orders' => $request->user()->hasPermissionTo('create_orders'),
                         'edit_all_orders' => $request->user()->hasPermissionTo('edit_all_orders'),
                         'edit_own_orders' => $request->user()->hasPermissionTo('edit_own_orders'),
