@@ -12,6 +12,7 @@ const form = useForm({
     phone: '',
     address: '',
     email: '',
+    name_company: '',
 });
 
 const submit = () => {
@@ -90,6 +91,16 @@ const submit = () => {
                                     class="mt-1 block w-full"
                                 />
                                 <InputError class="mt-2" :message="form.errors.email" />
+                            </div>
+                            <div>
+                                <InputLabel for="name_company" value="Nombre de la Empresa (Opcional)" />
+                                <TextInput
+                                    id="name_company"
+                                    v-model="form.name_company"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                />
+                                <InputError class="mt-2" :message="form.errors.name_company" />
                             </div>
                         </div>
 

@@ -29,13 +29,12 @@ class RolePermissionSeeder extends Seeder
         // Asignar permisos al Gerente (basado en tu diagrama de CU)
         if ($managerRole) {
             $managerPermissions = [
-                'manage_companies',
-                'add_users', 'edit_users', 'view_users', // Gerente puede gestionar usuarios/empleados
-                'create_orders', 'edit_all_orders', 'delete_orders', 'view_all_orders', 'print_order',
+                'add_users', 'edit_users', 'view_users', 'delete_users', // Gerente puede gestionar usuarios/empleados
+                'create_orders', 'edit_orders', 'delete_orders', 'view_orders', 'print_order',
                 'create_customers', 'edit_customers', 'delete_customers', 'view_customers',
-                'register_review_all_orders', 'register_budget_reviews', 'view_all_reviews', 'edit_all_reviews',
-                'register_payments', 'view_payments',
-                'register_products_services', 'edit_products_services', 'delete_products_services',
+                'create_reviews', 'view_reviews', 'edit_reviews', 'delete_reviews',
+                'create_payments', 'view_payments', 'edit_payments', 'delete_payments',
+                'create_products', 'edit_products', 'delete_products', 'view_products',
                 'initiate_session'
             ];
             $managerPermissionIds = Permission::whereIn('name', $managerPermissions)->pluck('id')->toArray();
@@ -46,10 +45,9 @@ class RolePermissionSeeder extends Seeder
         if ($technicianRole) {
             $technicianPermissions = [
                 'initiate_session',
-                'create_orders', 'edit_own_orders', 'view_own_orders', 'print_order',
+                'create_orders', 'edit_orders', 'view_orders', 'print_order',
                 'create_customers', 'view_customers', // Puede crear clientes, verlos pero no editar/eliminar todos
-                'register_review_all_orders', 'register_budget_reviews', // Puede registrar revisiones y presupuestos
-                'register_payments', // Puede registrar pagos
+                'view_products', 'view_reviews',
             ];
             $technicianPermissionIds = Permission::whereIn('name', $technicianPermissions)->pluck('id')->toArray();
             $technicianRole->permissions()->sync($technicianPermissionIds);

@@ -71,7 +71,6 @@ const deleteEmployee = (id) => {
                                         <td class="px-6 py-4 whitespace-nowrap">{{ employee.user ? employee.user.email : 'N/A (Sin Usuario)' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ employee.user && employee.user.role ? employee.user.role.name : 'Sin Rol' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link :href="route('employees_users.edit', employee.id)" v-if="props.can.edit_users" class="text-indigo-600 hover:text-indigo-900 mr-2">Editar</Link>
                                             <DangerButton @click="deleteEmployee(employee.id)" v-if="props.can.delete_users">Eliminar</DangerButton>
                                         </td>
                                     </tr>

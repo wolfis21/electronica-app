@@ -30,10 +30,10 @@ class PermissionSeeder extends Seeder
 
         // Permisos de Órdenes
         Permission::create(['name' => 'create_orders', 'description' => 'Crear nuevas órdenes de servicio']);
-        Permission::create(['name' => 'edit_all_orders', 'description' => 'Editar todas las órdenes (cualquier usuario)']);
+        Permission::create(['name' => 'edit_orders', 'description' => 'Editar todas las órdenes (cualquier usuario)']);
         Permission::create(['name' => 'edit_own_orders', 'description' => 'Editar órdenes creadas por el propio usuario']);
         Permission::create(['name' => 'delete_orders', 'description' => 'Eliminar órdenes de servicio']);
-        Permission::create(['name' => 'view_all_orders', 'description' => 'Ver todas las órdenes de servicio']);
+        Permission::create(['name' => 'view_orders', 'description' => 'Ver todas las órdenes de servicio']);
         Permission::create(['name' => 'view_own_orders', 'description' => 'Ver órdenes creadas por el propio usuario']);
         Permission::create(['name' => 'print_order', 'description' => 'Imprimir detalles de una orden']);
 
@@ -51,8 +51,10 @@ class PermissionSeeder extends Seeder
         
 
         // Permisos de Pagos
-        Permission::create(['name' => 'register_payments', 'description' => 'Registrar pagos recibidos de órdenes']);
+        Permission::create(['name' => 'create_payments', 'description' => 'Registrar pagos recibidos de órdenes']);
         Permission::create(['name' => 'view_payments', 'description' => 'Ver pagos recibidos']);
+        Permission::create(['name' => 'edit_payments', 'description' => 'Editar pagos']);
+        Permission::create(['name' => 'delete_payments', 'description' => 'Eliminar pagos']);
 
         // Permisos de Productos/Servicios
         Permission::create(['name' => 'create_products', 'description' => 'Crear productos/servicios']);

@@ -50,12 +50,12 @@ class HandleInertiaRequests extends Middleware
                         'delete_users' => $request->user()->hasPermissionTo('delete_users'),
                         'view_users' => $request->user()->hasPermissionTo('view_users'),
 
-                                                // Permisos de Órdenes
+                        // Permisos de Órdenes
                         'create_orders' => $request->user()->hasPermissionTo('create_orders'),
-                        'edit_all_orders' => $request->user()->hasPermissionTo('edit_all_orders'),
+                        'edit_orders' => $request->user()->hasPermissionTo('edit_all_orders'),
                         'edit_own_orders' => $request->user()->hasPermissionTo('edit_own_orders'),
                         'delete_orders' => $request->user()->hasPermissionTo('delete_orders'),
-                        'view_all_orders' => $request->user()->hasPermissionTo('view_all_orders'),
+                        'view_orders' => $request->user()->hasPermissionTo('view_all_orders'),
                         'view_own_orders' => $request->user()->hasPermissionTo('view_own_orders'),
                         'print_order' => $request->user()->hasPermissionTo('print_order'),
 
@@ -77,6 +77,13 @@ class HandleInertiaRequests extends Middleware
                         'edit_reviews' => $request->user()->hasPermissionTo('edit_reviews'),
                         'delete_reviews' => $request->user()->hasPermissionTo('delete_reviews'),
                         'view_reviews' => $request->user()->hasPermissionTo('view_reviews'),
+
+                        // Permisos de Pagos
+                        'create_payments' => $request->user()->hasPermissionTo('create_payments'),
+                        'edit_payments' => $request->user()->hasPermissionTo('edit_payments'),
+                        'delete_payments' => $request->user()->hasPermissionTo('delete_payments'),
+                        'view_payments' => $request->user()->hasPermissionTo('view_payments'),
+
                         ] : [],
                 ] : null,
             ],

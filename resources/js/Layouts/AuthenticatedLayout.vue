@@ -16,9 +16,10 @@ const user = page.props.auth.user;
 const canManageRoles = user && user.can.manage_roles; 
 const canManageCompanies = user && user.can.manage_companies;
 const canViewEmployeesUsers = user && user.can.view_users;
-const canViewOrders = user && user.can.view_all_orders;
+//const canViewOrders = user && user.can.view_orders;
 const canViewCustomers = user && user.can.view_customers;
 const canViewProducts = user && user.can.view_products;
+const canViewPayments = user && user.can.view_payments;
 
 </script>
 
@@ -57,7 +58,7 @@ const canViewProducts = user && user.can.view_products;
                                 <NavLink v-if="canViewEmployeesUsers" :href="route('employees_users.index')" :active="route().current('employees_users.index')">
                                     Gestión de Empleados/Usuarios
                                 </NavLink>
-                                 <NavLink v-if="canViewOrders" :href="route('orders.index')" :active="route().current('orders.*')">
+                                 <NavLink :href="route('orders.index')" :active="route().current('orders.*')">
                                     Órdenes
                                 </NavLink>
                                 <NavLink v-if="canViewCustomers" :href="route('customers.index')" :active="route().current('customers.*')">
@@ -66,7 +67,9 @@ const canViewProducts = user && user.can.view_products;
                                 <NavLink v-if="canViewProducts" :href="route('products.index')" :active="route().current('products.*')">
                                     Productos/Servicios
                                 </NavLink>
-
+                                <NavLink v-if="canViewPayments" :href="route('payments.index')" :active="route().current('payments.*')">
+                                    Gestión de Pagos
+                                </NavLink>
                             </div>
                         </div>
 
@@ -180,14 +183,17 @@ const canViewProducts = user && user.can.view_products;
                         <ResponsiveNavLink v-if="canViewEmployeesUsers" :href="route('employees_users.index')" :active="route().current('employees_users.index')">
                             Gestión de Empleados/Usuarios
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="canViewOrders" :href="route('orders.index')" :active="route().current('orders.*')">
-                            Gestión de Órdenes
+                        <ResponsiveNavLink :href="route('orders.index')" :active="route().current('orders.*')">
+                            Órdenes
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="canViewCustomers" :href="route('customers.index')" :active="route().current('customers.*')">
                             Clientes
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="canViewProducts" :href="route('products.index')" :active="route().current('products.*')">
                             Productos/Servicios
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="canViewPayments" :href="route('payments.index')" :active="route().current('payments.*')">
+                            Gestión de Pagos
                         </ResponsiveNavLink>
                     </div>
 

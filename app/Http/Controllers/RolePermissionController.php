@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia; // Para renderizar componentes Inertia
 use App\Models\Role;
-use App\Models\Permission;
+use App\Models\Permission; // Asegúrate de que este use statement esté presente
 use Illuminate\Validation\Rule;
 use App\Models\User;
 
 class RolePermissionController extends Controller
 {
-    
+
     public function __construct()
     {
         // Aplicar middleware de autenticación
@@ -25,7 +25,7 @@ class RolePermissionController extends Controller
     /**
      * Muestra la lista de roles con sus permisos.
      *
-     
+     *
      * @return \Inertia\Response
      */
     public function index()
@@ -68,13 +68,24 @@ class RolePermissionController extends Controller
      */
     public function create()
     {
-        return Inertia::render('RolesAndPermissions/CreateRole');
+        // Obtener todos los permisos disponibles para pasarlos a la vista de creación
+        $allPermissions = Permission::all()->map(function ($permission) {
+            return [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'description' => $permission->description,
+            ];
+        });
+
+        return Inertia::render('RolesAndPermissions/CreateRole', [
+            'all_permissions' => $allPermissions, // <-- ¡Este es el cambio clave!
+        ]);
     }
 
     /**
      * Almacena un nuevo rol en la base de datos.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param   \Illuminate\Http\Request    $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
@@ -82,18 +93,23 @@ class RolePermissionController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:50', 'unique:roles,name'],
             'description' => ['nullable', 'string', 'max:255'],
+            'permissions' => ['nullable', 'array'], // Array de IDs de permisos
+            'permissions.*' => ['exists:permissions,id'], // Cada ID debe existir en la tabla de permisos
         ]);
 
-        Role::create($request->all());
+        $role = Role::create($request->except('permissions')); // Crea el rol sin los permisos inicialmente
+
+        // Sincroniza los permisos después de crear el rol
+        $role->permissions()->sync($request->input('permissions', [])); // Asigna los permisos al nuevo rol
 
         return redirect()->route('roles.index')
-                         ->with('success', 'Rol creado exitosamente.');
+                         ->with('success', 'Rol creado exitosamente y permisos asignados.');
     }
 
     /**
      * Muestra el formulario para editar un rol y asignar/quitar permisos.
      *
-     * @param  \App\Models\Role  $role
+     * @param   \App\Models\Role    $role
      * @return \Inertia\Response
      */
     public function edit(Role $role)
@@ -124,8 +140,8 @@ class RolePermissionController extends Controller
     /**
      * Actualiza un rol existente y sus permisos.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Role  $role
+     * @param   \Illuminate\Http\Request    $request
+     * @param   \App\Models\Role    $role
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Role $role)
@@ -149,7 +165,7 @@ class RolePermissionController extends Controller
     /**
      * Elimina un rol.
      *
-     * @param  \App\Models\Role  $role
+     * @param   \App\Models\Role    $role
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Role $role)
