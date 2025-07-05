@@ -6,16 +6,17 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\EmployeeUserController; 
+use App\Http\Controllers\EmployeeUserController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\OrderController; 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\OrderDocumentController;
 
 
 Route::get('/', function () {
-    $companyName = 'Electronica Tp-Link'; 
+    $companyName = 'Electronica Tp-Link';
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -45,17 +46,17 @@ Route::middleware('auth')->group(function () {
     // Rutas para Empleados y Usuarios
     Route::resource('employees_users', EmployeeUserController::class);
 
-        // Ruta específica para buscar cliente por DNI (API endpoint)
-    Route::resource('customers', CustomerController::class); 
+    // Ruta específica para buscar cliente por DNI (API endpoint)
+    Route::resource('customers', CustomerController::class);
     Route::get('/customers/search-by-dni/{dni}', [CustomerController::class, 'searchByDni'])->name('customers.searchByDni');
 
     // Rutas para Órdenes
     Route::resource('orders', OrderController::class);
 
     // Rutas para productos
-     Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class);
 
-        // Rutas anidadas para Reviews
+    // Rutas anidadas para Reviews
     Route::prefix('orders/{order}')->group(function () {
         Route::get('reviews/create', [ReviewController::class, 'create'])->name('orders.reviews.create');
         Route::post('reviews', [ReviewController::class, 'store'])->name('orders.reviews.store');
@@ -64,6 +65,18 @@ Route::middleware('auth')->group(function () {
         Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
+
+    // --- Rutas para Generar Documentos de Órdenes ---
+    Route::get('/orders/{order}/documents/payment-receipt', [OrderDocumentController::class, 'generatePaymentReceipt'])
+        ->name('orders.documents.payment');
+
+    Route::get('/orders/{order}/documents/pickup-confirmation', [OrderDocumentController::class, 'generatePickupConfirmation'])
+        ->name('orders.documents.pickup');
+
+    Route::get('/orders/{order}/documents/delivery-order', [OrderDocumentController::class, 'generateDeliveryOrder'])
+        ->name('orders.documents.delivery');
 });
 
-require __DIR__.'/auth.php';
+
+
+require __DIR__ . '/auth.php';

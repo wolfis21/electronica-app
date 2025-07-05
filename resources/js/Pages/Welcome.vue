@@ -32,13 +32,9 @@ const currentDate = computed(() => {
 
         <!-- Header -->
         <header class="p-4 sm:p-6">
-            <div class="container mx-auto flex justify-between items-center">
+            <div class="container mx-auto text-center">
                 <div class="text-sm text-gray-500">
                     <p>{{ currentDate }}</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    <span class="font-bold text-xl text-gray-700">{{ companyName }}</span>
                 </div>
             </div>
         </header>
@@ -47,7 +43,7 @@ const currentDate = computed(() => {
         <main class="flex-grow flex items-center justify-center p-4">
             <div class="w-full max-w-md text-center">
                 
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+                <h1 class="text-3xl sm:text-4xl font-bold #1E1E1E mb-4">
                     Bienvenido a
                 </h1>
                 <p class="text-4xl sm:text-5xl font-bold text-indigo-600 mb-12">
@@ -85,7 +81,7 @@ const currentDate = computed(() => {
 
         <!-- Footer -->
         <footer class="p-4 sm:p-6">
-            <div class="container mx-auto text-left">
+            <div class="container mx-auto text-center">
                 <p class="text-sm text-gray-500">Desarrollado por Bermu Tech INC</p>
             </div>
         </footer>

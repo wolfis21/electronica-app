@@ -12,6 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
+
     <Head :title="`Detalles de Orden #${order.id}`" />
 
     <AuthenticatedLayout>
@@ -42,8 +43,10 @@ const props = defineProps({
                                 {{ order.status.replace(/_/g, ' ') }}
                             </span>
                         </p>
-                        <p class="text-gray-700"><strong>Fecha de Creación:</strong> {{ new Date(order.created_at).toLocaleString() }}</p>
-                        <p class="text-gray-700"><strong>Última Actualización:</strong> {{ new Date(order.updated_at).toLocaleString() }}</p>
+                        <p class="text-gray-700"><strong>Fecha de Creación:</strong> {{ new
+                            Date(order.created_at).toLocaleString() }}</p>
+                        <p class="text-gray-700"><strong>Última Actualización:</strong> {{ new
+                            Date(order.updated_at).toLocaleString() }}</p>
                     </div>
 
                     <div class="mb-6 border-b pb-4">
@@ -59,26 +62,45 @@ const props = defineProps({
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Información del Empleado Responsable</h3>
                         <p class="text-gray-700"><strong>Nombre:</strong> {{ user.name }}</p>
                         <p class="text-gray-700"><strong>Email:</strong> {{ user.email }}</p>
-                        </div>
+                    </div>
 
                     <div class="mt-6 flex justify-end space-x-2">
                         <template v-if="order.reviews && order.reviews.length > 0">
-                            <Link v-if="can.view_reviews" :href="route('reviews.show', [order.id, order.reviews[0].id])" class="inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                Ver Revisión
+                            <Link v-if="can.view_reviews" :href="route('reviews.show', [order.id, order.reviews[0].id])"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Ver Revisión
                             </Link>
                         </template>
                         <template v-else>
-                            <Link v-if="can.create_reviews" :href="route('orders.reviews.create', order.id)" class="inline-flex items-center px-4 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-600 focus:bg-green-600 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                Crear Revisión
+                            <Link v-if="can.create_reviews" :href="route('orders.reviews.create', order.id)"
+                                class="inline-flex items-center px-4 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-600 focus:bg-green-600 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Crear Revisión
                             </Link>
                         </template>
 
-                        <Link v-if="can.edit_all_orders || (can.edit_own_orders && order.users_id === $page.props.auth.user.id)" :href="route('orders.edit', order.id)" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 focus:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            Editar Orden
+                        <Link
+                            v-if="can.edit_all_orders || (can.edit_own_orders && order.users_id === $page.props.auth.user.id)"
+                            :href="route('orders.edit', order.id)"
+                            class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 focus:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        Editar Orden
                         </Link>
                         <DangerButton v-if="can.delete_orders" @click="confirmDelete(order.id)">
                             Eliminar Orden
                         </DangerButton>
+                        <a :href="route('orders.documents.payment', { order: order.id })" target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Recibo de Pago
+                        </a>
+
+                        <a :href="route('orders.documents.pickup', { order: order.id })" target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Confirmación de Retiro
+                        </a>
+
+                        <a :href="route('orders.documents.delivery', { order: order.id })" target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Orden de Entrega
+                        </a>
                     </div>
                 </div>
             </div>
