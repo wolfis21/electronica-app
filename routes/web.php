@@ -12,11 +12,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
-<<<<<<< HEAD
 use App\Http\Controllers\OrderDocumentController;
-=======
 use App\Http\Controllers\PaymentController; 
->>>>>>> 36c08581fbc9db6e4a4e98eadd79daa83519e2c4
 
 
 Route::get('/', function () {
@@ -70,7 +67,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 
-<<<<<<< HEAD
     // --- Rutas para Generar Documentos de Órdenes ---
     Route::get('/orders/{order}/documents/payment-receipt', [OrderDocumentController::class, 'generatePaymentReceipt'])
         ->name('orders.documents.payment');
@@ -80,11 +76,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders/{order}/documents/delivery-order', [OrderDocumentController::class, 'generateDeliveryOrder'])
         ->name('orders.documents.delivery');
-=======
         // Rutas para pagos
         Route::get('/payments/search-orders-live', [PaymentController::class, 'searchOrdersLive'])->name('payments.searchOrdersLive');
         Route::resource('payments', PaymentController::class);
->>>>>>> 36c08581fbc9db6e4a4e98eadd79daa83519e2c4
 });
 
 
