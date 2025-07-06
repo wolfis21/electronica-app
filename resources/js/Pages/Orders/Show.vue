@@ -83,8 +83,6 @@ const confirmDeleteReview = (orderId, reviewId) => {
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Información del Empleado Responsable</h3>
                         <p class="text-gray-700"><strong>Nombre:</strong> {{ user.name }}</p>
                         <p class="text-gray-700"><strong>Email:</strong> {{ user.email }}</p>
-                        </div>
-
                     <!-- Sección para mostrar la revisión o el botón de crear -->
                     <div class="mb-6 border-b pb-4">
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Revisión de la Orden</h3>
