@@ -14,6 +14,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\OrderDocumentController;
 use App\Http\Controllers\PaymentController; 
+use App\Http\Controllers\DashboardController;
 
 
 Route::get('/', function () {
@@ -27,9 +28,14 @@ Route::get('/', function () {
     ]);
 });
 
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+//Route::get('/dashboard', DashboardController::class)
+ //   ->middleware(['auth', 'verified'])
+//  ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

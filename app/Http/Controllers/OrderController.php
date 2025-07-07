@@ -9,10 +9,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Notifications\OrderAssigned;
 
 class OrderController extends Controller
 {
-/*     public function __construct()
+    /*     public function __construct()
     {
         $this->middleware('can:view_orders')->only('index', 'show'); // Cambiado a view_all_orders
         $this->middleware('can:create_orders')->only(['create', 'store']);
@@ -28,28 +29,28 @@ class OrderController extends Controller
         $search = $request->input('search'); // <-- Obtenemos el término de búsqueda
 
         $orders = Order::with('customer', 'user')
-                        ->when($search, function ($query, $search) {
-                            $query->where('id', 'like', "%{$search}%")
-                                ->orWhere('name_equip', 'like', "%{$search}%")
-                                ->orWhere('serial', 'like', "%{$search}%")
-                                ->orWhere('description', 'like', "%{$search}%")
-                                ->orWhere('accessories', 'like', "%{$search}%") // <-- Añadido
-                                ->orWhere('extra_notes', 'like', "%{$search}%") // <-- Añadido
-                                ->orWhere('status', 'like', "%{$search}%")
-                                ->orWhereHas('customer', function ($q) use ($search) {
-                                    $q->where('fullname', 'like', "%{$search}%")
-                                        ->orWhere('dni', 'like', "%{$search}%")
-                                        ->orWhere('phone', 'like', "%{$search}%")
-                                        ->orWhere('address', 'like', "%{$search}%")
-                                        ->orWhere('email', 'like', "%{$search}%");
-                                })
-                                ->orWhereHas('user', function ($q) use ($search) {
-                                    $q->where('name', 'like', "%{$search}%")
-                                        ->orWhere('email', 'like', "%{$search}%");
-                                });
-                        })
-                        ->paginate(10)
-                        ->withQueryString(); // <-- Para mantener los parámetros de búsqueda en la paginación
+            ->when($search, function ($query, $search) {
+                $query->where('id', 'like', "%{$search}%")
+                    ->orWhere('name_equip', 'like', "%{$search}%")
+                    ->orWhere('serial', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('accessories', 'like', "%{$search}%") // <-- Añadido
+                    ->orWhere('extra_notes', 'like', "%{$search}%") // <-- Añadido
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('fullname', 'like', "%{$search}%")
+                            ->orWhere('dni', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%")
+                            ->orWhere('address', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+            })
+            ->paginate(10)
+            ->withQueryString(); // <-- Para mantener los parámetros de búsqueda en la paginación
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
@@ -70,7 +71,7 @@ class OrderController extends Controller
     {
         // Carga solo los usuarios que pueden ser responsables de órdenes (ej. aquellos con rol "Técnico" o "Administrador")
         // Aquí obtengo todos los usuarios, pero puedes filtrar por rol si lo necesitas.
-        $responsibleUsers = User::all()->map(fn ($user) => [
+        $responsibleUsers = User::all()->map(fn($user) => [
             'id' => $user->id,
             'name' => $user->name,
         ]);
@@ -132,6 +133,12 @@ class OrderController extends Controller
                 'extra_notes' => $request->extra_notes,
                 'status' => $request->status,
             ]);
+
+            // Buscamos al usuario responsable y le enviamos la notificación.
+            $responsibleUser = User::find($request->users_id);
+            if ($responsibleUser) {
+                $responsibleUser->notify(new OrderAssigned($order));
+            }
         });
 
         return redirect()->route('orders.index')->with('success', 'Orden y cliente (si es nuevo) creados exitosamente.');
@@ -167,7 +174,7 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         $order->load('customer', 'user'); // Carga las relaciones
-        $responsibleUsers = User::all()->map(fn ($user) => [
+        $responsibleUsers = User::all()->map(fn($user) => [
             'id' => $user->id,
             'name' => $user->name,
         ]);
@@ -201,28 +208,33 @@ class OrderController extends Controller
             'users_id' => ['required', 'exists:users,id'], // Usuario responsable
         ]);
 
-        DB::transaction(function () use ($request, $order) {
-            // Actualizar el cliente asociado a la orden
-            $order->customer->update([
-                'fullname' => $request->customer_fullname,
-                'phone' => $request->customer_phone,
-                'address' => $request->customer_address,
-                'email' => $request->customer_email,
-                'name_company' => $request->customer_name_company,
-            ]);
+       DB::transaction(function () use ($request, $order) {
+        // Guardamos el ID del responsable original ANTES de actualizar
+        $originalUserId = $order->users_id;
 
-            // Actualizar la orden
-            $order->update([
-                'users_id' => $request->users_id, // Usa users_id
-                'name_equip' => $request->name_equip,
-                'serial' => $request->serial,
-                'description' => $request->description,
-                'accessories' => $request->accessories,
-                'extra_notes' => $request->extra_notes,
-                'status' => $request->status,
-            ]);
-        });
+        // Actualizar el cliente asociado a la orden
+        $order->customer->update([
+            'fullname' => $request->customer_fullname,
+            'phone' => $request->customer_phone,
+            'address' => $request->customer_address,
+            'email' => $request->customer_email,
+            'name_company' => $request->customer_name_company,
+        ]);
 
+        // Actualizar la orden con los nuevos datos
+        $order->update($request->all());
+
+        // --- LÓGICA DE NOTIFICACIÓN ---
+        // Comparamos si el ID del responsable ha cambiado.
+        if ($order->users_id != $originalUserId) {
+            // Si cambió, buscamos al nuevo usuario y le notificamos.
+            $newUser = User::find($order->users_id);
+            if ($newUser) {
+                $newUser->notify(new OrderAssigned($order));
+            }
+        }
+    });
+        
         return redirect()->route('orders.index')->with('success', 'Orden y cliente actualizados exitosamente.');
     }
 
