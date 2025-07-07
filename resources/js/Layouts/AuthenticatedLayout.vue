@@ -1,6 +1,8 @@
 <script setup>
 import { ref, h, computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
 
 // -----------------------------------------------------------------------------
 // 1. ESTADO Y PROPIEDADES (State & Props)
