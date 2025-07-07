@@ -1,56 +1,18 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
+import PieChart from '@/Components/Piechart.vue';
 
-// --- PROPS (Datos que vienen del controlador de Laravel) ---
-// La página sigue recibiendo sus propios datos para mostrar en las tarjetas.
 const props = defineProps({
-  ordenesEnCurso: {
-    type: Array,
-    default: () => [
-      { id: 'ORD-001', name: 'Orden #1', status: 'En progreso' },
-      { id: 'ORD-002', name: 'Orden #2', status: 'Pendiente' },
-      { id: 'ORD-003', name: 'Orden #3', status: 'En progreso' },
-      { id: 'ORD-004', name: 'Orden #4', status: 'Completada' },
-    ]
-  },
-  revisionesEnCurso: {
-    type: Array,
-    default: () => [
-      { id: 'REV-101', team: 'Equipo #1', task: 'Revisión #1' },
-      { id: 'REV-102', team: 'Equipo #2', task: 'Revisión de red' },
-      { id: 'REV-103', team: 'Equipo #3', task: 'Revisión Pantalla' },
-    ]
-  },
-  listaEmpleados: {
-    type: Array,
-    default: () => [
-      { id: 'EMP-01', name: 'Jose Desilva', avatar: 'https://placehold.co/40x40/E2E8F0/4A5568?text=JD' },
-      { id: 'EMP-02', name: 'Isaac Saado', avatar: 'https://placehold.co/40x40/E2E8F0/4A5568?text=IS' },
-      { id: 'EMP-03', name: 'Maria Rodriguez', avatar: 'https://placehold.co/40x40/E2E8F0/4A5568?text=MR' },
-    ]
-  }
+    charts: Object,
+    kpis: Object,
+    lists: Object,
+    filters: Object,
 });
 
-// --- LÓGICA LOCAL DE LA PÁGINA ---
-const currentDate = computed(() => {
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  // Usando la fecha actual real.
-  return new Date().toLocaleDateString('es-PA', options);
-});
-
-// --- COMPONENTE LOCAL (Solo para esta página) ---
-const DashboardCard = {
-  props: ['title'],
-  template: `
-    <div class="bg-white rounded-xl shadow-md p-6">
-      <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ title }}</h3>
-      <div class="space-y-3">
-        <slot></slot>
-      </div>
-    </div>
-  `
+const statusColors = {
+    'Pendiente': 'bg-red-100 text-red-800',
+    'En progreso': 'bg-yellow-100 text-yellow-800',
 };
 </script>
 
@@ -58,45 +20,77 @@ const DashboardCard = {
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        
         <template #header>
             Dashboard de Actividad
         </template>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <DashboardCard title="Órdenes en Curso">
-                <div v-for="order in props.ordenesEnCurso" :key="order.id" class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                    <div>
-                        <p class="font-medium text-gray-700">{{ order.name }}</p>
-                        <p class="text-xs text-gray-500">{{ order.id }}</p>
-                    </div>
-                    <span :class="['px-2 py-1 text-xs font-semibold leading-5 rounded-full capitalize', { 'bg-yellow-100 text-yellow-800': order.status === 'En progreso' }, { 'bg-red-100 text-red-800': order.status === 'Pendiente' }, { 'bg-green-100 text-green-800': order.status === 'Completada' }]">
-                        {{ order.status }}
-                    </span>
-                </div>
-            </DashboardCard>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-gray-800">Resumen General</h2>
+            <div class="flex space-x-2">
+                <Link v-for="period in [7, 30, 90]" :key="period"
+                    :href="route('dashboard', { period: period })"
+                    :class="['px-4 py-2 text-sm font-semibold rounded-lg transition-colors', props.filters?.period === period ? 'bg-indigo-600 text-white' : 'bg-white shadow-sm hover:bg-gray-50']"
+                    preserve-scroll>
+                    {{ period }} Días
+                </Link>
+            </div>
+        </div>
 
-            <DashboardCard title="Revisiones en curso">
-                <div v-for="revision in props.revisionesEnCurso" :key="revision.id" class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                    <div>
-                        <p class="font-medium text-gray-700">{{ revision.task }}</p>
-                        <p class="text-xs text-gray-500">{{ revision.team }}</p>
-                    </div>
-                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver</a>
-                </div>
-            </DashboardCard>
-
-            <DashboardCard title="Lista de Empleados">
-                <div v-for="employee in props.listaEmpleados" :key="employee.id" class="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
-                    <img :src="employee.avatar" :alt="`Avatar de ${employee.name}`" class="h-10 w-10 rounded-full" />
-                    <div>
-                        <p class="font-medium text-gray-800">{{ employee.name }}</p>
-                        <p class="text-xs text-gray-500">{{ employee.id }}</p>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+             <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="font-semibold text-gray-900 mb-4">Órdenes por Estado</h3>
+                    <div class="h-64">
+                        <PieChart :chart-data="props.charts.orders_by_status" />
                     </div>
                 </div>
-            </DashboardCard>
+                <div class="p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="font-semibold text-gray-900 mb-4">Carga de Trabajo</h3>
+                    <div class="h-64">
+                        <PieChart :chart-data="props.charts.orders_by_user" />
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-md space-y-4">
+                <h3 class="font-semibold text-gray-900 mb-2">Indicadores Clave</h3>
+                <div class="text-center p-4 rounded-lg bg-gray-50">
+                    <p class="text-gray-500 text-sm">Nuevas Órdenes</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ props.kpis.new_orders }}</p>
+                </div>
+                 <div class="text-center p-4 rounded-lg bg-gray-50">
+                    <p class="text-gray-500 text-sm">Órdenes Completadas</p>
+                    <p class="text-3xl font-bold text-green-600">{{ props.kpis.completed_orders }}</p>
+                </div>
+                <div class="text-center p-4 rounded-lg bg-gray-50">
+                    <p class="text-gray-500 text-sm">Nuevos Clientes</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ props.kpis.new_customers }}</p>
+                </div>
+            </div>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Órdenes en Curso</h3>
+                <div v-if="props.lists.orders_in_progress.length > 0" class="space-y-3">
+                    <div v-for="order in props.lists.orders_in_progress" :key="order.id" class="flex items-center justify-between">
+                        <p class="text-gray-700">{{ order.name_equip }}</p>
+                        <span :class="['px-2 py-0.5 text-xs font-semibold rounded-full capitalize', statusColors[order.status] || 'bg-gray-200 text-gray-800']">
+                            {{ order.status.replace(/_/g, ' ') }}
+                        </span>
+                    </div>
+                </div>
+                <p v-else class="text-sm text-gray-500">No hay órdenes en curso.</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Empleados con Órdenes Activas</h3>
+                <div v-if="props.lists.active_employees.length > 0" class="space-y-3">
+                    <div v-for="employee in props.lists.active_employees" :key="employee.id" class="flex items-center justify-between">
+                        <p class="text-gray-700">{{ employee.name }}</p>
+                        <span class="text-sm font-bold text-gray-800">{{ employee.orders_count }} <span class="font-normal text-gray-500">órdenes</span></span>
+                    </div>
+                </div>
+                <p v-else class="text-sm text-gray-500">Ningún empleado tiene órdenes activas.</p>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>

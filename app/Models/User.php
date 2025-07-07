@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,8 @@ class User extends Authenticatable
         'employees_id', // Añadido
         'role_id',      // Añadido
     ];
+
+    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -84,5 +87,11 @@ class User extends Authenticatable
     public function responsibleForOrders()
     {
         return $this->hasMany(Order::class, 'users_id'); // Usamos 'users_id' como clave foránea
+    }
+
+    public function orders(): HasMany
+    {
+        // El segundo argumento 'users_id' es la clave foránea en la tabla 'orders'
+        return $this->hasMany(Order::class, 'users_id');
     }
 }
