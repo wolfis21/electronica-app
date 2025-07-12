@@ -13,10 +13,20 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                // 'sans' será la fuente para el cuerpo del texto
+                sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
+                // 'serif' será la fuente para los títulos
+                serif: ['Playfair Display', ...defaultTheme.fontFamily.serif],
             },
+            colors: {
+                // Aquí definimos tu paleta de colores
+                'orq-blue': '#1A237E',         // Azul Noche [cite: 45]
+                'orq-gold': '#FBC02D',        // Dorado/Mostaza [cite: 46]
+                'orq-dark-gray': '#263238', // Texto Principal [cite: 48]
+                'orq-light-gray': '#ECEFF1',  // Fondos Secundarios [cite: 47]
+            }
         },
     },
 
-    plugins: [forms],
+    plugins: [require('@tailwindcss/forms')],
 };

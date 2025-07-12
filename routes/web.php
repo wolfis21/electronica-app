@@ -15,6 +15,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\OrderDocumentController;
 use App\Http\Controllers\PaymentController; 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PageController;
 
 
 Route::get('/', function () {
@@ -90,6 +91,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('payments', PaymentController::class);
 });
 
-
+Route::get('/', [PageController::class, 'welcome'])->name('welcome');
+Route::get('/nosotros', [PageController::class, 'about'])->name('about');
+Route::get('/servicios', [PageController::class, 'services'])->name('services');
+Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
 
 require __DIR__ . '/auth.php';
