@@ -105,7 +105,7 @@
             <h1>{{ $company->name ?? 'Nombre de la Empresa' }}</h1>
             <p>{{ $company->address ?? 'Dirección de la Empresa' }}</p>
             <p>{{ $company->phone ?? 'N/A' }}</p>
-            <p>{{ \Carbon\Carbon::now()->format('d/m/Y, H:i:s') }}</p>
+            <p>{{ $order->created_at }}</p>
         </div>
 
         <div class="section">
