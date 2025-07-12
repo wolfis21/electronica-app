@@ -118,6 +118,14 @@ const confirmDeleteReview = (orderId, reviewId) => {
                             class="inline-flex items-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Orden de Entrega
                         </a>
+                            <a :href="route('orders.pdf', order.id)" 
+                                target="_blank" 
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6m-6-4v-4m6 4v-4m-6-8H6a2 2 0 00-2 2v2a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2z" />
+                                </svg>
+                                Imprimir Orden (PDF)
+                            </a>
                     </div>
                 </div>
             </div>

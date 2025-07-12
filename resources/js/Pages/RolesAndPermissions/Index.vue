@@ -27,7 +27,6 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permisos Asignados</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                                     </tr>
                                 </thead>
@@ -36,12 +35,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap">{{ role.id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ role.name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ role.description }}</td>
-                                        <td class="px-6 py-4">
-                                            <span v-for="(permission, index) in role.permissions" :key="permission" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1 mb-1">
-                                                {{ permission }}
-                                            </span>
-                                            <span v-if="role.permissions.length === 0">Ninguno</span>
-                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <Link :href="route('roles.edit', role.id)" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</Link>
                                             <button @click="deleteRole(role.id)" class="text-red-600 hover:text-red-900">Eliminar</button>

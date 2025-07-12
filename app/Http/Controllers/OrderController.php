@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Customer;
-use App\Models\User; // Para asignar usuarios responsables
+use App\Models\User;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Notifications\OrderAssigned;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -254,5 +256,19 @@ class OrderController extends Controller
         });
 
         return redirect()->route('orders.index')->with('success', 'Orden eliminada exitosamente.');
+    }
+    public function printPdf(Order $order)
+    {
+        $order->load(['customer', 'user']); 
+        $company = Company::first();
+
+        $customPaper = array(0, 0, 230, 600); // [min_x, min_y, max_x, max_y] en puntos (pts)
+
+        $pdf = Pdf::loadView('pdfs.order_receipt', compact('order', 'company'));
+        
+        // Aplica el tamaño de papel personalizado
+        $pdf->setPaper($customPaper); // O setPaper([0,0,226.77,1000], 'portrait'); si lo prefieres
+
+        return $pdf->stream('orden-recepcion-' . $order->id . '.pdf', ['Attachment' => 0]);
     }
 }

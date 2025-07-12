@@ -59,10 +59,10 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Órdenes
     Route::resource('orders', OrderController::class);
-
+    
     // Rutas para productos
     Route::resource('products', ProductController::class);
-
+    
     // Rutas anidadas para Reviews
     Route::prefix('orders/{order}')->group(function () {
         Route::get('reviews/create', [ReviewController::class, 'create'])->name('orders.reviews.create');
@@ -72,8 +72,11 @@ Route::middleware('auth')->group(function () {
         Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
-
+    
     // --- Rutas para Generar Documentos de Órdenes ---
+        //new
+    Route::get('/orders/{order}/pdf', [OrderController::class, 'printPdf'])->name('orders.pdf');
+    
     Route::get('/orders/{order}/documents/payment-receipt', [OrderDocumentController::class, 'generatePaymentReceipt'])
         ->name('orders.documents.payment');
 
