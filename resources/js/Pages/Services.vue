@@ -47,13 +47,18 @@ const services = [
         <div class="py-20">
             <div class="container mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div v-for="service in services" :key="service.name" class="p-8 border border-gray-200 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                        <h3 class="font-serif text-2xl font-bold text-orq-dark-gray mb-3">{{ service.name }}</h3>
-                        <p class="text-gray-600">
-                            {{ service.description }}
-                        </p>
-                    </div>
-                </div>
+    <div v-for="service in services" :key="service.name" class="p-8 border border-gray-200 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        
+        <div class="mb-4">
+            <svg class="w-10 h-10 text-orq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        
+        <h3 class="font-serif text-2xl font-bold text-orq-dark-gray mb-3">{{ service.name }}</h3>
+        <p class="text-gray-600">
+            {{ service.description }}
+        </p>
+    </div>
+</div>
             </div>
         </div>
 

@@ -52,16 +52,14 @@ defineProps({
                         Orquestra es la plataforma definitiva para la gestión de servicios, clientes y órdenes de
                         trabajo. Simplifica tus procesos y enfócate en crecer.
                     </p>
-                    <div class="mt-8">
-                        <Link v-if="$page.props.auth.user" :href="route('dashboard')"
-                            class="inline-block px-8 py-3 rounded-lg text-lg font-semibold text-white transition-transform hover:scale-105 shadow-lg"
-                            style="background-color: #1A237E;">
-                        Ir al Dashboard
-                        </Link>
-                        <Link v-else :href="route('login')"
-                            class="inline-block px-8 py-3 rounded-lg text-lg font-semibold text-white transition-transform hover:scale-105 shadow-lg"
-                            style="background-color: #1A237E;">
+                    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                        <Link :href="route('login')"
+                            class="w-full sm:w-auto text-center px-8 py-4 rounded-lg text-lg font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105 shadow-lg">
                         Comenzar ahora
+                        </Link>
+                        <Link v-if="canRegister" :href="route('register')"
+                            class="w-full sm:w-auto text-center font-bold text-orq-dark-gray hover:text-orq-blue">
+                        Solicitar una demo
                         </Link>
                     </div>
                 </div>
@@ -70,7 +68,7 @@ defineProps({
                     <div class="relative w-full max-w-md h-80 rounded-xl flex items-center justify-center"
                         style="background-color: #ECEFF1;">
                         <svg class="w-24 h-24" style="color: #1A237E; opacity: 0.1;" viewBox="0 0 48 48" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
+                            xmlns="images/admin1.jpg">
                             <path
                                 d="M24 4C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4zm0 6c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm0 24c-6.627 0-12-5.373-12-12h24c0 6.627-5.373 12-12 12z"
                                 fill="currentColor"></path>
