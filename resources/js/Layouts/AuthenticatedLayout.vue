@@ -1,15 +1,31 @@
 <script setup>
-import { ref, h, computed } from 'vue';
+import { ref, h, computed, onMounted } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 
-// --- ESTADO Y PROPIEDADES ---
+// --- ESTADO ---
 const isSidebarOpen = ref(false);
 const page = usePage();
 
-// --- PERMISOS ---
 const can = page.props.auth.user?.can || {};
+
+
+// --- LÓGICA DE NOTIFICACIONES ---
+const notifications = ref(page.props.auth.user?.unreadNotifications || []);
+const showingNotifications = ref(false);
+
+onMounted(() => {
+    if (page.props.auth.user) {
+        // Escucha en el canal privado del usuario
+        window.Echo.private(`App.Models.User.${page.props.auth.user.id}`)
+            .notification((notification) => {
+                // Añade la nueva notificación a la lista en tiempo real
+                notifications.value.unshift(notification);
+            });
+    }
+});
+
 
 // --- ICONOS ---
 const createIcon = (renderFn) => ({ render: renderFn });
@@ -20,6 +36,8 @@ const BuildingIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0
 const ShieldCheckIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' }), h('path', { d: 'm9 12 2 2 4-4' })]));
 const DollarSignIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('line', { x1: '12', y1: '1', x2: '12', y2: '23' }), h('path', { d: 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' })]));
 const ChartBarIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2' }, [h('path', { d: 'M12 20V10' }), h('path', { d: 'M18 20V4' }), h('path', { d: 'M6 20V16' })]));
+const BellIcon = createIcon(() => h('svg', { class: 'w-6 h-6', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9' }), h('path', { d: 'M13.73 21a2 2 0 0 1-3.46 0' })]));
+
 
 // --- ESTRUCTURA DEL MENÚ ---
 const menuStructure = [
@@ -95,13 +113,32 @@ const filteredMenuItems = computed(() => {
                         </div>
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div class="relative">
-                                <button class="p-1 rounded-full text-gray-400 hover:text-gray-500 relative">
-                                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341A6.002 6.002 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                                        </path>
-                                    </svg>
+                                <!-- Botón de la Campana -->
+                                <button @click="showingNotifications = !showingNotifications"
+                                    class="p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none">
+                                    <BellIcon />
+                                    <!-- Contador -->
+                                    <span v-if="notifications.length > 0"
+                                        class="absolute -top-1 -right-1 h-4 w-4 text-xs font-bold text-white bg-red-500 rounded-full flex items-center justify-center">
+                                        {{ notifications.length }}
+                                    </span>
                                 </button>
+
+                                <!-- Menú Desplegable de Notificaciones -->
+                                <div v-show="showingNotifications" @click.away="showingNotifications = false"
+                                    class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-20 border">
+                                    <div class="py-2 px-4 text-sm font-semibold text-gray-700 border-b">Notificaciones
+                                    </div>
+                                    <div v-if="notifications.length > 0" class="divide-y max-h-96 overflow-y-auto">
+                                        <Link v-for="notification in notifications" :key="notification.id"
+                                            :href="notification.data.url" class="block px-4 py-3 hover:bg-gray-100">
+                                        <p class="text-sm text-gray-800">{{ notification.data.message }}</p>
+                                        </Link>
+                                    </div>
+                                    <div v-else class="px-4 py-8 text-center text-sm text-gray-500">
+                                        Sin notificaciones
+                                    </div>
+                                </div>
                             </div>
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">

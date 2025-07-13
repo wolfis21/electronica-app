@@ -58,7 +58,7 @@ const props = defineProps({
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
                             <div class="space-y-6">
-                                <div class="text-center p-6 rounded-lg bg-gray-50">
+                                <div class="text-center p-6 bg-gray-50">
                                     <p class="text-gray-500 text-sm">Ingresos Totales</p>
                                     <p class="text-4xl font-bold text-green-600">${{
                                         props.paymentsAnalysis.total_revenue.toFixed(2) }}</p>
