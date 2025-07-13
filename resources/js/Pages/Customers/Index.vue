@@ -34,6 +34,9 @@ const confirmDelete = (customerId) => {
         });
     }
 };
+
+console.log('Customers prop received:', props.customers); // <-- AÑADE ESTO
+console.log('Customers data received:', props.customers.data); 
 </script>
 
 <template>
@@ -107,13 +110,26 @@ const confirmDelete = (customerId) => {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-4 flex justify-between items-center" v-if="customers.links.length > 3">
-                            <Link v-for="link in customers.links" :key="link.label" :href="link.url"
-                                :class="{'bg-blue-500 text-white': link.active, 'text-gray-700': !link.active}"
-                                class="px-3 py-2 leading-tight border rounded-md mr-1"
-                                v-html="link.label">
-                            </Link>
-                        </div>
+<div class="mt-4 flex justify-between items-center" v-if="customers.links.length > 3">
+    <template v-for="(link, key) in customers.links" :key="key">
+        <Link
+            :href="link.url"
+            :class="{'bg-blue-500 text-white': link.active, 'text-gray-700': !link.active}"
+            class="px-3 py-2 leading-tight border rounded-md mr-1"
+            v-if="link.url"
+        >
+            <span v-if="link.label === '&laquo; Previous'" v-html="'&laquo; Anterior'"></span>
+            <span v-else-if="link.label === 'Next &raquo;'" v-html="'Siguiente &raquo;'"></span>
+            <span v-else v-html="link.label"></span>
+        </Link>
+        <span
+            v-else
+            :class="{'bg-blue-500 text-white': link.active, 'text-gray-700': !link.active}"
+            class="px-3 py-2 leading-tight border rounded-md mr-1"
+            v-html="link.label"
+        ></span>
+    </template>
+</div>
                     </div>
                 </div>
             </div>

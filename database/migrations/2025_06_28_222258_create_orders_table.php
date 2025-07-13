@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name_equip', 45);
+            $table->string('name_equip', 400);
             $table->string('serial', 45)->nullable();
             $table->text('description')->nullable(); // Cambiado a TEXT
             $table->text('accessories')->nullable(); // Cambiado a TEXT
