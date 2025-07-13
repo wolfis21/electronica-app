@@ -16,6 +16,7 @@ use App\Http\Controllers\OrderDocumentController;
 use App\Http\Controllers\PaymentController; 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ImportController;
 
 
 Route::get('/', function () {
@@ -89,6 +90,9 @@ Route::middleware('auth')->group(function () {
         // Rutas para pagos
         Route::get('/payments/search-orders-live', [PaymentController::class, 'searchOrdersLive'])->name('payments.searchOrdersLive');
         Route::resource('payments', PaymentController::class);
+
+    Route::get('/import', [ImportController::class, 'showImportForm'])->name('import.form');
+    Route::post('/import', [ImportController::class, 'import'])->name('import.process');
 });
 
 Route::get('/', [PageController::class, 'welcome'])->name('welcome');
