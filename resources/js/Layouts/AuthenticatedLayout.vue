@@ -27,7 +27,7 @@ const menuStructure = [
         title: 'Principal',
         items: [
             { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
-            { name: 'Analítica', icon: ChartBarIcon, href: '#', current: false, permission: true },
+            { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: true },
         ]
     },
     {

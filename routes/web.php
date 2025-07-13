@@ -17,6 +17,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\AnalyticsController;
 
 
 Route::get('/', function () {
@@ -65,6 +66,11 @@ Route::middleware('auth')->group(function () {
     // Rutas para productos
     Route::resource('products', ProductController::class);
     
+
+    // Ruta de Analytics
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+
     // Rutas anidadas para Reviews
     Route::prefix('orders/{order}')->group(function () {
         Route::get('reviews/create', [ReviewController::class, 'create'])->name('orders.reviews.create');
