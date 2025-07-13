@@ -1,22 +1,19 @@
 <script setup>
-// Imports de Vue y Laravel/Inertia
-import { ref } from 'vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-
-// Imports de Componentes de Formulario
+// La lógica del script no cambia. Sigue manejando el formulario y la autenticación.
 import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
-// --- Imports para el Carrusel ---
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
-
-// --- Lógica del Formulario (sin cambios) ---
 defineProps({
-    canResetPassword: Boolean,
-    status: String,
+    canResetPassword: {
+        type: Boolean,
+    },
+    status: {
+        type: String,
+    },
 });
 
 const form = useForm({
@@ -30,108 +27,77 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
-
-// --- Imágenes para el Carrusel ---
-const carouselImages = ref([
-    { src: '/images/admin.jpg', alt: 'Panel de administración del sistema' },
-    { src: '/images/admin2.jpg', alt: 'Equipo de trabajo colaborando' },
-    { src: '/images/admin3.jpg', alt: 'Persona analizando datos en una tableta' },
-]);
-
 </script>
 
 <template>
-
     <Head title="Iniciar Sesión" />
 
-    <div class="flex min-h-screen font-sans" style="background-color: #1E1E1E;">
+    <div class="flex min-h-screen font-sans">
 
-        <div class="flex w-full lg:w-1/2 items-center justify-center p-8">
+        <div class="hidden lg:flex w-1/2 items-center justify-center p-12 text-white relative bg-orq-blue">
+            <div class="relative z-10 text-center">
+                 <Link href="/" class="flex flex-col items-center justify-center space-y-4">
+                    <img src="/images/logo_orquestra.png" alt="Logo de Orquesta" class="h-16 w-auto" />
+                    <span class="text-4xl font-serif font-bold">Orquestra</span>
+                </Link>
+                <p class="mt-4 max-w-sm text-lg text-blue-100/80">
+                    El conductor de tu negocio.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex w-full lg:w-1/2 items-center justify-center bg-orq-light-gray p-8">
             <div class="w-full max-w-md">
-
-                <div class="text-center mb-12">
-                    <h1 class="text-4xl font-black tracking-wider">
-                        <Link href="/">
-                        <span class="text-white">ELECTRÓNICA</span>
-                        <span style="color: #00A99D;">TPLKG</span>
-                        </Link>
-                    </h1>
+                
+                <div class="text-center mb-10">
+                    <h2 class="font-serif text-4xl font-bold text-orq-dark-gray">Bienvenido</h2>
+                    <p class="mt-2 text-gray-600">Por favor, ingresa tus credenciales.</p>
                 </div>
 
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-white">Iniciar Sesión</h2>
-                    <p class="text-gray-400">Ingresa para acceder a tu panel de control.</p>
+                <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                    {{ status }}
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-6">
                     <div>
-                        <InputLabel for="email" value="Correo Electrónico" class="text-gray-300" />
-                        <TextInput id="email" type="email"
-                            class="mt-1 block w-full bg-gray-800 border-gray-700 text-white focus:border-cyan-500 focus:ring-cyan-500"
-                            v-model="form.email" required autofocus />
+                        <InputLabel for="email" value="Correo Electrónico" />
+                        <TextInput
+                            id="email"
+                            type="email"
+                            class="mt-1 block w-full border-gray-300 focus:border-orq-gold focus:ring-orq-gold rounded-md"
+                            v-model="form.email"
+                            required
+                            autofocus
+                        />
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
+
                     <div>
-                        <InputLabel for="password" value="Contraseña" class="text-gray-300" />
-                        <TextInput id="password" type="password"
-                            class="mt-1 block w-full bg-gray-800 border-gray-700 text-white focus:border-cyan-500 focus:ring-cyan-500"
-                            v-model="form.password" required />
+                        <InputLabel for="password" value="Contraseña" />
+                        <TextInput
+                            id="password"
+                            type="password"
+                            class="mt-1 block w-full border-gray-300 focus:border-orq-gold focus:ring-orq-gold rounded-md"
+                            v-model="form.password"
+                            required
+                        />
                         <InputError class="mt-2" :message="form.errors.password" />
                     </div>
+
                     <div class="flex items-center justify-between">
                         <label class="flex items-center">
-                            <Checkbox name="remember" v-model:checked="form.remember"
-                                class="bg-gray-700 border-gray-600" />
-                            <span class="ms-2 text-sm text-gray-400">Mantener sesión</span>
+                            <Checkbox name="remember" v-model:checked="form.remember" />
+                            <span class="ms-2 text-sm text-gray-600">Mantener sesión</span>
                         </label>
                     </div>
+
                     <div>
-                        <PrimaryButton class="w-full justify-center text-lg py-3"
-                            :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                            style="background-color: #0055A4;">
+                        <PrimaryButton class="w-full justify-center text-lg py-3 bg-orq-blue hover:bg-blue-900" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                             Ingresar
                         </PrimaryButton>
                     </div>
                 </form>
             </div>
         </div>
-
-        <div class="hidden lg:flex w-1/2 relative items-center justify-center p-8">
-            
-            <Carousel :autoplay="5000" :wrap-around="true" class="w-full max-w-2xl">
-                <Slide v-for="image in carouselImages" :key="image.src">
-                    <div class="carousel__item w-full">
-                        
-                        <img :src="image.src" :alt="image.alt"
-                            class="w-full h-auto object-cover rounded-2xl shadow-2xl border-2 border-white/10">
-
-                    </div>
-                </Slide>
-            </Carousel>
-        </div>
     </div>
 </template>
-
-<style>
-/* Estilos para personalizar la navegación del carrusel y hacerla visible en el tema oscuro */
-.carousel__prev,
-.carousel__next {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    color: white !important;
-    border-radius: 50%;
-    transform: translateY(-50%);
-}
-
-.carousel__prev:hover,
-.carousel__next:hover {
-    background-color: rgba(0, 0, 0, 0.8) !important;
-}
-
-.carousel__pagination-button::after {
-    background-color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.carousel__pagination-button--active::after {
-    background-color: white !important;
-}
-</style>
