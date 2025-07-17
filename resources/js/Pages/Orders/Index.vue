@@ -2,15 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import DangerButton from '@/Components/DangerButton.vue';
-import Pagination from '@/Components/Pagination.vue'; // Asegúrate de importar Pagination
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { debounce } from 'lodash'; // Necesitarás instalar lodash si no lo tienes: npm install lodash
+import { debounce } from 'lodash';
 
 const props = defineProps({
-    orders: Object, // Paginator object
-    can: Object, // Permisos
-    filters: Object, // El objeto de filtros que pasamos desde el controlador
+    orders: Object,
+    can: Object,
+    filters: Object,
 });
 
 const confirmDelete = (orderId) => {
@@ -25,14 +24,28 @@ const confirmDelete = (orderId) => {
 
 // Estado reactivo para el término de búsqueda
 const search = ref(props.filters.search || '');
+// Nuevo estado reactivo para el filtro de estado
+const statusFilter = ref(props.filters.status || '');
 
-// Observa cambios en el término de búsqueda y aplica un debounce
-watch(search, debounce((value) => {
-    router.get(route('orders.index'), { search: value }, {
-        preserveState: true, // Mantener el estado de la página (scroll, etc.)
-        replace: true,       // Reemplazar la entrada en el historial del navegador
+// Observa cambios en el término de búsqueda y el filtro de estado
+watch([search, statusFilter], debounce(([newSearch, newStatus]) => {
+    router.get(route('orders.index'), {
+        search: newSearch,
+        status: newStatus, // Enviar el estado seleccionado
+    }, {
+        preserveState: true,
+        replace: true,
     });
-}, 300)); // Espera 300ms después de que el usuario deja de escribir
+}, 300));
+
+// Opciones para el filtro de estado
+const statusOptions = [
+    { value: '', label: 'Todos los estados' },
+    { value: 'Pendiente', label: 'Pendiente' },
+    { value: 'En proceso', label: 'En proceso' }, // Asegúrate que estos valores coincidan exactamente con los de tu DB
+    { value: 'Completado', label: 'Completado' },
+    { value: 'Cancelado', label: 'Cancelado' },
+];
 
 </script>
 
@@ -50,13 +63,23 @@ watch(search, debounce((value) => {
                     <div class="p-6">
                         <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                             <h3 class="text-lg font-medium text-gray-900 mb-3 md:mb-0">Listado de Órdenes</h3>
-                            <div class="flex items-center space-x-4 w-full md:w-auto">
+                            <div class="flex flex-wrap items-center space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
                                 <input
                                     type="text"
                                     v-model="search"
                                     placeholder="Buscar órdenes..."
                                     class="block w-full md:w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 />
+
+                                <select
+                                    v-model="statusFilter"
+                                    class="block w-full md:w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                    <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+
                                 <Link v-if="can.create_orders" :href="route('orders.create')" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 focus:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     Crear Nueva Orden
                                 </Link>
@@ -72,7 +95,6 @@ watch(search, debounce((value) => {
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI Cliente</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responsable</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serial</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                                     </tr>
@@ -88,13 +110,12 @@ watch(search, debounce((value) => {
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.customer.fullname }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.customer.dni }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ order.user.name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ order.name_equip }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ order.serial }}</td>
+                                        <td class="px-6 py-4 break-words max-w-xs">{{ order.name_equip }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span :class="{
                                                 'bg-yellow-100 text-yellow-800': order.status === 'Pendiente',
-                                                'bg-blue-100 text-blue-800': order.status === 'En proceso',
-                                                'bg-green-100 text-green-800': order.status === 'Completado',
+                                                'bg-blue-100 text-blue-800': order.status === 'En proceso', // Corregido
+                                                'bg-green-100 text-green-800': order.status === 'Completado', // Corregido
                                                 'bg-red-100 text-red-800': order.status === 'Cancelado',
                                             }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                                                 {{ order.status }}
@@ -122,7 +143,36 @@ watch(search, debounce((value) => {
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :links="orders.links" class="mt-4" />
+
+                         <div v-if="orders.links.length > 3" class="mt-6 flex justify-center">
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                <template v-for="(link, key) in orders.links" :key="key">
+                                    <Link
+                                        v-if="link.url"
+                                        :href="link.url"
+                                        :class="{
+                                            'z-10 bg-blue-50 border-blue-500 text-blue-600': link.active,
+                                            'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': !link.active,
+                                            'rounded-l-md': link.label.includes('Previous'),
+                                            'rounded-r-md': link.label.includes('Next'),
+                                        }"
+                                        class="relative inline-flex items-center px-4 py-2 border text-sm font-medium focus:z-20"
+                                        v-html="link.label.replace('&laquo; Previous', '&laquo; Anterior').replace('Next &raquo;', 'Siguiente &raquo;')"
+                                    />
+                                    <span
+                                        v-else
+                                        :class="{
+                                            'z-10 bg-blue-50 border-blue-500 text-blue-600': link.active,
+                                            'bg-white border-gray-300 text-gray-500': !link.active,
+                                            'rounded-l-md': link.label.includes('Previous'),
+                                            'rounded-r-md': link.label.includes('Next'),
+                                        }"
+                                        class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                        v-html="link.label.replace('&laquo; Previous', '&laquo; Anterior').replace('Next &raquo;', 'Siguiente &raquo;')"
+                                    ></span>
+                                </template>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>

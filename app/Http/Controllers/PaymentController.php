@@ -162,16 +162,25 @@ class PaymentController extends Controller
     public function searchOrdersLive(Request $request)
     {
         $searchTerm = $request->input('query'); // Término de búsqueda
-        $orders = Order::with('customer', 'user')
-                        ->where(function($q) use ($searchTerm) {
-                            $q->where('id', 'like', "%{$searchTerm}%")
-                            ->orWhere('name_equip', 'like', "%{$searchTerm}%")
-                            ->orWhereHas('customer', function($q2) use ($searchTerm) {
-                                $q2->where('fullname', 'like', "%{$searchTerm}%");
-                            });
-                        })
-                        ->limit(10) // Limitar resultados para autocompletado
-                        ->get();
+
+        // Intenta buscar por ID exacto si el término es numérico, de lo contrario, usa búsqueda parcial en otros campos.
+        if (is_numeric($searchTerm)) {
+            $orders = Order::with('customer', 'user')
+                            ->where('id', $searchTerm) // Búsqueda por ID exacto
+                            ->limit(1) // Solo queremos una coincidencia si es por ID
+                            ->get();
+        } else {
+            // Si no es un ID numérico, buscar por nombre de equipo o nombre de cliente
+            $orders = Order::with('customer', 'user')
+                            ->where(function($q) use ($searchTerm) {
+                                $q->where('name_equip', 'like', "%{$searchTerm}%")
+                                  ->orWhereHas('customer', function($q2) use ($searchTerm) {
+                                      $q2->where('fullname', 'like', "%{$searchTerm}%");
+                                  });
+                            })
+                            ->limit(10) // Limitar resultados para autocompletado si hay muchos
+                            ->get();
+        }
 
         return response()->json($orders);
     }

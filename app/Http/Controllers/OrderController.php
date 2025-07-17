@@ -26,9 +26,10 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) // <-- Añadimos Request $request
+    public function index(Request $request)
     {
-        $search = $request->input('search'); // <-- Obtenemos el término de búsqueda
+        $search = $request->input('search');
+        $status = $request->input('status'); // <-- Nuevo: Obtenemos el término de estado
 
         $orders = Order::with('customer', 'user')
             ->when($search, function ($query, $search) {
@@ -36,9 +37,9 @@ class OrderController extends Controller
                     ->orWhere('name_equip', 'like', "%{$search}%")
                     ->orWhere('serial', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%")
-                    ->orWhere('accessories', 'like', "%{$search}%") // <-- Añadido
-                    ->orWhere('extra_notes', 'like', "%{$search}%") // <-- Añadido
-                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('accessories', 'like', "%{$search}%")
+                    ->orWhere('extra_notes', 'like', "%{$search}%")
+                    // No es necesario orWhere('status', 'like', "%{$search}%") aquí si ya tienes un filtro específico para el estado
                     ->orWhereHas('customer', function ($q) use ($search) {
                         $q->where('fullname', 'like', "%{$search}%")
                             ->orWhere('dni', 'like', "%{$search}%")
@@ -51,8 +52,13 @@ class OrderController extends Controller
                             ->orWhere('email', 'like', "%{$search}%");
                     });
             })
+            // Nuevo: Filtro por estado
+            ->when($status, function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->orderBy('id', 'desc')
             ->paginate(10)
-            ->withQueryString(); // <-- Para mantener los parámetros de búsqueda en la paginación
+            ->withQueryString();
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
@@ -62,7 +68,8 @@ class OrderController extends Controller
                 'edit_orders' => auth()->user()->hasPermissionTo('edit_orders'),
                 'delete_orders' => auth()->user()->hasPermissionTo('delete_orders'),
             ],
-            'filters' => $request->only('search'), // <-- Pasamos el filtro actual a la vista
+            // Pasamos ambos filtros a la vista para que puedan ser inicializados
+            'filters' => $request->only('search', 'status'),
         ]);
     }
 

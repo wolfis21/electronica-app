@@ -40,7 +40,7 @@ class CustomerController extends Controller
                   ->orWhere('name_company', 'like', '%' . $search . '%'); // <-- Nuevo campo en la búsqueda
         }
 
-        $customers = $query->paginate(10)->withQueryString(); // Mantener parámetros de búsqueda en paginación
+        $customers = $query->orderBy('id', 'desc')->paginate(10)->withQueryString(); // Mantener parámetros de búsqueda en paginación
 
         return Inertia::render('Customers/Index', [
             'customers' => $customers,
