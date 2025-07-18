@@ -1,25 +1,82 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Recibo de Pago #{{ $order->id }}</title>
     <style>
-        body { font-family: 'Helvetica', sans-serif; font-size: 12px; color: #333; }
-        .container { width: 100%; margin: 0 auto; }
-        .header, .footer { text-align: center; }
-        .header h1 { margin: 0; }
-        .header p { margin: 2px 0; }
-        .details { margin-top: 20px; margin-bottom: 20px; }
-        .details table { width: 100%; border-collapse: collapse; }
-        .details th, .details td { padding: 8px; text-align: left; }
-        .items-table table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .items-table th, .items-table td { border: 1px solid #ddd; padding: 8px; }
-        .items-table th { background-color: #f2f2f2; }
-        .totals { float: right; width: 40%; margin-top: 20px; }
-        .totals table { width: 100%; }
-        .totals td { padding: 5px 8px; }
+        body {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            margin: 2px 0;
+        }
+
+        .details {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details th,
+        .details td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .items-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .items-table th,
+        .items-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .items-table th {
+            background-color: #f2f2f2;
+        }
+
+        .totals {
+            float: right;
+            width: 40%;
+            margin-top: 20px;
+        }
+
+        .totals table {
+            width: 100%;
+        }
+
+        .totals td {
+            padding: 5px 8px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <table style="width:100%;">
@@ -71,14 +128,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($order->items as $item)
-                    <tr>
-                        <td>{{ $item->description }}</td>
-                        <td style="text-align:right;">${{ number_format($item->unit_price, 2) }}</td>
-                        <td style="text-align:center;">{{ $item->quantity }}</td>
-                        <td style="text-align:right;">${{ number_format($item->quantity * $item->unit_price, 2) }}</td>
-                    </tr>
+                    @foreach ($review->products as $product)
+                        <tr>
+                            <td>
+                                <strong>{{ $product->name }}</strong>
+                                <br>
+                                <small style="color: #6c757d;">{{ $product->description }}</small>
+                            </td>
+                            <td>{{ $product->pivot->quantity }}</td>
+                            <td>${{ number_format($product->pivot->price_at_time_of_review, 2) }}</td>
+                            <td>${{ number_format($product->pivot->quantity * $product->pivot->price_at_time_of_review, 2) }}
+                            </td>
+                        </tr>
                     @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -94,11 +157,16 @@
                     <td style="text-align:right;">${{ number_format($order->tax, 2) }}</td>
                 </tr>
                 <tr>
-                    <td><h3>Total:</h3></td>
-                    <td style="text-align:right;"><h3>${{ number_format($order->total, 2) }}</h3></td>
+                    <td>
+                        <h3>Total:</h3>
+                    </td>
+                    <td style="text-align:right;">
+                        <h3>${{ number_format($order->total, 2) }}</h3>
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </body>
+
 </html>

@@ -278,4 +278,19 @@ class OrderController extends Controller
 
         return $pdf->stream('orden-recepcion-' . $order->id . '.pdf', ['Attachment' => 0]);
     }
+
+     // --- MÉTODOS PARA GENERAR PDFS (LÓGICA CORREGIDA) ---
+
+    public function generatePaymentReceipt(Order $order)
+    {
+        // 1. Obtenemos la primera (y única) revisión de la orden.
+        $review = $order->reviews()->firstOrFail();
+        
+        // 2. Cargamos los productos asociados a ESA revisión.
+        $review->load('products');
+
+        // 3. Pasamos la orden y LA REVISIÓN a la vista del PDF.
+        $pdf = PDF::loadView('pdfs.payment_receipt', compact('order', 'review'));
+        return $pdf->stream('recibo-pago-'.$order->id.'.pdf');
+    }
 }
