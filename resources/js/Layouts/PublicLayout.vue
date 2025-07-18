@@ -11,11 +11,11 @@ const page = usePage();
     <div class="bg-white font-sans">
         <header :class="[
             'w-full fixed top-0 left-0 z-20 transition-all duration-300',
-            isScrolled ? 'py-4 bg-white/90 backdrop-blur-lg shadow-md' : 'py-6 bg-transparent'
+            isScrolled ? 'py-4 bg-white/95 backdrop-blur-lg shadow-sm' : 'py-6 bg-white'
         ]">
             <nav class="container mx-auto px-6 flex justify-between items-center">
                 <Link href="/" class="flex items-center space-x-3">
-                <img src="/images/orquesta-logo.png" alt="Logo de Orquesta" class="h-8 w-auto" />
+                <img src="/images/logo_orquestra.png" alt="Logo de Orquesta" class="h-8 w-auto" />
                 <span class="text-2xl font-serif font-bold text-orq-dark-gray">Orquesta</span>
                 </Link>
 
@@ -70,7 +70,7 @@ const page = usePage();
                 <div class="grid md:grid-cols-3 gap-8">
                     <div>
                         <Link href="/" class="flex items-center space-x-3 mb-4">
-                        <img src="/images/orquesta-logo.png" alt="Logo de Orquesta" class="h-8 w-auto" />
+                        <img src="/images/logo_orquestra.png" alt="Logo de Orquesta" class="h-8 w-auto" />
                         <span class="text-2xl font-serif font-bold text-white">Orquesta</span>
                         </Link>
                         <p class="text-gray-400">El conductor de tu negocio.</p>

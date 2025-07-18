@@ -7,12 +7,27 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 // --- ESTADO ---
 const isSidebarOpen = ref(false);
 const page = usePage();
-
 const can = page.props.auth.user?.can || {};
+
+// --- LÓGICA DE NOTIFICACIONES ---
+const notifications = ref(page.props.auth.user?.unreadNotifications || []);
+const showingNotifications = ref(false);
+
+onMounted(() => {
+    if (page.props.auth.user) {
+        window.Echo.private(`App.Models.User.${page.props.auth.user.id}`)
+            .notification((notification) => {
+                notifications.value.unshift(notification);
+            });
+    }
+});
+
+
 
 
 // --- ICONOS ---
 const createIcon = (renderFn) => ({ render: renderFn });
+const MenuIcon = createIcon(() => h('svg', { class: 'w-6 h-6', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('line', { x1: "4", y1: "12", x2: "20", y2: "12" }), h('line', { x1: "4", y1: "6", x2: "20", y2: "6" }), h('line', { x1: "4", y1: "18", x2: "20", y2: "18" })]));
 const DashboardIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('rect', { x: "3", y: "3", width: "7", height: "7" }), h('rect', { x: "14", y: "3", width: "7", height: "7" }), h('rect', { x: "14", y: "14", width: "7", height: "7" }), h('rect', { x: "3", y: "14", width: "7", height: "7" })]));
 const BriefcaseIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('rect', { x: '2', y: '7', width: '20', height: '14', rx: '2', ry: '2' }), h('path', { d: 'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16' })]));
 const UsersIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' }), h('circle', { cx: '9', cy: '7', r: '4' }), h('path', { d: 'M23 21v-2a4 4 0 0 0-3-3.87' }), h('path', { d: 'M16 3.13a4 4 0 0 1 0 7.75' })]));
@@ -51,6 +66,8 @@ const menuStructure = [
     }
 ];
 
+
+
 // --- MENÚ FILTRADO POR PERMISOS ---
 const filteredMenuItems = computed(() => {
     return menuStructure
@@ -63,24 +80,36 @@ const filteredMenuItems = computed(() => {
 </script>
 
 <template>
-    <div class="flex h-screen bg-gray-100">
+    <div class="relative min-h-screen lg:flex">
 
-        <aside class="hidden lg:flex w-64 flex-col bg-gray-800 text-white">
+        <div v-show="isSidebarOpen" @click="isSidebarOpen = false" class="fixed inset-0 z-20 bg-black opacity-50 lg:hidden" aria-hidden="true"></div>
+
+        <aside 
+            :class="[
+                'fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gray-800 text-white transform transition-transform duration-300 ease-in-out',
+                'lg:relative lg:translate-x-0', // En Desktop: es parte del layout y siempre visible
+                isSidebarOpen ? 'translate-x-0' : '-translate-x-full' // En Móvil: se desliza para entrar o salir
+            ]"
+        >
             <div class="h-16 flex items-center justify-center border-b border-gray-700 px-4">
                 <Link :href="route('dashboard')" class="text-xl font-semibold text-white truncate">
-                Hola, {{ $page.props.auth.user.name }}
+                    Hola, {{ $page.props.auth.user.name }}
                 </Link>
             </div>
-            <nav class="flex-1 px-2 py-4 space-y-2">
+            
+            <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
                 <div v-for="menu in filteredMenuItems" :key="menu.title" class="mb-4">
-                    <p class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ menu.title }}
-                    </p>
-                    <Link v-for="item in menu.items" :key="item.name" :href="item.href" :class="[
-                        'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
-                    ]">
-                    <component :is="item.icon" class="h-5 w-5" />
-                    <span>{{ item.name }}</span>
+                    <p class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ menu.title }}</p>
+                    <Link
+                        v-for="item in menu.items"
+                        :key="item.name"
+                        :href="item.href"
+                        :class="[
+                            'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
+                            item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                        ]">
+                        <component :is="item.icon" class="h-5 w-5" />
+                        <span>{{ item.name }}</span>
                     </Link>
                 </div>
             </nav>
@@ -91,42 +120,49 @@ const filteredMenuItems = computed(() => {
                 <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
+                            <button @click="isSidebarOpen = !isSidebarOpen" class="lg:hidden mr-4 text-gray-500 hover:text-gray-700">
+                                <MenuIcon />
+                            </button>
                             <div class="font-semibold text-xl text-gray-800 leading-tight">
                                 <slot name="header" />
                             </div>
                         </div>
+                        
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div class="relative">
-                                <!-- Botón de la Campana -->
-                                <button @click="showingNotifications = !showingNotifications"
-                                    class="p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none">
+                                <button @click="showingNotifications = !showingNotifications" class="p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none">
                                     <BellIcon />
-                                    <!-- Contador -->
-
+                                    <span v-if="notifications.length > 0" class="absolute -top-1 -right-1 h-4 w-4 text-xs font-bold text-white bg-red-500 rounded-full flex items-center justify-center">
+                                        {{ notifications.length }}
+                                    </span>
                                 </button>
-
-
+                                
+                                <div v-show="showingNotifications" @click.away="showingNotifications = false" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-20 border" style="display: none;">
+                                    <div class="py-2 px-4 text-sm font-semibold text-gray-700 border-b">Notificaciones</div>
+                                    <div v-if="notifications.length > 0" class="divide-y max-h-96 overflow-y-auto">
+                                        <Link v-for="notification in notifications" :key="notification.id" :href="notification.data.url" class="block px-4 py-3 hover:bg-gray-100">
+                                            <p class="text-sm text-gray-800">{{ notification.data.message }}</p>
+                                        </Link>
+                                    </div>
+                                    <div v-else class="px-4 py-8 text-center text-sm text-gray-500">
+                                        Sin notificaciones
+                                    </div>
+                                </div>
                             </div>
+                            
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
-                                        <button
-                                            class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
+                                        <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
                                             <div>{{ $page.props.auth.user.name }}</div>
                                             <div class="ml-1">
-                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
+                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                                             </div>
                                         </button>
                                     </template>
                                     <template #content>
                                         <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
-                                        <DropdownLink :href="route('logout')" method="post" as="button"> Cerrar Sesión
-                                        </DropdownLink>
+                                        <DropdownLink :href="route('logout')" method="post" as="button"> Cerrar Sesión </DropdownLink>
                                     </template>
                                 </Dropdown>
                             </div>
@@ -135,7 +171,7 @@ const filteredMenuItems = computed(() => {
                 </div>
             </header>
 
-            <main class="flex-grow p-6 overflow-y-auto">
+            <main class="flex-grow p-6 overflow-y-auto bg-gray-100">
                 <slot />
             </main>
         </div>

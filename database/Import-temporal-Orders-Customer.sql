@@ -1,7 +1,7 @@
 -- ******************************************************
--- 1. Insertar Datos en la Tabla `customers`
+-- 1. Insertar Datos en la Tabla "customers"
 -- ******************************************************
-INSERT INTO `customers` (`fullname`, `dni`, `phone`, `email`, `address`, `name_company`) VALUES
+INSERT INTO "customers" ("fullname", "dni", "phone", "email", "address", "name_company") VALUES
 ('GEOBER ORTEGA', '10862', NULL , NULL, 'Puerto Ordaz', NULL),
 ('DENYY SALAZAR', '10842', NULL , NULL, 'Puerto Ordaz', NULL),
 ('JHONATA PHILLIP', '10839', NULL , NULL, 'Puerto Ordaz', NULL),
@@ -46,10 +46,10 @@ INSERT INTO `customers` (`fullname`, `dni`, `phone`, `email`, `address`, `name_c
 ('LEOANGEL RODRIGUEZ', '3254', NULL , NULL, 'Puerto Ordaz', NULL);
 
 -- ******************************************************
--- 2. Insertar Datos en la Tabla `orders`
+-- 2. Insertar Datos en la Tabla "orders"
 -- ******************************************************
 
-INSERT INTO `orders` (`name_equip`, `serial`, `description`, `accessories`, `extra_notes`, `status`, `customers_id`, `users_id`) VALUES
+INSERT INTO "orders" ("name_equip", "serial", "description", "accessories", "extra_notes", "status", "customers_id", "users_id") VALUES
 ('LAPTO MICROSOFT MODELO 2036', NULL, 'FORMATEO E INSTALACION DE WINDOWS 11 PROCESADOR SNAPDRAGON R X10 PING2580', NULL , NULL , 'Pendiente', 4, 1),
 ('TODO EN UNO iMAC APLE 2013 8RAM- I5- SERIE BF8J2', NULL, 'AUMENTO DE RAM-CAMBIO DE DISCO SSD- ACTUALIZACION DE SISTEMA OPERATIVO', NULL , NULL , 'Pendiente', 5, 1),
 ('PC DE ESCRITORIO I5 THERMALTAKE', NULL, 'REVISION- MUESTRA PANTALLA AZUL Y SE REINICIA- MANTENIMIENTO REQUERIDO POR EL ESTADO EN EL QUE ENCUENTRA EL EQUIPO', NULL ,'EL EQUIPO TIENE DAÃADA LA TARJETA GRAFICA- REVISADO POR CARLOS 18/06/25' , 'Pendiente', 6, 1),

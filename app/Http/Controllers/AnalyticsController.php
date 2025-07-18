@@ -21,8 +21,8 @@ class AnalyticsController extends Controller
         $totalOrders = DB::table('orders')->whereBetween('created_at', [$startDate, $endDate])->count();
         $ordersByStatus = DB::table('orders')->whereBetween('created_at', [$startDate, $endDate])->select('status', DB::raw('count(*) as count'))->groupBy('status')->get();
         $paymentsInPeriod = DB::table('payments')->whereBetween('created_at', [$startDate, $endDate]);
-        $totalRevenue = (clone $paymentsInPeriod)->sum('amount');
-        $totalTransactions = (clone $paymentsInPeriod)->count();
+        $totalRevenue = (clone $paymentsInPeriod)->sum('amount') ?? 0;
+        $totalTransactions = (clone $paymentsInPeriod)->count() ?? 0;
         $averageTicket = ($totalTransactions > 0) ? $totalRevenue / $totalTransactions : 0;
         $revenueByMethod = (clone $paymentsInPeriod)
             ->select('payment_method', DB::raw('sum(amount) as total'))
