@@ -9,21 +9,6 @@ const isSidebarOpen = ref(false);
 const page = usePage();
 const can = page.props.auth.user?.can || {};
 
-// --- LÓGICA DE NOTIFICACIONES ---
-const notifications = ref(page.props.auth.user?.unreadNotifications || []);
-const showingNotifications = ref(false);
-
-onMounted(() => {
-    if (page.props.auth.user) {
-        window.Echo.private(`App.Models.User.${page.props.auth.user.id}`)
-            .notification((notification) => {
-                notifications.value.unshift(notification);
-            });
-    }
-});
-
-
-
 
 // --- ICONOS ---
 const createIcon = (renderFn) => ({ render: renderFn });
@@ -129,26 +114,6 @@ const filteredMenuItems = computed(() => {
                         </div>
                         
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <div class="relative">
-                                <button @click="showingNotifications = !showingNotifications" class="p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none">
-                                    <BellIcon />
-                                    <span v-if="notifications.length > 0" class="absolute -top-1 -right-1 h-4 w-4 text-xs font-bold text-white bg-red-500 rounded-full flex items-center justify-center">
-                                        {{ notifications.length }}
-                                    </span>
-                                </button>
-                                
-                                <div v-show="showingNotifications" @click.away="showingNotifications = false" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-20 border" style="display: none;">
-                                    <div class="py-2 px-4 text-sm font-semibold text-gray-700 border-b">Notificaciones</div>
-                                    <div v-if="notifications.length > 0" class="divide-y max-h-96 overflow-y-auto">
-                                        <Link v-for="notification in notifications" :key="notification.id" :href="notification.data.url" class="block px-4 py-3 hover:bg-gray-100">
-                                            <p class="text-sm text-gray-800">{{ notification.data.message }}</p>
-                                        </Link>
-                                    </div>
-                                    <div v-else class="px-4 py-8 text-center text-sm text-gray-500">
-                                        Sin notificaciones
-                                    </div>
-                                </div>
-                            </div>
                             
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">

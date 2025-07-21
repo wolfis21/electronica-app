@@ -13,23 +13,21 @@ const props = defineProps({
 });
 
 const form = useForm({
-    // Datos del cliente asociado (para editar)
-    customer_fullname: props.order.customer.fullname,
-    customer_phone: props.order.customer.phone,
-    customer_address: props.order.customer.address,
-    customer_email: props.order.customer.email,
-    customer_name_company: props.order.customer.name_company,
+    // Utiliza ?. y ?? para asegurar que los valores sean seguros al inicializarse
+    customer_fullname: props.order.customer?.fullname ?? '',
+    customer_phone: props.order.customer?.phone ?? '',
+    customer_address: props.order.customer?.address ?? '',
+    customer_email: props.order.customer?.email ?? '',
+    customer_name_company: props.order.customer?.name_company ?? '',
 
-    // Datos de la orden
-    name_equip: props.order.name_equip,
-    serial: props.order.serial,
-    description: props.order.description,
-    accessories: props.order.accessories,
-    extra_notes: props.order.extra_notes,
-    status: props.order.status,
-    users_id: props.order.users_id, // Usuario responsable
+    name_equip: props.order.name_equip ?? '',
+    serial: props.order.serial ?? '',
+    description: props.order.description ?? '',
+    accessories: props.order.accessories ?? '',
+    extra_notes: props.order.extra_notes ?? '',
+    status: props.order.status ?? 'Pendiente',
+    users_id: props.order.users_id ?? null,
 });
-
 const submit = () => {
     form.put(route('orders.update', props.order.id));
 };
