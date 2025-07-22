@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImportController;
 
 
 Route::get('/', function () {
@@ -103,6 +104,7 @@ Route::middleware('auth')->group(function () {
     //Rutas de Exportacion e Importación de Usuarios
     Route::get('/exportar', [ExportController::class, 'index'])->name('export.index');
     Route::get('/exportar/descargar', [ExportController::class, 'download'])->name('export.download');
+    Route::post('/importar', [ImportController::class, 'import'])->name('import.store');
 });
 
 Route::get('/', [PageController::class, 'welcome'])->name('welcome');
