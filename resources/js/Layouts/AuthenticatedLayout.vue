@@ -21,7 +21,7 @@ const ShieldCheckIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "
 const DollarSignIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('line', { x1: '12', y1: '1', x2: '12', y2: '23' }), h('path', { d: 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' })]));
 const ChartBarIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2' }, [h('path', { d: 'M12 20V10' }), h('path', { d: 'M18 20V4' }), h('path', { d: 'M6 20V16' })]));
 const BellIcon = createIcon(() => h('svg', { class: 'w-6 h-6', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9' }), h('path', { d: 'M13.73 21a2 2 0 0 1-3.46 0' })]));
-
+const downloadIcon = createIcon(() => h('svg', { class: 'w-6 h-6', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M4 6h16M4 12h16M4 18h16' })]));
 
 // --- ESTRUCTURA DEL MENÚ ---
 const menuStructure = [
@@ -30,6 +30,7 @@ const menuStructure = [
         items: [
             { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
             { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: true },
+            { name: 'Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: true },
         ]
     },
     {

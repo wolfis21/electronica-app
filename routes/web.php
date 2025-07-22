@@ -13,10 +13,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\OrderDocumentController;
-use App\Http\Controllers\PaymentController; 
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ExportController;
 
 
 Route::get('/', function () {
@@ -36,7 +37,7 @@ Route::get('/dashboard', DashboardController::class)
     ->name('dashboard');
 
 //Route::get('/dashboard', DashboardController::class)
- //   ->middleware(['auth', 'verified'])
+//   ->middleware(['auth', 'verified'])
 //  ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -61,10 +62,10 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Órdenes
     Route::resource('orders', OrderController::class);
-    
+
     // Rutas para productos
     Route::resource('products', ProductController::class);
-    
+
 
     // Ruta de Analytics
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
@@ -82,11 +83,11 @@ Route::middleware('auth')->group(function () {
         Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
-    
+
     // --- Rutas para Generar Documentos de Órdenes ---
-        //new
+    //new
     Route::get('/orders/{order}/pdf', [OrderController::class, 'printPdf'])->name('orders.pdf');
-    
+
     Route::get('/orders/{order}/documents/payment-receipt', [OrderDocumentController::class, 'generatePaymentReceipt'])
         ->name('orders.documents.payment');
 
@@ -95,9 +96,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders/{order}/documents/delivery-order', [OrderDocumentController::class, 'generateDeliveryOrder'])
         ->name('orders.documents.delivery');
-        // Rutas para pagos
-        Route::get('/payments/search-orders', [PaymentController::class, 'searchOrdersForPayment'])->name('payments.searchOrdersForPayment');
-        Route::resource('payments', PaymentController::class);
+    // Rutas para pagos
+    Route::get('/payments/search-orders', [PaymentController::class, 'searchOrdersForPayment'])->name('payments.searchOrdersForPayment');
+    Route::resource('payments', PaymentController::class);
+
+    //Rutas de Exportacion e Importación de Usuarios
+    Route::get('/exportar', [ExportController::class, 'index'])->name('export.index');
+    Route::get('/exportar/descargar', [ExportController::class, 'download'])->name('export.download');
 });
 
 Route::get('/', [PageController::class, 'welcome'])->name('welcome');
