@@ -14,8 +14,8 @@ class PaymentsImport implements ToModel, WithHeadingRow
             'orders_id'        => $row['id_orden'],
             'payment_date'     => $row['fecha_de_pago_yyyy_mm_dd'],
             'amount'           => $row['monto'],
-            'currency'         => $row['moneda_ej_usd'],
-            'payment_method'   => $row['metodo_de_pago'],
+            'currency'         => $row['moneda'],
+            'payment_method'   => $row['metodo_pago'],
             'status'           => $row['estado'],
         ]);
     }

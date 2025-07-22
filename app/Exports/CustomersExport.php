@@ -11,7 +11,8 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping
 {
     public function collection()
     {
-        return Customer::all();
+        // Usamos withCount y with para cargar todos los datos necesarios en una sola consulta
+        return Customer::withCount(['orders', 'payments'])->with('payments')->get();
     }
 
     public function headings(): array
@@ -24,6 +25,9 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping
             'Email',
             'Dirección',
             'Empresa',
+            'Cantidad de Órdenes',
+            'Cantidad de Pagos',
+            'Métodos de Pago Usados',
             'Fecha de Creación',
         ];
     }
@@ -38,6 +42,9 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping
             $customer->email,
             $customer->address,
             $customer->name_company,
+            $customer->orders_count, // Usamos la propiedad generada por withCount
+            $customer->payments_count, // Usamos la propiedad generada por withCount
+            $customer->payments->pluck('payment_method')->unique()->implode(', '),
             $customer->created_at->format('Y-m-d'),
         ];
     }

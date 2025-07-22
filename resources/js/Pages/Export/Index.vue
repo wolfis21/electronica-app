@@ -103,7 +103,7 @@ const submitImport = () => {
                                 <p class="text-sm text-gray-600">
                                     Paso 2: Descarga la plantilla para el formato correcto.
                                 </p>
-                                <a href="/templates/orders_template.xlsx" download class="text-sm text-indigo-600 hover:underline font-semibold">
+                                <a href="/templates/clients_template.xlsx" download class="text-sm text-indigo-600 hover:underline font-semibold">
                                     Descargar Plantilla de Ejemplo
                                 </a>
                             </div>
