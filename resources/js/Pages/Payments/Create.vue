@@ -50,7 +50,7 @@ onMounted(async () => {
 
 
 // --- ARRAYS PARA SELECTS ---
-const currencies = ['USD', 'EUR', 'VES', 'COP'];
+const currencies = ['USD', 'EUR', 'VES'];
 const paymentStatuses = [
     { value: 'completed', label: 'Completado' },
     { value: 'pending', label: 'Pendiente' },
@@ -63,6 +63,17 @@ const pendingBalance = computed(() => {
     if (!selectedOrder.value) return 0;
     return Number(selectedOrder.value.pending_balance);
 });
+
+// --- NUEVA PROPIEDAD CALCULADA PARA EL SALDO EN VES ---
+const pendingBalanceInVes = computed(() => {
+    // Solo calcula si tenemos un saldo pendiente y la tasa del BCV
+    if (pendingBalance.value > 0 && bcvRate.value) {
+        const rate = Number(bcvRate.value);
+        return pendingBalance.value * rate;
+    }
+    return null; // Retorna null si no se puede calcular
+});
+
 
 // --- METHODS ---
 const searchOrders = debounce(async () => {
@@ -153,7 +164,7 @@ const formatVes = (amount) => {
                                placeholder="Escribe para buscar..."
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                         
-                        <ul v-if="searchResults.length > 0" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-auto">
+                        <ul v-if="searchResults.length > 0" class="relative z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-auto">
                             <li v-for="order in searchResults" :key="order.id" @click="selectOrder(order)"
                                 class="px-4 py-3 cursor-pointer hover:bg-indigo-50 border-b last:border-b-0">
                                 <p class="font-semibold text-gray-800">Orden #{{ order.id }} - {{ order.name_equip }}</p>
@@ -178,6 +189,10 @@ const formatVes = (amount) => {
                             <div>
                                 <h4 class="text-sm font-medium text-gray-500">Saldo Pendiente</h4>
                                 <p class="text-2xl font-bold text-red-600">${{ pendingBalance.toFixed(2) }}</p>
+                                <!-- MONTO EN VES (se muestra si la tasa está disponible) -->
+                                <p v-if="pendingBalanceInVes" class="text-sm text-gray-500 mt-1">
+                                    aprox. {{ formatVes(pendingBalanceInVes) }}
+                                </p>
                             </div>
                         </div>
 
