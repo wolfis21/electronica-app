@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Exports\OrdersExport; // 1. Importamos nuestra "receta" de exportación
-use Maatwebsite\Excel\Facades\Excel; // 2. Importamos la fachada de la librería
+use App\Exports\OrdersExport;
+use Maatwebsite\Excel\Facades\Excel; 
+use App\Exports\CustomersExport;
+use App\Exports\ProductsExport;
+use App\Exports\PaymentsExport;
 
 class ExportController extends Controller
 {
@@ -32,22 +35,22 @@ class ExportController extends Controller
 
         $type = $request->input('type');
         $format = $request->input('format');
-        
-        // Generamos un nombre de archivo dinámico con la fecha actual.
         $fileName = $type . '-' . now()->format('Y-m-d') . '.' . $format;
         
-        // 4. LÓGICA DE SELECCIÓN:
-        // Usamos un 'switch' para decidir qué clase de exportación usar.
-        // Esto hace que sea muy fácil añadir más reportes en el futuro.
+        // --- ACTUALIZA EL SWITCH ---
         switch ($type) {
             case 'orders':
                 return Excel::download(new OrdersExport(), $fileName);
                 break;
-            
-            // Futuros casos:
-            // case 'customers':
-            //     return Excel::download(new CustomersExport(), $fileName);
-            //     break;
+            case 'customers': // <-- Nuevo
+                return Excel::download(new CustomersExport(), $fileName);
+                break;
+            case 'products': // <-- Nuevo
+                return Excel::download(new ProductsExport(), $fileName);
+                break;
+            case 'payments': // <-- Nuevo
+                return Excel::download(new PaymentsExport(), $fileName);
+                break;
         }
 
         // Si el 'type' no es válido, redirigimos de vuelta.
