@@ -29,7 +29,7 @@ class ExportController extends Controller
         // 3. VALIDACIÓN:
         // Nos aseguramos de que los datos que envía el formulario sean válidos.
         $request->validate([
-            'type' => 'required|string|in:orders,customers,products', // Acepta solo estos valores
+            'type' => 'required|string|in:orders,customers,products,payments', // Acepta solo estos valores
             'format' => 'required|string|in:xlsx,csv', // Acepta solo estos formatos
         ]);
 

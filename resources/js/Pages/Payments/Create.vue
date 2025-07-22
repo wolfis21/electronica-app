@@ -1,12 +1,20 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
-import { debounce } from 'lodash';
+import { Head, useForm } from '@inertiajs/vue3'; // Importamos useForm
+import { ref, computed, onMounted } from 'vue'; // Importamos ref, computed, onMounted
+import axios from 'axios'; // Mantenemos axios para la tasa de cambio
+
+// Componentes de UI
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import TextareaInput from '@/Components/TextareaInput.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
 
 // --- STATE MANAGEMENT ---
-const paymentForm = useForm({
+
+// Mantenemos tu formulario original, pero lo renombramos para claridad
+const form = useForm({
     orders_id: null,
     payment_date: new Date().toISOString().slice(0, 10),
     amount: '',
@@ -17,11 +25,17 @@ const paymentForm = useForm({
     status: 'completed',
 });
 
-const searchQuery = ref('');
-const searchResults = ref([]);
-const selectedOrder = ref(null);
-const isLoading = ref(false);
+// Props que vienen del controlador (PaymentController@create)
+const props = defineProps({
+    eligibleOrders: {
+        type: Array,
+        required: true,
+    },
+});
 
+// Estado para la UI
+const selectedOrder = ref(null);
+const searchQuery = ref(''); // Para filtrar la tabla
 // --- STATE PARA TASAS DE CAMBIO ---
 const bcvRate = ref(null);
 const dateBcv = ref(null);
@@ -48,25 +62,42 @@ onMounted(async () => {
     }
 });
 
-
 // --- ARRAYS PARA SELECTS ---
-const currencies = ['USD', 'EUR', 'VES'];
+const currencies = ['USD', 'VES']; // Simplificado como en tu código original
 const paymentStatuses = [
     { value: 'completed', label: 'Completado' },
     { value: 'pending', label: 'Pendiente' },
     { value: 'failed', label: 'Fallido' },
     { value: 'refunded', label: 'Reembolsado' },
 ];
+const paymentMethods = [
+    { value: 'cash', label: 'Efectivo' },
+    { value: 'card', label: 'Tarjeta' },
+    { value: 'bank_transfer', label: 'Transferencia' },
+    { value: 'other', label: 'Otro' },
+];
 
 // --- COMPUTED PROPERTIES ---
+
+// Filtra las órdenes elegibles basándose en la búsqueda del usuario
+const filteredOrders = computed(() => {
+    if (!searchQuery.value) {
+        return props.eligibleOrders;
+    }
+    const lowerCaseQuery = searchQuery.value.toLowerCase();
+    return props.eligibleOrders.filter(order =>
+        order.id.toString().includes(lowerCaseQuery) ||
+        order.name_equip.toLowerCase().includes(lowerCaseQuery) ||
+        order.customer_name.toLowerCase().includes(lowerCaseQuery)
+    );
+});
+
 const pendingBalance = computed(() => {
     if (!selectedOrder.value) return 0;
     return Number(selectedOrder.value.pending_balance);
 });
 
-// --- NUEVA PROPIEDAD CALCULADA PARA EL SALDO EN VES ---
 const pendingBalanceInVes = computed(() => {
-    // Solo calcula si tenemos un saldo pendiente y la tasa del BCV
     if (pendingBalance.value > 0 && bcvRate.value) {
         const rate = Number(bcvRate.value);
         return pendingBalance.value * rate;
@@ -74,53 +105,33 @@ const pendingBalanceInVes = computed(() => {
     return null; // Retorna null si no se puede calcular
 });
 
-
-// --- METHODS ---
-const searchOrders = debounce(async () => {
-    if (searchQuery.value.length < 2) {
-        searchResults.value = [];
-        return;
-    }
-    isLoading.value = true;
-    try {
-        const response = await axios.get(route('payments.searchOrdersForPayment', { query: searchQuery.value }));
-        searchResults.value = response.data;
-    } catch (error) {
-        console.error("Error buscando órdenes:", error);
-        searchResults.value = [];
-    } finally {
-        isLoading.value = false;
-    }
-}, 300);
-
-const selectOrder = (order) => {
-    selectedOrder.value = order;
-    paymentForm.orders_id = order.id;
-    searchQuery.value = `Orden #${order.id} - ${order.customer_name}`;
-    searchResults.value = [];
-};
-
 const setFullPayment = () => {
-    paymentForm.amount = pendingBalance.value.toFixed(2);
+    form.amount = pendingBalance.value.toFixed(2);
 };
 
 const resetAll = () => {
-    paymentForm.reset();
+    form.reset();
     selectedOrder.value = null;
     searchQuery.value = '';
-    searchResults.value = [];
 };
 
-const submitPayment = () => {
-    paymentForm.post(route('payments.store'), {
+const submit = () => {
+    form.post(route('payments.store'), {
         onSuccess: () => {
-            alert('Pago registrado exitosamente.');
+            // Podrías usar un toast de notificación aquí
             resetAll();
         },
         onError: (errors) => {
             console.error('Error al crear pago:', errors);
         },
     });
+};
+
+const selectOrderForPayment = (order) => {
+    selectedOrder.value = order;
+    form.orders_id = order.id;
+    form.amount = order.pending_balance.toFixed(2); // Sugiere el monto pendiente
+    searchQuery.value = ''; // Limpia la búsqueda para evitar confusiones
 };
 
 // Formato específico para Bolívares
@@ -134,12 +145,12 @@ const formatVes = (amount) => {
     <Head title="Registrar Pago" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Registrar Nuevo Pago</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Registrar Nuevo Pago</h2>
         </template>
 
         <div class="py-12">
-            <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-8 space-y-8">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900 dark:text-gray-100">
 
                     <!-- Card: Referencia Cambiaria -->
                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -157,27 +168,55 @@ const formatVes = (amount) => {
                         </dl>
                     </div>
 
-                    <!-- PASO 1: BUSCAR ORDEN -->
-                    <div class="relative border-t pt-8">
-                        <label for="search" class="block text-sm font-medium text-gray-700">Buscar Orden por ID o Cliente</label>
-                        <input type="text" id="search" v-model="searchQuery" @input="searchOrders"
-                               placeholder="Escribe para buscar..."
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        
-                        <ul v-if="searchResults.length > 0" class="relative z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-auto">
-                            <li v-for="order in searchResults" :key="order.id" @click="selectOrder(order)"
-                                class="px-4 py-3 cursor-pointer hover:bg-indigo-50 border-b last:border-b-0">
-                                <p class="font-semibold text-gray-800">Orden #{{ order.id }} - {{ order.name_equip }}</p>
-                                <p class="text-sm text-gray-600">{{ order.customer_name }}</p>
-                                <p class="text-sm text-red-600 font-medium">Pendiente: ${{ Number(order.pending_balance).toFixed(2) }}</p>
-                            </li>
-                        </ul>
-                        <p v-if="isLoading" class="text-sm text-gray-500 mt-2">Buscando...</p>
+                    <!-- SECCIÓN 1: LISTA DE ÓRDENES ELEGIBLES (Nuevo Flujo) -->
+                    <div v-if="!selectedOrder" class="mt-8">
+                        <div v-if="eligibleOrders.length > 0">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                                Seleccione una Orden para Registrar el Pago
+                            </h3>
+                            <TextInput
+                                type="text"
+                                class="mt-1 block w-full md:w-1/2 mb-4"
+                                v-model="searchQuery"
+                                placeholder="Buscar por ID, Equipo o Cliente..."
+                            />
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Equipo</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Cliente</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Saldo Pendiente</th>
+                                            <th scope="col" class="relative px-6 py-3"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        <tr v-for="order in filteredOrders" :key="order.id">
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ order.id }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ order.name_equip }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ order.customer_name }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-red-600 font-semibold">${{ order.pending_balance.toFixed(2) }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <PrimaryButton @click="selectOrderForPayment(order)">
+                                                    Seleccionar
+                                                </PrimaryButton>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div v-else class="text-center py-8 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No hay órdenes pendientes de pago</h3>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Todas las órdenes con revisiones han sido pagadas o no hay revisiones asignadas.</p>
+                        </div>
                     </div>
 
-                    <!-- PASO 2: REGISTRAR PAGO -->
-                    <div v-if="selectedOrder" class="border-t pt-8">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-lg mb-8">
+                    <!-- PASO 2: REGISTRAR PAGO (Mantenemos tu diseño original) -->
+                    <div v-if="selectedOrder" class="border-t border-gray-200 dark:border-gray-700 pt-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-lg mb-8 dark:bg-gray-900/50">
                             <div>
                                 <h4 class="text-sm font-medium text-gray-500">Total a Pagar</h4>
                                 <p class="text-2xl font-bold text-gray-800">${{ Number(selectedOrder.total_due).toFixed(2) }}</p>
@@ -196,67 +235,63 @@ const formatVes = (amount) => {
                             </div>
                         </div>
 
-                        <form @submit.prevent="submitPayment" class="space-y-6">
+                        <form @submit.prevent="submit" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="payment_date" class="block text-sm font-medium text-gray-700">Fecha de Pago</label>
-                                    <input type="date" id="payment_date" v-model="paymentForm.payment_date" required class="mt-1 block w-full input-style">
+                                    <InputLabel for="payment_date" value="Fecha de Pago" />
+                                    <TextInput type="date" id="payment_date" v-model="form.payment_date" required class="mt-1 block w-full" />
                                 </div>
                                 <div>
-                                    <label for="amount" class="block text-sm font-medium text-gray-700">Monto a Pagar</label>
+                                    <InputLabel for="amount" value="Monto a Pagar" />
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="number" id="amount" v-model="paymentForm.amount" required step="0.01" :max="pendingBalance"
-                                               class="flex-1 block w-full rounded-none rounded-l-md input-style">
-                                        <button type="button" @click="setFullPayment"
+                                        <TextInput type="number" id="amount" v-model="form.amount" required step="0.01" :max="pendingBalance"
+                                               class="flex-1 block w-full rounded-none rounded-l-md" />
+                                        <PrimaryButton type="button" @click="setFullPayment"
                                                 class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm hover:bg-gray-100">
                                             Pagar Completo
-                                        </button>
+                                        </PrimaryButton>
                                     </div>
-                                    <p v-if="paymentForm.errors.amount" class="text-sm text-red-600 mt-1">{{ paymentForm.errors.amount }}</p>
+                                    <InputError class="mt-2" :message="form.errors.amount" />
                                 </div>
                                 
                                 <div>
-                                    <label for="currency" class="block text-sm font-medium text-gray-700">Moneda del Pago</label>
-                                    <select id="currency" v-model="paymentForm.currency" required class="mt-1 block w-full input-style">
+                                    <InputLabel for="currency" value="Moneda del Pago" />
+                                    <select id="currency" v-model="form.currency" required class="mt-1 block w-full input-style">
                                         <option v-for="currency in currencies" :key="currency" :value="currency">{{ currency }}</option>
                                     </select>
-                                    <p v-if="paymentForm.errors.currency" class="text-sm text-red-600 mt-1">{{ paymentForm.errors.currency }}</p>
+                                    <InputError class="mt-2" :message="form.errors.currency" />
                                 </div>
 
                                 <div>
-                                    <label for="payment_method" class="block text-sm font-medium text-gray-700">Método de Pago</label>
-                                    <select id="payment_method" v-model="paymentForm.payment_method" required class="mt-1 block w-full input-style">
-                                        <option value="cash">Efectivo</option>
-                                        <option value="card">Tarjeta</option>
-                                        <option value="bank_transfer">Transferencia</option>
-                                        <option value="other">Otro</option>
+                                    <InputLabel for="payment_method" value="Método de Pago" />
+                                    <select id="payment_method" v-model="form.payment_method" required class="mt-1 block w-full input-style">
+                                        <option v-for="method in paymentMethods" :key="method.value" :value="method.value">{{ method.label }}</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label for="status" class="block text-sm font-medium text-gray-700">Estado del Pago</label>
-                                    <select id="status" v-model="paymentForm.status" required class="mt-1 block w-full input-style">
+                                    <InputLabel for="status" value="Estado del Pago" />
+                                    <select id="status" v-model="form.status" required class="mt-1 block w-full input-style">
                                         <option v-for="status in paymentStatuses" :key="status.value" :value="status.value">{{ status.label }}</option>
                                     </select>
-                                    <p v-if="paymentForm.errors.status" class="text-sm text-red-600 mt-1">{{ paymentForm.errors.status }}</p>
+                                    <InputError class="mt-2" :message="form.errors.status" />
                                 </div>
 
                                 <div>
-                                    <label for="reference_number" class="block text-sm font-medium text-gray-700">N° de Referencia (Opcional)</label>
-                                    <input type="text" id="reference_number" v-model="paymentForm.reference_number" class="mt-1 block w-full input-style">
+                                    <InputLabel for="reference_number" value="N° de Referencia (Opcional)" />
+                                    <TextInput type="text" id="reference_number" v-model="form.reference_number" class="mt-1 block w-full" />
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label for="note" class="block text-sm font-medium text-gray-700">Notas (Opcional)</label>
-                                    <textarea id="note" v-model="paymentForm.note" rows="3" class="mt-1 block w-full input-style"></textarea>
+                                    <InputLabel for="note" value="Notas (Opcional)" />
+                                    <TextareaInput id="note" v-model="form.note" rows="3" class="mt-1 block w-full"></TextareaInput>
                                 </div>
                             </div>
                             <div class="flex justify-end space-x-4">
-                                <button type="button" @click="resetAll" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancelar</button>
-                                <button type="submit" :disabled="paymentForm.processing"
-                                        class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 disabled:opacity-50">
+                                <button type="button" @click="resetAll" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">Cancelar</button>
+                                <PrimaryButton :disabled="form.processing">
                                     Registrar Pago
-                                </button>
+                                </PrimaryButton>
                             </div>
                         </form>
                     </div>
@@ -268,6 +303,6 @@ const formatVes = (amount) => {
 
 <style scoped>
 .input-style {
-    @apply border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500;
+    @apply border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm;
 }
 </style>

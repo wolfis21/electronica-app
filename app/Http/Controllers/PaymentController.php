@@ -42,8 +42,31 @@ class PaymentController extends Controller
      */
     public function create()
     {
+        // 1. OBTENER TODAS LAS ÓRDENES ELEGIBLES PARA PAGO
+        $eligibleOrders = Order::with(['customer', 'reviews', 'payments'])
+            ->whereHas('reviews') // Solo órdenes con revisión
+            ->where('payment_status', '!=', 'paid') // Y que no estén pagadas
+            ->orderBy('id', 'desc')
+            ->get()
+            ->map(function ($order) {
+                $totalDue = $order->reviews->first()->budget ?? 0;
+                $totalPaid = $order->payments()->where('status', 'completed')->sum('amount');
+                
+                return [
+                    'id' => $order->id,
+                    'name_equip' => $order->name_equip,
+                    'customer_name' => $order->customer->fullname,
+                    'total_due' => (float) $totalDue,
+                    'total_paid' => (float) $totalPaid,
+                    'pending_balance' => (float) ($totalDue - $totalPaid),
+                ];
+            })
+            // Filtramos para asegurarnos de que solo mostramos las que realmente tienen un saldo pendiente
+            ->filter(fn($order) => $order['pending_balance'] > 0);
+
+        // 2. PASAR LAS ÓRDENES A LA VISTA
         return Inertia::render('Payments/Create', [
-            // No se pasan órdenes aquí, se buscarán dinámicamente en el frontend
+            'eligibleOrders' => $eligibleOrders,
         ]);
     }
 
