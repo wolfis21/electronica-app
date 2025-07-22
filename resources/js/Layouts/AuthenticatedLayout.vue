@@ -30,7 +30,7 @@ const menuStructure = [
         items: [
             { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
             { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: true },
-            { name: 'Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: true },
+            { name: 'Importar/Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: true },
         ]
     },
     {

@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3'; // <-- Se añadió useForm
+import { Head, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { ref, computed } from 'vue';
@@ -16,15 +16,14 @@ const downloadUrl = computed(() => {
 });
 
 // --- Lógica para IMPORTACIÓN (añadida) ---
-// Usamos 'useForm' para manejar el archivo que se va a subir.
 const importForm = useForm({
     import_file: null,
+    type: 'orders', // Se añade 'type' para que el controlador sepa qué importar
 });
 
-// Esta función se llama al enviar el formulario de importación.
 const submitImport = () => {
     importForm.post(route('import.store'), {
-        onSuccess: () => importForm.reset(), // Limpia el campo del archivo si la subida fue exitosa
+        onSuccess: () => importForm.reset('import_file'),
     });
 };
 </script>
@@ -84,36 +83,52 @@ const submitImport = () => {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Importar Datos</h3>
                     
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-600 mb-2">
-                            Paso 1: Descarga la plantilla para asegurarte de que tus datos tengan el formato correcto.
-                        </p>
-                        <a href="/templates/orders_template.xlsx" download class="text-sm text-indigo-600 hover:underline font-semibold">
-                            Descargar Plantilla para Órdenes
-                        </a>
-                    </div>
-                    
-                    <div class="border-t pt-6">
-                        <form @submit.prevent="submitImport">
-                             <InputLabel for="import_file" value="Paso 2: Sube el archivo completado" />
-                             <input 
-                                id="import_file"
-                                type="file" 
-                                @input="importForm.import_file = $event.target.files[0]"
-                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                                required
-                            />
-                            <p v-if="importForm.errors.import_file" class="text-sm text-red-600 mt-2">
-                                {{ importForm.errors.import_file }}
-                            </p>
-
-                             <div class="mt-6 flex justify-end">
-                                <PrimaryButton :disabled="importForm.processing">
-                                    Importar Datos
-                                </PrimaryButton>
+                    <form @submit.prevent="submitImport">
+                        <div class="space-y-6">
+                            <div>
+                                <InputLabel for="import_type" value="Paso 1: Elige qué datos importar" />
+                                <select 
+                                    id="import_type" 
+                                    v-model="importForm.type"
+                                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                >
+                                    <option value="orders">Órdenes</option>
+                                    <option value="customers">Clientes</option>
+                                    <option value="products">Productos/Servicios</option>
+                                    <option value="payments">Pagos</option>
+                                </select>
                             </div>
-                        </form>
-                    </div>
+                            
+                            <div>
+                                <p class="text-sm text-gray-600">
+                                    Paso 2: Descarga la plantilla para el formato correcto.
+                                </p>
+                                <a href="/templates/orders_template.xlsx" download class="text-sm text-indigo-600 hover:underline font-semibold">
+                                    Descargar Plantilla de Ejemplo
+                                </a>
+                            </div>
+
+                            <div>
+                                <InputLabel for="import_file" value="Paso 3: Sube el archivo completado" />
+                                <input 
+                                    id="import_file"
+                                    type="file" 
+                                    @input="importForm.import_file = $event.target.files[0]"
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                                    required
+                                />
+                                <p v-if="importForm.errors.import_file" class="text-sm text-red-600 mt-2">
+                                    {{ importForm.errors.import_file }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex justify-end">
+                            <PrimaryButton :disabled="importForm.processing">
+                                Importar Datos
+                            </PrimaryButton>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
