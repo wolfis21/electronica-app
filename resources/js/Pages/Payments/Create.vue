@@ -1,132 +1,126 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm, Link } from '@inertiajs/vue3';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import SelectInput from '@/Components/SelectInput.vue';
-import { ref } from 'vue';
-import axios from 'axios'; // Para la búsqueda de órdenes
+import { Head, useForm } from '@inertiajs/vue3';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import { debounce } from 'lodash';
 
-// Formulario para los datos del pago
+// --- STATE MANAGEMENT ---
 const paymentForm = useForm({
-    orders_id: null, // ID de la orden seleccionada
-    payment_date: new Date().toISOString().slice(0, 10), // Fecha actual por defecto en formato YYYY-MM-DD
+    orders_id: null,
+    payment_date: new Date().toISOString().slice(0, 10),
     amount: '',
-    currency: 'USD', // Moneda por defecto
-    payment_method: 'cash', // Método de pago por defecto
+    currency: 'USD',
+    payment_method: 'cash',
     reference_number: '',
     note: '',
-    status: 'completed', // Estado por defecto
+    status: 'completed',
 });
 
-// Formulario para la búsqueda de la orden
-const orderSearchForm = useForm({
-    order_id: '', // Este campo se usará como el término de búsqueda 'query'
-});
-
-// Variable reactiva para almacenar la orden seleccionada después de la búsqueda
+const searchQuery = ref('');
+const searchResults = ref([]);
 const selectedOrder = ref(null);
-// Variable reactiva para mostrar errores de búsqueda de la orden
-const orderSearchError = ref('');
+const isLoading = ref(false);
 
-/**
- * Función para buscar una orden por su ID.
- * Realiza una llamada AJAX al backend para obtener los detalles de la orden.
- */
-const searchOrder = async () => {
-    orderSearchError.value = ''; // Limpiar errores anteriores
-    selectedOrder.value = null; // Limpiar orden seleccionada anterior
-    paymentForm.orders_id = null; // Asegurarse de que el orders_id del formulario de pago esté nulo
+// --- STATE PARA TASAS DE CAMBIO ---
+const bcvRate = ref(null);
+const dateBcv = ref(null);
+const ratesLoading = ref(true);
+const ratesError = ref(null);
 
-    // Validar que se haya ingresado un ID de Orden
-    if (!orderSearchForm.order_id) {
-        orderSearchError.value = 'Por favor, introduce un ID de Orden.';
-        return;
-    }
-
+// --- LLAMADA A LA API AL MONTAR EL COMPONENTE ---
+onMounted(async () => {
     try {
-        // Realiza la solicitud GET a la ruta 'payments.searchOrdersLive'
-        // El método searchOrdersLive espera un parámetro 'query'
-        const response = await axios.get(route('payments.searchOrdersLive', { query: orderSearchForm.order_id }));
+        ratesError.value = null;
+        ratesLoading.value = true;
+        const [bcvResponse] = await Promise.all([
+            axios.get('https://pydolarve.org/api/v2/dollar')
+        ]);
 
-        // El método searchOrdersLive devuelve un array de órdenes.
-        // Si se busca por ID, asumimos que esperamos solo una o ninguna.
-        if (response.data && response.data.length > 0) {
-            selectedOrder.value = response.data[0]; // Tomamos la primera orden encontrada
-            paymentForm.orders_id = selectedOrder.value.id; // Asigna el ID de la orden al formulario de pago
-            orderSearchError.value = ''; // Limpia cualquier error anterior
-        } else {
-            // Si no se encontraron órdenes, muestra un mensaje de error
-            orderSearchError.value = 'Orden no encontrada. Verifica el ID.';
-            selectedOrder.value = null;
-            paymentForm.orders_id = null;
-        }
+        bcvRate.value = bcvResponse.data.monitors.bcv.price;
+        dateBcv.value = bcvResponse.data.datetime.date;
 
     } catch (error) {
-        // Manejo de errores de la solicitud AJAX
-        selectedOrder.value = null;
-        paymentForm.orders_id = null;
-        if (error.response) {
-            if (error.response.status === 404) {
-                orderSearchError.value = 'Orden no encontrada. Verifica el ID.';
-            } else if (error.response.status === 403) {
-                orderSearchError.value = 'Acceso denegado. Asegúrate de tener los permisos correctos y de estar autenticado.';
-                console.error('Error 403: Acceso denegado. Posiblemente no autenticado o sin permisos.');
-            } else if (error.response.data && error.response.data.errors && error.response.data.errors.query) {
-                // Si hay errores de validación específicos del backend para 'query'
-                orderSearchError.value = error.response.data.errors.query[0];
-            } else {
-                orderSearchError.value = 'Error al buscar la orden. Inténtalo de nuevo.';
-            }
-        } else {
-            orderSearchError.value = 'Error de red o desconocido al buscar la orden.';
-        }
-        console.error('Error searching order:', error);
+        console.error("Error fetching exchange rates:", error);
+        ratesError.value = "No se pudieron cargar las tasas de cambio.";
+    } finally {
+        ratesLoading.value = false;
     }
+});
+
+
+// --- ARRAYS PARA SELECTS ---
+const currencies = ['USD', 'EUR', 'VES', 'COP'];
+const paymentStatuses = [
+    { value: 'completed', label: 'Completado' },
+    { value: 'pending', label: 'Pendiente' },
+    { value: 'failed', label: 'Fallido' },
+    { value: 'refunded', label: 'Reembolsado' },
+];
+
+// --- COMPUTED PROPERTIES ---
+const pendingBalance = computed(() => {
+    if (!selectedOrder.value) return 0;
+    return Number(selectedOrder.value.pending_balance);
+});
+
+// --- METHODS ---
+const searchOrders = debounce(async () => {
+    if (searchQuery.value.length < 2) {
+        searchResults.value = [];
+        return;
+    }
+    isLoading.value = true;
+    try {
+        const response = await axios.get(route('payments.searchOrdersForPayment', { query: searchQuery.value }));
+        searchResults.value = response.data;
+    } catch (error) {
+        console.error("Error buscando órdenes:", error);
+        searchResults.value = [];
+    } finally {
+        isLoading.value = false;
+    }
+}, 300);
+
+const selectOrder = (order) => {
+    selectedOrder.value = order;
+    paymentForm.orders_id = order.id;
+    searchQuery.value = `Orden #${order.id} - ${order.customer_name}`;
+    searchResults.value = [];
 };
 
-/**
- * Función para enviar el formulario de registro de pago.
- */
+const setFullPayment = () => {
+    paymentForm.amount = pendingBalance.value.toFixed(2);
+};
+
+const resetAll = () => {
+    paymentForm.reset();
+    selectedOrder.value = null;
+    searchQuery.value = '';
+    searchResults.value = [];
+};
+
 const submitPayment = () => {
-    // Envía el formulario de pago a la ruta 'payments.store'
     paymentForm.post(route('payments.store'), {
         onSuccess: () => {
-            // Si el pago se crea exitosamente, resetear los formularios
-            paymentForm.reset();
-            selectedOrder.value = null;
-            orderSearchForm.reset();
-            alert('Pago registrado exitosamente.'); // Notificación de éxito
+            alert('Pago registrado exitosamente.');
+            resetAll();
         },
         onError: (errors) => {
-            // Manejo de errores en caso de fallo al crear el pago
             console.error('Error al crear pago:', errors);
-            alert('Hubo un error al registrar el pago. Por favor, revisa los campos.'); // Notificación de error
         },
     });
 };
 
-// Opciones disponibles para los campos de selección (select)
-const currencies = ['USD', 'EUR', 'GBP', 'VES']; // Lista de monedas
-const paymentMethods = [
-    { value: 'cash', label: 'Efectivo' },
-    { value: 'card', label: 'Tarjeta' },
-    { value: 'bank_transfer', label: 'Transferencia Bancaria' },
-    { value: 'other', label: 'Otro' },
-];
-const paymentStatuses = [
-    { value: 'pending', label: 'Pendiente' },
-    { value: 'completed', label: 'Completado' },
-    { value: 'failed', label: 'Fallido' },
-    { value: 'refunded', label: 'Reembolsado' },
-];
+// Formato específico para Bolívares
+const formatVes = (amount) => {
+    if (amount === null || typeof amount === 'undefined') return 'N/A';
+    return new Intl.NumberFormat('es-VE', { style: 'currency', currency: 'VES' }).format(amount);
+};
 </script>
 
 <template>
     <Head title="Registrar Pago" />
-
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Registrar Nuevo Pago</h2>
@@ -134,135 +128,120 @@ const paymentStatuses = [
 
         <div class="py-12">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-8 space-y-8">
 
-                    <!-- Sección de Búsqueda de Orden -->
-                    <div class="mb-8 p-4 border rounded-md bg-gray-50">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Paso 1: Buscar Orden</h3>
-                        <form @submit.prevent="searchOrder" class="flex items-center space-x-4">
+                    <!-- Card: Referencia Cambiaria -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-sm font-medium text-gray-700 flex items-center">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                            Referencia Cambiaria (BCV)
+                        </h3>
+                        <div v-if="ratesLoading" class="mt-2 text-sm text-gray-500">Cargando tasas...</div>
+                        <div v-else-if="ratesError" class="mt-2 text-sm text-red-600">{{ ratesError }}</div>
+                        <dl v-else class="mt-2 grid grid-cols-2 gap-x-4">
                             <div>
-                                <InputLabel for="order_id" value="ID de Orden" />
-                                <TextInput
-                                    id="order_id"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    v-model="orderSearchForm.order_id"
-                                    required
-                                    autofocus
-                                />
-                                <!-- Muestra el error de búsqueda de la orden -->
-                                <InputError :message="orderSearchError || orderSearchForm.errors.order_id" class="mt-2" />
+                                <dt class="text-xs font-medium text-gray-500">Tasa USD - {{ dateBcv }}</dt>
+                                <dd class="text-sm text-gray-900 font-mono">{{ formatVes(bcvRate) }}</dd>
                             </div>
-                            <PrimaryButton :class="{ 'opacity-25': orderSearchForm.processing }" :disabled="orderSearchForm.processing" class="mt-6">
-                                Buscar Orden
-                            </PrimaryButton>
-                        </form>
-
-                        <!-- Muestra los detalles de la orden seleccionada si existe -->
-                        <div v-if="selectedOrder" class="mt-6 p-4 border-t pt-4">
-                            <h4 class="font-semibold text-gray-800 mb-2">Detalles de la Orden Seleccionada:</h4>
-                            <p class="text-gray-700"><strong>ID:</strong> #{{ selectedOrder.id }}</p>
-                            <p class="text-gray-700"><strong>Equipo:</strong> {{ selectedOrder.name_equip }}</p>
-                            <p class="text-gray-700"><strong>Serial:</strong> {{ selectedOrder.serial || 'N/A' }}</p>
-                            <p class="text-gray-700"><strong>Cliente:</strong> {{ selectedOrder.customer?.fullname || 'N/A' }} (DNI: {{ selectedOrder.customer?.dni || 'N/A' }})</p>
-                            <p class="text-gray-700"><strong>Responsable:</strong> {{ selectedOrder.user?.name || 'N/A' }}</p>
-                            <p class="text-gray-700"><strong>Estado de la Orden:</strong> {{ selectedOrder.status.replace(/_/g, ' ') }}</p>
-                        </div>
+                        </dl>
                     </div>
 
-                    <!-- Sección de Registro de Pago (solo se muestra si hay una orden seleccionada) -->
-                    <div v-if="selectedOrder">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Paso 2: Datos del Pago</h3>
-                        <form @submit.prevent="submitPayment">
+                    <!-- PASO 1: BUSCAR ORDEN -->
+                    <div class="relative border-t pt-8">
+                        <label for="search" class="block text-sm font-medium text-gray-700">Buscar Orden por ID o Cliente</label>
+                        <input type="text" id="search" v-model="searchQuery" @input="searchOrders"
+                               placeholder="Escribe para buscar..."
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        
+                        <ul v-if="searchResults.length > 0" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-auto">
+                            <li v-for="order in searchResults" :key="order.id" @click="selectOrder(order)"
+                                class="px-4 py-3 cursor-pointer hover:bg-indigo-50 border-b last:border-b-0">
+                                <p class="font-semibold text-gray-800">Orden #{{ order.id }} - {{ order.name_equip }}</p>
+                                <p class="text-sm text-gray-600">{{ order.customer_name }}</p>
+                                <p class="text-sm text-red-600 font-medium">Pendiente: ${{ Number(order.pending_balance).toFixed(2) }}</p>
+                            </li>
+                        </ul>
+                        <p v-if="isLoading" class="text-sm text-gray-500 mt-2">Buscando...</p>
+                    </div>
+
+                    <!-- PASO 2: REGISTRAR PAGO -->
+                    <div v-if="selectedOrder" class="border-t pt-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-lg mb-8">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Total a Pagar</h4>
+                                <p class="text-2xl font-bold text-gray-800">${{ Number(selectedOrder.total_due).toFixed(2) }}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Total Pagado</h4>
+                                <p class="text-2xl font-bold text-green-600">${{ Number(selectedOrder.total_paid).toFixed(2) }}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Saldo Pendiente</h4>
+                                <p class="text-2xl font-bold text-red-600">${{ pendingBalance.toFixed(2) }}</p>
+                            </div>
+                        </div>
+
+                        <form @submit.prevent="submitPayment" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <InputLabel for="payment_date" value="Fecha de Pago" />
-                                    <TextInput
-                                        id="payment_date"
-                                        type="date"
-                                        class="mt-1 block w-full"
-                                        v-model="paymentForm.payment_date"
-                                        required
-                                    />
-                                    <InputError :message="paymentForm.errors.payment_date" class="mt-2" />
+                                    <label for="payment_date" class="block text-sm font-medium text-gray-700">Fecha de Pago</label>
+                                    <input type="date" id="payment_date" v-model="paymentForm.payment_date" required class="mt-1 block w-full input-style">
+                                </div>
+                                <div>
+                                    <label for="amount" class="block text-sm font-medium text-gray-700">Monto a Pagar</label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="number" id="amount" v-model="paymentForm.amount" required step="0.01" :max="pendingBalance"
+                                               class="flex-1 block w-full rounded-none rounded-l-md input-style">
+                                        <button type="button" @click="setFullPayment"
+                                                class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm hover:bg-gray-100">
+                                            Pagar Completo
+                                        </button>
+                                    </div>
+                                    <p v-if="paymentForm.errors.amount" class="text-sm text-red-600 mt-1">{{ paymentForm.errors.amount }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label for="currency" class="block text-sm font-medium text-gray-700">Moneda del Pago</label>
+                                    <select id="currency" v-model="paymentForm.currency" required class="mt-1 block w-full input-style">
+                                        <option v-for="currency in currencies" :key="currency" :value="currency">{{ currency }}</option>
+                                    </select>
+                                    <p v-if="paymentForm.errors.currency" class="text-sm text-red-600 mt-1">{{ paymentForm.errors.currency }}</p>
                                 </div>
 
                                 <div>
-                                    <InputLabel for="amount" value="Monto" />
-                                    <TextInput
-                                        id="amount"
-                                        type="number"
-                                        step="0.01"
-                                        class="mt-1 block w-full"
-                                        v-model="paymentForm.amount"
-                                        required
-                                    />
-                                    <InputError :message="paymentForm.errors.amount" class="mt-2" />
+                                    <label for="payment_method" class="block text-sm font-medium text-gray-700">Método de Pago</label>
+                                    <select id="payment_method" v-model="paymentForm.payment_method" required class="mt-1 block w-full input-style">
+                                        <option value="cash">Efectivo</option>
+                                        <option value="card">Tarjeta</option>
+                                        <option value="bank_transfer">Transferencia</option>
+                                        <option value="other">Otro</option>
+                                    </select>
                                 </div>
 
                                 <div>
-                                    <InputLabel for="currency" value="Moneda" />
-                                    <SelectInput
-                                        id="currency"
-                                        class="mt-1 block w-full"
-                                        v-model="paymentForm.currency"
-                                        :options="currencies"
-                                        required
-                                    />
-                                    <InputError :message="paymentForm.errors.currency" class="mt-2" />
+                                    <label for="status" class="block text-sm font-medium text-gray-700">Estado del Pago</label>
+                                    <select id="status" v-model="paymentForm.status" required class="mt-1 block w-full input-style">
+                                        <option v-for="status in paymentStatuses" :key="status.value" :value="status.value">{{ status.label }}</option>
+                                    </select>
+                                    <p v-if="paymentForm.errors.status" class="text-sm text-red-600 mt-1">{{ paymentForm.errors.status }}</p>
                                 </div>
 
                                 <div>
-                                    <InputLabel for="payment_method" value="Método de Pago" />
-                                    <SelectInput
-                                        id="payment_method"
-                                        class="mt-1 block w-full"
-                                        v-model="paymentForm.payment_method"
-                                        :options="paymentMethods"
-                                        required
-                                    />
-                                    <InputError :message="paymentForm.errors.payment_method" class="mt-2" />
+                                    <label for="reference_number" class="block text-sm font-medium text-gray-700">N° de Referencia (Opcional)</label>
+                                    <input type="text" id="reference_number" v-model="paymentForm.reference_number" class="mt-1 block w-full input-style">
                                 </div>
 
-                                <div class="col-span-1 md:col-span-2">
-                                    <InputLabel for="reference_number" value="Número de Referencia (Opcional)" />
-                                    <TextInput
-                                        id="reference_number"
-                                        type="text"
-                                        class="mt-1 block w-full"
-                                        v-model="paymentForm.reference_number"
-                                    />
-                                    <InputError :message="paymentForm.errors.reference_number" class="mt-2" />
-                                </div>
-
-                                <div class="col-span-1 md:col-span-2">
-                                    <InputLabel for="note" value="Notas (Opcional)" />
-                                    <textarea
-                                        id="note"
-                                        class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                        rows="3"
-                                        v-model="paymentForm.note"
-                                    ></textarea>
-                                    <InputError :message="paymentForm.errors.note" class="mt-2" />
-                                </div>
-
-                                <div>
-                                    <InputLabel for="status" value="Estado del Pago" />
-                                    <SelectInput
-                                        id="status"
-                                        class="mt-1 block w-full"
-                                        v-model="paymentForm.status"
-                                        :options="paymentStatuses"
-                                        required
-                                    />
-                                    <InputError :message="paymentForm.errors.status" class="mt-2" />
+                                <div class="md:col-span-2">
+                                    <label for="note" class="block text-sm font-medium text-gray-700">Notas (Opcional)</label>
+                                    <textarea id="note" v-model="paymentForm.note" rows="3" class="mt-1 block w-full input-style"></textarea>
                                 </div>
                             </div>
-
-                            <div class="flex items-center justify-end mt-6">
-                                <PrimaryButton :class="{ 'opacity-25': paymentForm.processing }" :disabled="paymentForm.processing || !selectedOrder">
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" @click="resetAll" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancelar</button>
+                                <button type="submit" :disabled="paymentForm.processing"
+                                        class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 disabled:opacity-50">
                                     Registrar Pago
-                                </PrimaryButton>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -271,3 +250,9 @@ const paymentStatuses = [
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+.input-style {
+    @apply border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500;
+}
+</style>

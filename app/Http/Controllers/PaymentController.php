@@ -25,18 +25,14 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        // Carga los pagos con su orden asociada para mostrar detalles relevantes
-        $payments = Payment::with('order.customer', 'order.user') // Carga la orden, y dentro de la orden, el cliente y el usuario
-                            ->orderBy('payment_date', 'desc')
-                            ->paginate(10);
-
+        $payments = Payment::with('order.customer')->orderBy('payment_date', 'desc')->paginate(10);
         return Inertia::render('Payments/Index', [
             'payments' => $payments,
-            'can' => [
+            'can' => [ 
                 'create_payments' => auth()->user()->can('create_payments'),
                 'edit_payments' => auth()->user()->can('edit_payments'),
                 'delete_payments' => auth()->user()->can('delete_payments'),
-                'view_orders' => auth()->user()->can('view_all_orders'), // Permiso para ver órdenes si es necesario en la vista de pagos
+                'view_orders' => auth()->user()->can('view_all_orders'),
             ],
         ]);
     }
@@ -56,31 +52,59 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
+        // --- CAMBIO 1: Añadir validación para currency y status ---
         $request->validate([
-            'orders_id' => ['required', 'exists:orders,id'], // Asegura que la orden exista
+            'orders_id' => ['required', 'exists:orders,id'],
             'payment_date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0.01'],
-            'currency' => ['required', 'string', 'max:3'], // Ej. USD, EUR
+            'currency' => ['required', 'string', 'max:10'],
             'payment_method' => ['required', 'string', Rule::in(['cash', 'card', 'bank_transfer', 'other'])],
             'reference_number' => ['nullable', 'string', 'max:255'],
             'note' => ['nullable', 'string', 'max:1000'],
             'status' => ['required', 'string', Rule::in(['pending', 'completed', 'failed', 'refunded'])],
         ]);
 
-        DB::transaction(function () use ($request) {
-            Payment::create([
-                'orders_id' => $request->orders_id,
+        $order = Order::with(['reviews', 'payments'])->findOrFail($request->orders_id);
+        
+        if ($order->reviews->isEmpty()) {
+            throw ValidationException::withMessages(['orders_id' => 'Esta orden no tiene una revisión y no se le pueden registrar pagos.']);
+        }
+
+        $totalDue = $order->reviews->first()->budget;
+        $totalPaid = $order->payments->sum('amount');
+        $pendingBalance = $totalDue - $totalPaid;
+
+        if ($request->amount > $pendingBalance + 0.001) {
+            throw ValidationException::withMessages(['amount' => 'El monto del pago no puede ser mayor que el saldo pendiente de $' . number_format($pendingBalance, 2)]);
+        }
+
+        DB::transaction(function () use ($request, $order) {
+            // --- CAMBIO 2: Usar los valores del request en lugar de los hardcodeados ---
+            $order->payments()->create([
                 'payment_date' => $request->payment_date,
                 'amount' => $request->amount,
-                'currency' => $request->currency,
+                'currency' => $request->currency, // Usar la moneda del formulario
                 'payment_method' => $request->payment_method,
                 'reference_number' => $request->reference_number,
                 'note' => $request->note,
-                'status' => $request->status,
+                'status' => $request->status, // Usar el estado del formulario
             ]);
+
+            // Solo actualiza el estado de la orden si el pago está 'completado'
+            if ($request->status === 'completed') {
+                $newTotalPaid = $order->fresh()->payments()->where('status', 'completed')->sum('amount');
+                $newBalance = $order->reviews->first()->budget - $newTotalPaid;
+
+                if ($newBalance <= 0) {
+                    $order->payment_status = 'paid';
+                } else {
+                    $order->payment_status = 'partial';
+                }
+                $order->save();
+            }
         });
 
-        return redirect()->route('payments.index')->with('success', 'Pago creado exitosamente.');
+        return redirect()->route('payments.index')->with('success', 'Pago registrado y estado de la orden actualizado.');
     }
 
     /**
@@ -159,28 +183,36 @@ class PaymentController extends Controller
      * Busca una orden por su ID para el frontend (usado en el formulario de creación/edición de pagos).
      */
 // En PaymentController.php
-    public function searchOrdersLive(Request $request)
+    public function searchOrdersForPayment(Request $request)
     {
-        $searchTerm = $request->input('query'); // Término de búsqueda
+        $searchTerm = $request->input('query');
 
-        // Intenta buscar por ID exacto si el término es numérico, de lo contrario, usa búsqueda parcial en otros campos.
-        if (is_numeric($searchTerm)) {
-            $orders = Order::with('customer', 'user')
-                            ->where('id', $searchTerm) // Búsqueda por ID exacto
-                            ->limit(1) // Solo queremos una coincidencia si es por ID
-                            ->get();
-        } else {
-            // Si no es un ID numérico, buscar por nombre de equipo o nombre de cliente
-            $orders = Order::with('customer', 'user')
-                            ->where(function($q) use ($searchTerm) {
-                                $q->where('name_equip', 'like', "%{$searchTerm}%")
-                                  ->orWhereHas('customer', function($q2) use ($searchTerm) {
-                                      $q2->where('fullname', 'like', "%{$searchTerm}%");
-                                  });
-                            })
-                            ->limit(10) // Limitar resultados para autocompletado si hay muchos
-                            ->get();
-        }
+        $orders = Order::with(['customer', 'reviews', 'payments'])
+            ->where(function($q) use ($searchTerm) {
+                $q->where('id', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('customer', function($q2) use ($searchTerm) {
+                      $q2->where('fullname', 'like', "%{$searchTerm}%");
+                  });
+            })
+            ->whereHas('reviews') // <-- SOLO ÓRDENES CON REVISIÓN
+            ->where('payment_status', '!=', 'paid') // <-- SOLO ÓRDENES CON DEUDA
+            ->limit(10)
+            ->get()
+            ->map(function ($order) {
+                // Calculamos y añadimos los totales para que el frontend los reciba listos
+                $totalDue = $order->reviews->first()->budget ?? 0;
+                $totalPaid = $order->payments->sum('amount');
+                
+                return [
+                    'id' => $order->id,
+                    'name_equip' => $order->name_equip,
+                    'customer_name' => $order->customer->fullname,
+                    // --- CAMBIOS AQUÍ: Castear a float para asegurar que sean números en el JSON ---
+                    'total_due' => (float) $totalDue,
+                    'total_paid' => (float) $totalPaid,
+                    'pending_balance' => (float) ($totalDue - $totalPaid),
+                ];
+            });
 
         return response()->json($orders);
     }

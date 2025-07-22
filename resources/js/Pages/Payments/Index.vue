@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3'; // <-- 1. IMPORTAR router
 import Pagination from '@/Components/Pagination.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 
@@ -9,12 +9,21 @@ const props = defineProps({
     can: Object, // Objeto de permisos
 });
 
+// --- 2. FUNCIÓN DE ELIMINACIÓN CORREGIDA ---
 const confirmDelete = (paymentId) => {
     if (confirm('¿Estás seguro de que quieres eliminar este pago? Esta acción es irreversible.')) {
-        // Lógica para eliminar el pago
-        // Inertia.delete(route('payments.destroy', paymentId));
-        console.log(`Eliminar pago con ID: ${paymentId}`);
-        alert('Funcionalidad de eliminación no implementada en este ejemplo.');
+        // Usar router.delete para enviar la solicitud
+        router.delete(route('payments.destroy', paymentId), {
+            preserveScroll: true, // Evita que la página salte al inicio
+            onSuccess: () => {
+                // Opcional: Mostrar una notificación más elegante
+                // alert('Pago eliminado exitosamente.');
+            },
+            onError: (errors) => {
+                alert('Hubo un error al eliminar el pago.');
+                console.error(errors);
+            }
+        });
     }
 };
 

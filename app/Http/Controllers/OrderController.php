@@ -31,7 +31,7 @@ class OrderController extends Controller
         $search = $request->input('search');
         $status = $request->input('status'); // <-- Nuevo: Obtenemos el término de estado
 
-        $orders = Order::with('customer', 'user')
+        $orders = Order::with('customer', 'user', 'reviews')
             ->when($search, function ($query, $search) {
                 $query->where('id', 'like', "%{$search}%")
                     ->orWhere('name_equip', 'like', "%{$search}%")
@@ -292,5 +292,51 @@ class OrderController extends Controller
         // 3. Pasamos la orden y LA REVISIÓN a la vista del PDF.
         $pdf = PDF::loadView('pdfs.payment_receipt', compact('order', 'review'));
         return $pdf->stream('recibo-pago-'.$order->id.'.pdf');
+    }
+
+    public function confirmPickup(Order $order)
+    {
+        // 1. Cambia el estado SOLO si es necesario
+        if (!in_array($order->status, [ 'Cancelado'])) {
+            $order->update(['status' => 'Completado']);
+        }
+
+        // 2. Carga las relaciones necesarias
+        $order->load(['customer', 'user']);
+        $review = $order->reviews()->with('products')->first(); // Carga la revisión y sus productos
+        $company = Company::first();
+
+        if (!$review) {
+            return response('<h1>Error</h1><p>La orden no tiene una revisión técnica asociada.</p>', 404)
+                    ->header('Content-Type', 'text/html');
+        }
+
+        // 3. 👇 CÁLCULO DINÁMICO DE COSTOS 👇
+        $partsCost = 0;
+        $serviceCost = 0;
+
+        foreach ($review->products as $item) {
+            $itemCost = $item->pivot->quantity * $item->pivot->price_at_time_of_review;
+            if ($item->is_service) {
+                $serviceCost += $itemCost; // Suma si es un servicio
+            } else {
+                $partsCost += $itemCost; // Suma si es un repuesto/producto
+            }
+        }
+
+        $totalCost = $partsCost + $serviceCost;
+
+        // 4. Pasa las nuevas variables a la vista del PDF
+        $pdf = PDF::loadView('pdfs.delivery_confirmation', compact(
+            'order', 
+            'review', 
+            'company',
+            'partsCost',      // <--- Nuevo
+            'serviceCost',    // <--- Nuevo
+            'totalCost'       // <--- Nuevo
+        ));
+
+        $filename = 'confirmacion-retiro-' . $order->id . '.pdf';
+        return $pdf->stream($filename);
     }
 }

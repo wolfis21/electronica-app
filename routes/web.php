@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
     // Ruta de Analytics
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
+    Route::get('/orders/{order}/confirm-pickup', [OrderController::class, 'confirmPickup'])
+        ->name('orders.confirmPickup')
+        ->middleware(['auth']);
 
     // Rutas anidadas para Reviews
     Route::prefix('orders/{order}')->group(function () {
@@ -93,7 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}/documents/delivery-order', [OrderDocumentController::class, 'generateDeliveryOrder'])
         ->name('orders.documents.delivery');
         // Rutas para pagos
-        Route::get('/payments/search-orders-live', [PaymentController::class, 'searchOrdersLive'])->name('payments.searchOrdersLive');
+        Route::get('/payments/search-orders', [PaymentController::class, 'searchOrdersForPayment'])->name('payments.searchOrdersForPayment');
         Route::resource('payments', PaymentController::class);
 });
 
