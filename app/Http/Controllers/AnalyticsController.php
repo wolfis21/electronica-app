@@ -53,10 +53,11 @@ class AnalyticsController extends Controller
             ->withAvg(['orders' => function ($query) use ($startDate, $endDate) {
                 $query->where('status', 'Completado')
                       ->whereBetween('updated_at', [$startDate, $endDate]);
-            }], DB::raw('TIMESTAMPDIFF(SECOND, created_at, updated_at)')) // <-- CAMBIO CLAVE AQUÍ
+            }], DB::raw('EXTRACT(EPOCH FROM (updated_at - created_at))'))
             ->get()
             ->map(function ($employee) {
-                $avg_seconds = $employee->orders_avg_timestampdiff_second_created_at_updated_at; // El nombre del atributo cambiará
+                // El nombre de la columna generada cambia un poco, así que lo ajustamos
+                $avg_seconds = $employee->orders_avg_extract_epoch_from_updated_at_created_at;
                 $avg_days = $avg_seconds ? $avg_seconds / 86400 : 0;
                 $employee->avg_completion_time_formatted = round($avg_days, 1) . ' días';
                 return $employee;
