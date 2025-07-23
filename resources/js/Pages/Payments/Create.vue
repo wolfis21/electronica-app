@@ -145,15 +145,15 @@ const formatVes = (amount) => {
     <Head title="Registrar Pago" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Registrar Nuevo Pago</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Registrar Nuevo Pago</h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900 dark:text-gray-100">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
                     <!-- Card: Referencia Cambiaria -->
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-800">
                         <h3 class="text-sm font-medium text-gray-700 flex items-center">
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                             Referencia Cambiaria (BCV)
@@ -171,7 +171,7 @@ const formatVes = (amount) => {
                     <!-- SECCIÓN 1: LISTA DE ÓRDENES ELEGIBLES (Nuevo Flujo) -->
                     <div v-if="!selectedOrder" class="mt-8">
                         <div v-if="eligibleOrders.length > 0">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">
                                 Seleccione una Orden para Registrar el Pago
                             </h3>
                             <TextInput
@@ -181,17 +181,17 @@ const formatVes = (amount) => {
                                 placeholder="Buscar por ID, Equipo o Cliente..."
                             />
                             <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
                                         <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Equipo</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Cliente</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Saldo Pendiente</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Saldo Pendiente</th>
                                             <th scope="col" class="relative px-6 py-3"></th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    <tbody class="bg-white divide-y divide-gray-200 text-gray-700">
                                         <tr v-for="order in filteredOrders" :key="order.id">
                                             <td class="px-6 py-4 whitespace-nowrap">{{ order.id }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ order.name_equip }}</td>
@@ -207,16 +207,16 @@ const formatVes = (amount) => {
                                 </table>
                             </div>
                         </div>
-                        <div v-else class="text-center py-8 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                        <div v-else class="text-center py-8 px-4 border-2 border-dashed border-gray-300 rounded-lg">
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No hay órdenes pendientes de pago</h3>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Todas las órdenes con revisiones han sido pagadas o no hay revisiones asignadas.</p>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay órdenes pendientes de pago</h3>
+                            <p class="mt-1 text-sm text-gray-500">Todas las órdenes con revisiones han sido pagadas o no hay revisiones asignadas.</p>
                         </div>
                     </div>
 
                     <!-- PASO 2: REGISTRAR PAGO (Mantenemos tu diseño original) -->
-                    <div v-if="selectedOrder" class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-lg mb-8 dark:bg-gray-900/50">
+                    <div v-if="selectedOrder" class="border-t border-gray-200 pt-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-lg mb-8 text-gray-800">
                             <div>
                                 <h4 class="text-sm font-medium text-gray-500">Total a Pagar</h4>
                                 <p class="text-2xl font-bold text-gray-800">${{ Number(selectedOrder.total_due).toFixed(2) }}</p>
@@ -245,18 +245,18 @@ const formatVes = (amount) => {
                                     <InputLabel for="amount" value="Monto a Pagar" />
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <TextInput type="number" id="amount" v-model="form.amount" required step="0.01" :max="pendingBalance"
-                                               class="flex-1 block w-full rounded-none rounded-l-md" />
-                                        <PrimaryButton type="button" @click="setFullPayment"
-                                                class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm hover:bg-gray-100">
+                                               class="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                        <button type="button" @click="setFullPayment"
+                                                class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                             Pagar Completo
-                                        </PrimaryButton>
+                                        </button>
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.amount" />
                                 </div>
                                 
                                 <div>
                                     <InputLabel for="currency" value="Moneda del Pago" />
-                                    <select id="currency" v-model="form.currency" required class="mt-1 block w-full input-style">
+                                    <select id="currency" v-model="form.currency" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                         <option v-for="currency in currencies" :key="currency" :value="currency">{{ currency }}</option>
                                     </select>
                                     <InputError class="mt-2" :message="form.errors.currency" />
@@ -264,14 +264,14 @@ const formatVes = (amount) => {
 
                                 <div>
                                     <InputLabel for="payment_method" value="Método de Pago" />
-                                    <select id="payment_method" v-model="form.payment_method" required class="mt-1 block w-full input-style">
+                                    <select id="payment_method" v-model="form.payment_method" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                         <option v-for="method in paymentMethods" :key="method.value" :value="method.value">{{ method.label }}</option>
                                     </select>
                                 </div>
 
                                 <div>
                                     <InputLabel for="status" value="Estado del Pago" />
-                                    <select id="status" v-model="form.status" required class="mt-1 block w-full input-style">
+                                    <select id="status" v-model="form.status" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                         <option v-for="status in paymentStatuses" :key="status.value" :value="status.value">{{ status.label }}</option>
                                     </select>
                                     <InputError class="mt-2" :message="form.errors.status" />
@@ -288,7 +288,7 @@ const formatVes = (amount) => {
                                 </div>
                             </div>
                             <div class="flex justify-end space-x-4">
-                                <button type="button" @click="resetAll" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">Cancelar</button>
+                                <button type="button" @click="resetAll" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancelar</button>
                                 <PrimaryButton :disabled="form.processing">
                                     Registrar Pago
                                 </PrimaryButton>
@@ -300,9 +300,3 @@ const formatVes = (amount) => {
         </div>
     </AuthenticatedLayout>
 </template>
-
-<style scoped>
-.input-style {
-    @apply border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm;
-}
-</style>
