@@ -44,24 +44,51 @@ class AnalyticsController extends Controller
         $ordersByStatus = DB::table('orders')->whereBetween('created_at', [$startDate, $endDate])->select('status', DB::raw('count(*) as count'))->groupBy('status')->get();
 
         // --- ANÁLISIS DE RENDIMIENTO DE EMPLEADOS (Lógica modificada para role_id = 3 y MySQL TIMESTAMPDIFF) ---
-        $employeePerformance = User::where('role_id', 3)
-            ->select('users.id', 'users.name')
-            ->withCount(['orders' => function ($query) use ($startDate, $endDate) {
-                $query->where('status', 'Completado')
-                      ->whereBetween('updated_at', [$startDate, $endDate]);
-            }])
-            ->withAvg(['orders' => function ($query) use ($startDate, $endDate) {
-                $query->where('status', 'Completado')
-                      ->whereBetween('updated_at', [$startDate, $endDate]);
-            }], DB::raw('EXTRACT(EPOCH FROM (updated_at - created_at))'))
-            ->get()
-            ->map(function ($employee) {
-                // El nombre de la columna generada cambia un poco, así que lo ajustamos
-                $avg_seconds = $employee->orders_avg_extract_epoch_from_updated_at_created_at;
-                $avg_days = $avg_seconds ? $avg_seconds / 86400 : 0;
-                $employee->avg_completion_time_formatted = round($avg_days, 1) . ' días';
-                return $employee;
-            });
+        // 1. Determinar el driver de la base de datos actual
+        $driver = DB::connection()->getDriverName();
+
+        // 2. Definir la expresión SQL correcta con un alias consistente ('avg_completion_seconds')
+        $avgTimeDiffRaw = null;
+        if ($driver === 'mysql') {
+            //  MySQL
+            $employeePerformance = User::where('role_id', 3)
+                ->select('users.id', 'users.name')
+                ->withCount(['orders' => function ($query) use ($startDate, $endDate) {
+                    $query->where('status', 'Completado')
+                        ->whereBetween('updated_at', [$startDate, $endDate]);
+                }])
+                ->withAvg(['orders' => function ($query) use ($startDate, $endDate) {
+                    $query->where('status', 'Completado')
+                        ->whereBetween('updated_at', [$startDate, $endDate]);
+                }], DB::raw('TIMESTAMPDIFF(SECOND, created_at, updated_at)')) // <-- CAMBIO CLAVE AQUÍ
+                ->get()
+                ->map(function ($employee) {
+                    $avg_seconds = $employee->orders_avg_timestampdiff_second_created_at_updated_at; // El nombre del atributo cambiará
+                    $avg_days = $avg_seconds ? $avg_seconds / 86400 : 0;
+                    $employee->avg_completion_time_formatted = round($avg_days, 1) . ' días';
+                    return $employee;
+                });
+        } else {
+                //postgress
+            $employeePerformance = User::where('role_id', 3)
+                ->select('users.id', 'users.name')
+                ->withCount(['orders' => function ($query) use ($startDate, $endDate) {
+                    $query->where('status', 'Completado')
+                        ->whereBetween('updated_at', [$startDate, $endDate]);
+                }])
+                ->withAvg(['orders' => function ($query) use ($startDate, $endDate) {
+                    $query->where('status', 'Completado')
+                        ->whereBetween('updated_at', [$startDate, $endDate]);
+                }], DB::raw('EXTRACT(EPOCH FROM (updated_at - created_at))'))
+                ->get()
+                ->map(function ($employee) {
+                    // El nombre de la columna generada cambia un poco, así que lo ajustamos
+                    $avg_seconds = $employee->orders_avg_extract_epoch_from_updated_at_created_at;
+                    $avg_days = $avg_seconds ? $avg_seconds / 86400 : 0;
+                    $employee->avg_completion_time_formatted = round($avg_days, 1) . ' días';
+                    return $employee;
+                });
+        }
             
         // --- ENVIAR DATOS A LA VISTA ---
         return Inertia::render('Analytics/Index', [
