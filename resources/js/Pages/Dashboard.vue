@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import PieChart from '@/Components/Piechart.vue';
+import PieChart from '@/Components/PieChart.vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { ref, onMounted, onUnmounted } from 'vue'; // Importa onMounted y onUnmounted
