@@ -21,7 +21,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     $companyName = 'Electronica Tp-Link';
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -30,7 +30,9 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+}); */
+
+Route::redirect('/', '/login');
 
 
 Route::get('/dashboard', DashboardController::class)
@@ -107,9 +109,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/importar', [ImportController::class, 'import'])->name('import.store');
 });
 
-Route::get('/', [PageController::class, 'welcome'])->name('welcome');
+/* Route::get('/', [PageController::class, 'welcome'])->name('welcome');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
-Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
+Route::get('/contacto', [PageController::class, 'contact'])->name('contact'); */
 
 require __DIR__ . '/auth.php';
