@@ -45,7 +45,7 @@ const ShieldCheckIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "
 const BuildingIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('rect', { x: '4', y: '2', width: '16', height: '20', rx: '2', ry: '2' }), h('path', { d: 'M9 22v-4h6v4' }), h('path', { d: 'M8 6h.01' }), h('path', { d: 'M16 6h.01' }), h('path', { d: 'M12 6h.01' }), h('path', { d: 'M12 10h.01' }), h('path', { d: 'M12 14h.01' }), h('path', { d: 'M16 10h.01' }), h('path', { d: 'M16 14h.01' }), h('path', { d: 'M8 10h.01' }), h('path', { d: 'M8 14h.01' })]));
 const UsersIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' }), h('circle', { cx: '9', cy: '7', r: '4' }), h('path', { d: 'M23 21v-2a4 4 0 0 0-3-3.87' }), h('path', { d: 'M16 3.13a4 4 0 0 1 0 7.75' })]));
 const BriefcaseIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('rect', { x: '2', y: '7', width: '20', height: '14', rx: '2', ry: '2' }), h('path', { d: 'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16' })]));
-const DollarSignIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2"}, [h('line',{x1:'12',y1:'1',x2:'12',y2:'23'}),h('path',{d:'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'})]));
+const DollarSignIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('line', { x1: '12', y1: '1', x2: '12', y2: '23' }), h('path', { d: 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' })]));
 
 
 // --- ESTRUCTURA DEL MENÚ (RESTAURADA) ---
@@ -87,42 +87,45 @@ const filteredMenuItems = computed(() => {
 
 <template>
     <div class="relative min-h-screen lg:flex">
-        <div v-show="isSidebarOpen" @click="isSidebarOpen = false" class="fixed inset-0 z-20 bg-black opacity-50 lg:hidden" aria-hidden="true"></div>
+        <div v-show="isSidebarOpen" @click="isSidebarOpen = false"
+            class="fixed inset-0 z-20 bg-black opacity-50 lg:hidden" aria-hidden="true"></div>
 
-        <aside 
-            :class="[
-                'fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gray-800 text-white transform transition-transform duration-300 ease-in-out',
-                'lg:relative lg:translate-x-0',
-                isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-            ]"
-        >
+        <aside :class="[
+            'fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gray-800 text-white transform transition-transform duration-300 ease-in-out',
+            'lg:relative lg:translate-x-0',
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        ]">
             <div class="h-16 flex items-center justify-center border-b border-gray-700 px-4">
                 <Link :href="route('dashboard')" class="text-xl font-semibold text-white truncate">
-                    Hola, {{ $page.props.auth.user.name }}
+                Hola, {{ $page.props.auth.user.name }}
                 </Link>
             </div>
-            
+
             <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
                 <div v-for="menu in filteredMenuItems" :key="menu.title" class="mb-4">
-                    <p class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ menu.title }}</p>
-                    <Link
-                        v-for="item in menu.items"
-                        :key="item.name"
-                        :href="item.href"
-                        :class="[
-                            'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
-                            item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
-                        ]">
-                        <component :is="item.icon" class="h-5 w-5" />
-                        <span>{{ item.name }}</span>
+                    <p class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ menu.title }}
+                    </p>
+                    <Link v-for="item in menu.items" :key="item.name" :href="item.href" :class="[
+                        'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
+                        item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                    ]">
+                    <component :is="item.icon" class="h-5 w-5" />
+                    <span>{{ item.name }}</span>
                     </Link>
                 </div>
             </nav>
 
             <div class="border-t border-gray-700 p-4 lg:hidden">
-                <div class="mt-3 space-y-1">
-                    <DropdownLink :href="route('profile.edit')" class="text-gray-400 hover:text-white hover:bg-gray-700"> Perfil </DropdownLink>
-                    <DropdownLink :href="route('logout')" method="post" as="button" class="text-gray-400 hover:text-white hover:bg-gray-700"> Cerrar Sesión </DropdownLink>
+                <div>
+                    <div class="font-medium text-base text-white">{{ $page.props.auth.user.name }}</div>
+                    <div class="font-medium text-sm text-gray-400">{{ $page.props.auth.user.email }}</div>
+                </div>
+                <div class="mt-3 space-y-1 border-t border-gray-700 pt-3">
+                    <DropdownLink :href="route('profile.edit')"
+                        class="text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"> Perfil </DropdownLink>
+                    <DropdownLink :href="route('logout')" method="post" as="button"
+                        class="text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"> Cerrar Sesión
+                    </DropdownLink>
                 </div>
             </div>
         </aside>
@@ -132,34 +135,43 @@ const filteredMenuItems = computed(() => {
                 <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
-                            <button @click="isSidebarOpen = !isSidebarOpen" class="lg:hidden mr-4 text-gray-500 hover:text-gray-700">
+                            <button @click="isSidebarOpen = !isSidebarOpen"
+                                class="lg:hidden mr-4 text-gray-500 hover:text-gray-700">
                                 <MenuIcon />
                             </button>
                             <div class="font-semibold text-xl text-gray-800 leading-tight">
                                 <slot name="header" />
                             </div>
                         </div>
-                        
+
                         <div class="hidden lg:flex items-center sm:ml-6">
-                             <div class="text-right mr-6">
+                            <div class="text-right mr-6">
                                 <div class="font-bold text-gray-700 text-lg">{{ currentTime }}</div>
                                 <div class="text-xs text-gray-500 capitalize">{{ currentDate }}</div>
                             </div>
-                            
+
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
-                                        <button class="flex items-center space-x-2 text-sm font-medium text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition duration-150">
-                                            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
+                                        <button
+                                            class="flex items-center space-x-2 text-sm font-medium text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition duration-150">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
                                                 {{ $page.props.auth.user.name.charAt(0) }}
                                             </div>
                                             <div class="hidden md:block">{{ $page.props.auth.user.name }}</div>
-                                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
                                         </button>
                                     </template>
                                     <template #content>
                                         <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
-                                        <DropdownLink :href="route('logout')" method="post" as="button"> Cerrar Sesión </DropdownLink>
+                                        <DropdownLink :href="route('logout')" method="post" as="button"> Cerrar Sesión
+                                        </DropdownLink>
                                     </template>
                                 </Dropdown>
                             </div>
