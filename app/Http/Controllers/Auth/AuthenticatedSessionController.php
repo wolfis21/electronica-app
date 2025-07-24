@@ -47,6 +47,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // Se redirige al login temporal de electronika
+        return redirect('')->route('login');
     }
 }
