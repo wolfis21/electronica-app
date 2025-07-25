@@ -46,22 +46,22 @@ onUnmounted(() => {
     <Head title="Iniciar Sesión" />
 
     <div class="flex min-h-screen font-sans bg-gray-900 text-white">
+
         <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-            <div class="mx-auto w-full max-w-sm lg:w-96">
+            <div class="mx-auto w-full max-w-sm">
                 
                 <div class="text-left mb-2">
-                    <h1 class="text-4xl font-black tracking-wider">
+                    <h1 class="text-3xl sm:text-4xl font-black tracking-wider">
                         <span class="text-white">ELECTRÓNICA</span>
                         <span class="text-cyan-400">TPLKG</span>
                     </h1>
                 </div>
                 <br />
-
-                <div class="text-center mb-8">
+                <div class="text-center mb-6">
                     <h2 class="text-2xl font-bold tracking-tight text-white">Iniciar Sesión</h2>
                 </div>
 
-                <div class="mt-8">
+                <div class="mt-6">
                     <form @submit.prevent="submit" class="space-y-6">
                         <div>
                             <InputLabel for="email" value="Correo Electrónico" class="text-white" />
@@ -79,7 +79,6 @@ onUnmounted(() => {
                                 <Checkbox name="remember" v-model:checked="form.remember" class="bg-gray-700 border-gray-600 text-cyan-400 focus:ring-cyan-500" />
                                 <span class="ms-2 text-sm text-gray-400">Mantener sesión iniciada</span>
                             </label>
-
                         </div>
                         
                         <div>
@@ -90,11 +89,6 @@ onUnmounted(() => {
                     </form>
                 </div>
             </div>
-<br />
-            <footer class="text-center text-xs text-white-500">
-                <p>Desarrollado por Orquesta</p>
-                <p>Isaac Saado y José Andrés Dasilva</p>
-            </footer>
         </div>
 
         <div class="relative hidden w-0 flex-1 lg:block">
