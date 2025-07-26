@@ -50,14 +50,15 @@ onUnmounted(() => {
         <div class="absolute inset-0 bg-black/60 z-10"></div>
 
         <div class="relative z-20 w-full max-w-md">
-            <div class="bg-gray-900/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl border border-gray-700/50 shadow-2xl">
+            <div class="bg-gray-900/80 backdrop-blur-sm p-6 md:p-12 rounded-2xl border border-gray-700/50 shadow-2xl">
                 
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl sm:text-4xl font-black tracking-wider">
+                    <h1 class="text-2xl sm:text-4xl font-black tracking-wider">
                         <span class="text-white">ELECTRÓNICA</span>
                         <span class="text-cyan-400">TPLKG</span>
                     </h1>
-                    <p class="mt-2 text-gray-400 text-lg">Bienvenido de nuevo</p>
+                    <br>
+                    <p class="mt-2 text-white-400">Bienvenido de nuevo</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-6">
@@ -67,19 +68,16 @@ onUnmounted(() => {
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
                     <div>
-                        <InputLabel for="password" value="Contraseña" class="text-gray-300"/>
+                        <InputLabel for="password" value="Contraseña" class="text-white-300"/>
                         <TextInput id="password" type="password" class="mt-1 block w-full bg-gray-800/70 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400 rounded-md" v-model="form.password" required />
                         <InputError class="mt-2" :message="form.errors.password" />
                     </div>
                     
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center select-none">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <label class="flex items-center select-none self-start">
                             <Checkbox name="remember" v-model:checked="form.remember" class="bg-gray-700 border-gray-600 text-cyan-400 focus:ring-cyan-500" />
-                            <span class="ms-2 text-sm text-gray-300">Mantener sesión</span>
+                            <span class="ms-2 text-sm text-white-300">Mantener sesión</span>
                         </label>
-                        <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-cyan-400 hover:underline">
-                            ¿Olvidaste tu contraseña?
-                        </Link>
                     </div>
                     
                     <div>
@@ -99,7 +97,7 @@ onUnmounted(() => {
                 </div>
             </div>
 
-             <div class="text-center mt-8 text-gray-400 text-sm">
+            <div class="text-center mt-8 text-white-400 text-sm px-4">
                 <span>{{ currentDate }}</span> — <span>{{ currentTime }}</span>
             </div>
         </div>

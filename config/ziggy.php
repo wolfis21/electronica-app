@@ -14,6 +14,7 @@ return [
             'terms',
             'login',
             'register',
+            'contact.store',
         ],
     ],
 ];

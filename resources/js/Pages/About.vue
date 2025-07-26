@@ -12,7 +12,7 @@ import PublicLayout from '@/Layouts/PublicLayout.vue'; // Asumiendo que tenemos 
             <div class="container mx-auto px-6 text-center">
                 <h1 class="font-serif text-5xl md:text-6xl font-bold text-orq-dark-gray">El Conductor de tu Negocio</h1>
                 <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-                    Con Orquesta, tu negocio no solo funciona. [cite_start]Suena increíble. [cite: 61]
+                    Con Orquesta, tu negocio no solo funciona. Suena increíble.
                 </p>
             </div>
         </div>
@@ -25,10 +25,10 @@ import PublicLayout from '@/Layouts/PublicLayout.vue'; // Asumiendo que tenemos 
                 <div class="text-gray-700">
                     <h2 class="font-serif text-4xl font-bold text-orq-dark-gray mb-4">Nuestra Historia</h2>
                     <p class="mb-4">
-                        Cada negocio es una orquesta. [cite_start]El teléfono que suena es el violín, un nuevo cliente es el piano, y una orden de trabajo son los tambores. [cite: 55] [cite_start]Cuando todo está afinado y en sintonía, la música es increíble: es el sonido del éxito. [cite: 56]
+                        Cada negocio es una orquesta. El teléfono que suena es el violín, un nuevo cliente es el piano, y una orden de trabajo son los tambores. Cuando todo está afinado y en sintonía, la música es increíble: es el sonido del éxito.
                     </p>
                     <p>
-                        [cite_start]Aquí es donde entra Orquestra. [cite: 58] [cite_start]Somos la plataforma que toma cada instrumento y lo pone en perfecta armonía, silenciando el ruido para que puedas escuchar la melodía. [cite: 59, 60]
+                        Aquí es donde entra Orquestra. Somos la plataforma que toma cada instrumento y lo pone en perfecta armonía, silenciando el ruido para que puedas escuchar la melodía.
                     </p>
                 </div>
             </div>
@@ -46,10 +46,10 @@ import PublicLayout from '@/Layouts/PublicLayout.vue'; // Asumiendo que tenemos 
                         <p class="text-gray-600 mt-2">Co-fundador y emprendedor con la misión de ayudar a los negocios a crecer.</p>
                     </div>
                     <div class="text-center">
-                        <div class="w-40 h-40 rounded-full bg-gray-300 mx-auto mb-4 flex items-center justify-center">
+                        <div class="w-40 h-40 rounded-full bg-pink-300 mx-auto mb-4 flex items-center justify-center">
                            <span class="text-gray-500">Foto</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-orq-dark-gray">Jose Andres Dasilva</h3>
+                        <h3 class="text-2xl font-bold text-orq-dark-gray">José Andrés Dasilva</h3>
                         <p class="text-gray-600 mt-2">Co-fundador y emprendedor apasionado por la sincronización del éxito empresarial.</p>
                     </div>
                 </div>
