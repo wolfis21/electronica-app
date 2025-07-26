@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use App\Notifications\OrderAssigned;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
@@ -143,11 +142,6 @@ class OrderController extends Controller
                 'status' => $request->status,
             ]);
 
-            // Buscamos al usuario responsable y le enviamos la notificación.
-            $responsibleUser = User::find($request->users_id);
-            if ($responsibleUser) {
-                $responsibleUser->notify(new OrderAssigned($order));
-            }
         });
 
         return redirect()->route('orders.index')->with('success', 'Orden y cliente (si es nuevo) creados exitosamente.');
@@ -233,15 +227,6 @@ class OrderController extends Controller
         // Actualizar la orden con los nuevos datos
         $order->update($request->all());
 
-        // --- LÓGICA DE NOTIFICACIÓN ---
-        // Comparamos si el ID del responsable ha cambiado.
-        if ($order->users_id != $originalUserId) {
-            // Si cambió, buscamos al nuevo usuario y le notificamos.
-            $newUser = User::find($order->users_id);
-            if ($newUser) {
-                $newUser->notify(new OrderAssigned($order));
-            }
-        }
     });
         
         return redirect()->route('orders.index')->with('success', 'Orden y cliente actualizados exitosamente.');
