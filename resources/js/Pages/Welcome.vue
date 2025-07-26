@@ -44,28 +44,71 @@ onMounted(setupScrollAnimations);
             </div>
         </section>
 
-        <section class="py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto scroll-animate">
-                    <h2 class="font-serif text-4xl md:text-5xl font-bold text-orq-dark-gray">Del Ruido a la Melodía.</h2>
-                    <p class="mt-4 text-lg text-gray-600">Conocemos la frustración de las oportunidades perdidas por falta de sincronización. Este caos operativo es el verdadero enemigo del crecimiento.</p>
+       <section class="py-24 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto scroll-animate">
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-orq-dark-gray">Un Plan para Cada Director</h2>
+            <p class="mt-4 text-lg text-gray-600">Desde el solista que recién comienza hasta la sinfonía empresarial completa. Encuentra el ritmo perfecto para tu negocio.</p>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+            <div class="scroll-animate border border-gray-200 rounded-xl p-8 text-center flex flex-col">
+                <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Soloista</h3>
+                <p class="text-gray-500 mt-2">Ideal para empezar a organizarte.</p>
+                <div class="my-8">
+                    <span class="text-5xl font-bold text-orq-dark-gray">$29</span>
+                    <span class="text-gray-500">/ mes</span>
                 </div>
-                <div class="mt-16 grid md:grid-cols-2 gap-8">
-                    <div class="scroll-animate p-8 bg-orq-light-gray rounded-xl">
-                        <h3 class="text-2xl font-bold text-orq-dark-gray mb-4">El Ruido</h3>
-                        <p class="text-gray-700">
-                            Un cliente llama, pero el equipo no tiene la información. Una orden de trabajo se retrasa, afectando todo el ritmo. El inventario no cuadra. Ese es el ruido del estrés operativo.
-                        </p>
-                    </div>
-                    <div class="scroll-animate p-8 bg-orq-blue rounded-xl text-white">
-                        <h3 class="text-2xl font-bold text-white mb-4">La Melodía</h3>
-                        <p class="text-blue-100/90">
-                           Ahora imagina: cada tarea fluye sin esfuerzo, tu equipo está perfectamente sincronizado y tú tienes el control total desde un solo lugar. Esa es la promesa de Orquestra.
-                        </p>
-                    </div>
-                </div>
+                <ul class="space-y-3 text-gray-600 text-left flex-grow">
+                    <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hasta 2 Usuarios</li>
+                    <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Gestión de Órdenes</li>
+                    <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte por Email</li>
+                </ul>
+                <Link :href="route('pricing')" class="mt-8 block w-full py-3 px-6 border border-orq-blue text-orq-blue font-bold rounded-lg hover:bg-orq-blue hover:text-white transition-colors">
+                    Ver Detalles
+                </Link>
             </div>
-        </section>
+
+            <div class="scroll-animate relative border-2 border-orq-blue rounded-xl p-8 text-center flex flex-col shadow-2xl transform scale-105">
+                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                    <span class="px-4 py-1 bg-orq-blue text-white text-sm font-bold rounded-full">MÁS POPULAR</span>
+                </div>
+                <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Director</h3>
+                <p class="text-gray-500 mt-2">Para negocios en pleno crecimiento.</p>
+                <div class="my-8">
+                    <span class="text-5xl font-bold text-orq-dark-gray">$79</span>
+                    <span class="text-gray-500">/ mes</span>
+                </div>
+                <ul class="space-y-3 text-gray-600 text-left flex-grow">
+                    <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hasta 10 Usuarios</li>
+                    <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Informes Personalizables</li>
+                    <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte Prioritario y Chat</li>
+                </ul>
+                <Link :href="route('pricing')" class="mt-8 block w-full py-3 px-6 bg-orq-blue text-white font-bold rounded-lg hover:bg-blue-900 transition-colors shadow-lg">
+                    Elegir Plan
+                </Link>
+            </div>
+
+            <div class="scroll-animate border border-gray-200 rounded-xl p-8 text-center flex flex-col">
+                <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Sinfonía</h3>
+                <p class="text-gray-500 mt-2">Soluciones a la medida de tu empresa.</p>
+                <div class="my-8">
+                    <span class="text-4xl font-bold text-orq-dark-gray">Personalizado</span>
+                </div>
+                <ul class="space-y-3 text-gray-600 text-left flex-grow">
+                     <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Usuarios Ilimitados</li>
+                     <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Automatización y API</li>
+                     <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Gerente de Cuenta Dedicado</li>
+                </ul>
+                <Link :href="route('contact')" class="mt-8 block w-full py-3 px-6 border border-orq-dark-gray text-orq-dark-gray font-bold rounded-lg hover:bg-orq-dark-gray hover:text-white transition-colors">
+                    Contactar
+                </Link>
+            </div>
+
+        </div>
+    </div>
+</section>
         
         <section class="py-24 bg-orq-blue text-white">
              <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">

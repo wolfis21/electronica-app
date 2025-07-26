@@ -107,11 +107,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/exportar', [ExportController::class, 'index'])->name('export.index');
     Route::get('/exportar/descargar', [ExportController::class, 'download'])->name('export.download');
     Route::post('/importar', [ImportController::class, 'import'])->name('import.store');
+
+    // Rutas de Precios
+    Route::get('/precios', [PageController::class, 'pricing'])->name('pricing');
+    Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
 });
 
-/* Route::get('/', [PageController::class, 'welcome'])->name('welcome');
+Route::get('/', [PageController::class, 'welcome'])->name('welcome');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
-Route::get('/contacto', [PageController::class, 'contact'])->name('contact'); */
+Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
 
 require __DIR__ . '/auth.php';
