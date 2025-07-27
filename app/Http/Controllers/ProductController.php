@@ -31,7 +31,7 @@ class ProductController extends Controller
                   ->orWhere('code', 'like', '%' . $search . '%'); // Añadir búsqueda por código
         }
 
-        $products = $query->paginate(10)->orderBy('id', 'desc')->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
         return Inertia::render('Products/Index', [
             'products' => $products,
