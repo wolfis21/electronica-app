@@ -46,7 +46,7 @@ const formatDate = (dateString) => {
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <Link v-if="can.edit_orders || (can.edit_orders && order.users_id === $page.props.auth.user.id)"
+                    <Link v-if="can.edit_orders"
                         :href="route('orders.edit', order.id)"
                         class="inline-flex items-center px-3 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 transition">
                         Editar
