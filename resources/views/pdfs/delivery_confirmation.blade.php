@@ -55,7 +55,7 @@
 
             <div class="details">
                 <h3>Diagnóstico y Trabajo Realizado</h3>
-                <p>{{ $review->diagnostic }}</p>
+                <p>{{ $review->description_tec }}</p>
             </div>
 
             @if($review->products->isNotEmpty())
