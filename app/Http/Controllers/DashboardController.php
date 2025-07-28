@@ -71,6 +71,9 @@ class DashboardController extends Controller
                 'active_employees'   => $activeEmployees,
             ],
             'filters' => ['period' => intval($days)],
+            'can' => [
+                'manage_users' => auth()->user()->can('manage_users'), // Permiso solo de admin  y gerente
+            ],
         ]);
     }
-}
+}   
