@@ -58,7 +58,7 @@ const statusColors = {
                     <p class="text-gray-500 text-sm">Órdenes Completadas</p>
                     <p class="text-4xl font-bold text-green-600">{{ props.kpis.completed_orders }}</p>
                 </div>
-                <div class="p-6 bg-white rounded-xl shadow-md text-center" v-if="props.can.manage_users">
+                <div class="p-6 bg-white rounded-xl shadow-md text-center" v-if="props.can.view_users">
                     <p class="text-gray-500 text-sm">Ingresos Totales</p>
                     <p class="text-4xl font-bold text-indigo-600">${{ parseFloat(props.kpis.total_revenue).toFixed(2) }}</p>
                 </div>
@@ -87,7 +87,7 @@ const statusColors = {
                 </div>
                 <p v-else class="text-sm text-gray-500">No hay órdenes en curso.</p>
             </div>
-            <div class="p-6 bg-white rounded-xl shadow-md" v-if="props.can.manage_users">
+            <div class="p-6 bg-white rounded-xl shadow-md" v-if="props.can.view_users">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Empleados con Órdenes Activas</h3>
                 <div v-if="props.lists.active_employees.length > 0" class="space-y-3">
                     <div v-for="employee in props.lists.active_employees" :key="employee.id"

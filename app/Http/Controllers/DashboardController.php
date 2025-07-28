@@ -72,7 +72,7 @@ class DashboardController extends Controller
             ],
             'filters' => ['period' => intval($days)],
             'can' => [
-                'manage_users' => auth()->user()->can('manage_users'), // Permiso solo de admin  y gerente
+                'view_users' => auth()->user()->can('view_users'), // Permiso solo de admin  y gerente
             ],
         ]);
     }
