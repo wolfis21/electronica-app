@@ -140,6 +140,10 @@ class ReviewController extends Controller
         return Inertia::render('Reviews/Show', [
             'order' => $order,
             'review' => $review,
+            'can' => [ // Add this 'can' array
+                'edit_reviews' => auth()->user()->can('edit_reviews'),
+                'delete_reviews' => auth()->user()->can('delete_reviews'),
+            ],
         ]);
     }
 
