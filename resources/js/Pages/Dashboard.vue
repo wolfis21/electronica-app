@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import PieChart from '@/Components/PieChart.vue';
+import SupportSection from '@/Components/SupportSection.vue';
 
 const props = defineProps({
     charts: Object,
@@ -64,7 +65,7 @@ const statusColors = {
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="p-6 bg-white rounded-xl shadow-md">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Órdenes en Curso</h3>
                 <div v-if="props.lists.orders_in_progress.length > 0" class="space-y-3">
@@ -99,5 +100,8 @@ const statusColors = {
                 <p v-else class="text-sm text-gray-500">Ningún empleado tiene órdenes activas.</p>
             </div>
         </div>
+
+        <!-- Sección de Soporte y Reporte de Problemas -->
+        <SupportSection />
     </AuthenticatedLayout>
 </template>
