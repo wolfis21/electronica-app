@@ -27,8 +27,14 @@ class PageController extends Controller
         return Inertia::render('Services');
     }
 
+  public function pricing()
+    {
+        return Inertia::render('Pricing');
+    }
+    
     public function contact()
-{
-    return Inertia::render('Contact');
-}
+    {
+        // Lógica para la página de contacto
+        return Inertia::render('Contact');
+    }
 }

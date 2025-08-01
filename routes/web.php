@@ -19,6 +19,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\ContactController;
 
 
 /* Route::get('/', function () {
@@ -107,11 +108,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/exportar', [ExportController::class, 'index'])->name('export.index');
     Route::get('/exportar/descargar', [ExportController::class, 'download'])->name('export.download');
     Route::post('/importar', [ImportController::class, 'import'])->name('import.store');
+
+
 });
 
-/* Route::get('/', [PageController::class, 'welcome'])->name('welcome');
+
+// Rutas públicas
+Route::get('/', [PageController::class, 'welcome'])->name('welcome');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
+Route::get('/precios', [PageController::class, 'pricing'])->name('pricing');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
-Route::get('/contacto', [PageController::class, 'contact'])->name('contact'); */
+Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
+Route::post('/contacto', [ContactController::class, 'store'])->name('contact.store');
 
 require __DIR__ . '/auth.php';

@@ -24,7 +24,6 @@ const submit = () => {
     });
 };
 
-// --- LÓGICA PARA FECHA Y HORA ---
 const currentTime = ref('');
 const currentDate = computed(() => {
     return new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -45,54 +44,73 @@ onUnmounted(() => {
 <template>
     <Head title="Iniciar Sesión" />
 
-    <div class="flex min-h-screen font-sans bg-gray-900 text-white">
+    <div class="relative min-h-screen bg-gray-900 font-sans text-white flex items-center justify-center p-4 overflow-hidden">
+        
+        <!-- Imagen optimizada con lazy loading y múltiples formatos -->
+        <picture class="absolute inset-0 z-0">
+            <source srcset="/images/taller.webp" type="image/webp">
+            <source srcset="/images/taller.avif" type="image/avif">
+            <img 
+                class="h-full w-full object-cover" 
+                src="/images/taller.jpg" 
+                alt="Taller de electrónica"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+            >
+        </picture>
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
 
-        <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-            <div class="mx-auto w-full max-w-sm">
+        <div class="relative z-20 w-full max-w-sm sm:max-w-md">
+            <div class="bg-gray-900/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-2xl mx-4">
                 
-                <div class="text-left mb-2">
-                    <h1 class="text-3xl sm:text-4xl font-black tracking-wider">
-                        <span class="text-white">ELECTRÓNICA</span>
-                        <span class="text-cyan-400">TPLKG</span>
+                <div class="text-center mb-8">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight break-words">
+                        <span class="text-white">ELECTRÓNICA</span><span class="text-cyan-400">TPLKG</span>
                     </h1>
-                </div>
-                <br />
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold tracking-tight text-white">Iniciar Sesión</h2>
+                    <br>
+                    <p class="mt-2 text-gray-400">Bienvenido de nuevo</p>
                 </div>
 
-                <div class="mt-6">
-                    <form @submit.prevent="submit" class="space-y-6">
-                        <div>
-                            <InputLabel for="email" value="Correo Electrónico" class="text-white" />
-                            <TextInput id="email" type="email" class="mt-1 block w-full bg-gray-800 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400" v-model="form.email" required autofocus />
-                            <InputError class="mt-2" :message="form.errors.email" />
-                        </div>
-                        <div>
-                            <InputLabel for="password" value="Contraseña" class="text-white"/>
-                            <TextInput id="password" type="password" class="mt-1 block w-full bg-gray-800 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400" v-model="form.password" required />
-                            <InputError class="mt-2" :message="form.errors.password" />
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center">
-                                <Checkbox name="remember" v-model:checked="form.remember" class="bg-gray-700 border-gray-600 text-cyan-400 focus:ring-cyan-500" />
-                                <span class="ms-2 text-sm text-gray-400">Mantener sesión iniciada</span>
-                            </label>
-                        </div>
-                        
-                        <div>
-                            <PrimaryButton class="w-full justify-center text-lg py-3 bg-blue-600 hover:bg-blue-700" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                Ingresar
-                            </PrimaryButton>
-                        </div>
-                    </form>
+                <form @submit.prevent="submit" class="space-y-6">
+                    <div>
+                        <InputLabel for="email" value="Correo Electrónico" class="text-gray-300" />
+                        <TextInput id="email" type="email" class="mt-1 block w-full bg-gray-800/70 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400 rounded-md" v-model="form.email" required autofocus />
+                        <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+                    <div>
+                        <InputLabel for="password" value="Contraseña" class="text-white-300"/>
+                        <TextInput id="password" type="password" class="mt-1 block w-full bg-gray-800/70 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400 rounded-md" v-model="form.password" required />
+                        <InputError class="mt-2" :message="form.errors.password" />
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <label class="flex items-center select-none self-start">
+                            <Checkbox name="remember" v-model:checked="form.remember" class="bg-gray-700 border-gray-600 text-cyan-400 focus:ring-cyan-500" />
+                            <span class="ms-2 text-sm text-white-300">Mantener sesión</span>
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <PrimaryButton class="w-full justify-center text-base font-bold py-3 bg-cyan-500 hover:bg-cyan-600 text-gray-900 rounded-lg transition-all duration-300 transform hover:scale-105" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            Ingresar
+                        </PrimaryButton>
+                    </div>
+                </form>
+
+                <div class="mt-8 text-center">
+                    <Link
+                        :href="route('welcome')"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200"
+                    >
+                        ← Ir al sitio web principal
+                    </Link>
                 </div>
             </div>
-        </div>
 
-        <div class="relative hidden w-0 flex-1 lg:block">
-            <img class="absolute inset-0 h-full w-full object-cover" src="/images/taller.jpg" alt="Taller de electrónica">
+            <div class="text-center mt-8 text-white-400 text-sm px-4">
+                <span>{{ currentDate }}</span> — <span>{{ currentTime }}</span>
+            </div>
         </div>
     </div>
 </template>

@@ -141,7 +141,6 @@ class OrderController extends Controller
                 'extra_notes' => $request->extra_notes,
                 'status' => $request->status,
             ]);
-
         });
 
         return redirect()->route('orders.index')->with('success', 'Orden y cliente (si es nuevo) creados exitosamente.');

@@ -9,6 +9,11 @@ const isSidebarOpen = ref(false);
 const page = usePage();
 const can = page.props.auth.user?.can || {};
 
+// Verificar si el usuario es técnico
+const isTechnician = computed(() => {
+    return page.props.auth.user?.role_id === 3;
+});
+
 // --- LÓGICA PARA FECHA Y HORA (AÑADIDA AQUÍ) ---
 const currentTime = ref('');
 const currentDate = computed(() => {
@@ -46,40 +51,107 @@ const BuildingIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0
 const UsersIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' }), h('circle', { cx: '9', cy: '7', r: '4' }), h('path', { d: 'M23 21v-2a4 4 0 0 0-3-3.87' }), h('path', { d: 'M16 3.13a4 4 0 0 1 0 7.75' })]));
 const BriefcaseIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('rect', { x: '2', y: '7', width: '20', height: '14', rx: '2', ry: '2' }), h('path', { d: 'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16' })]));
 const DollarSignIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('line', { x1: '12', y1: '1', x2: '12', y2: '23' }), h('path', { d: 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' })]));
+const ExclamationTriangleIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z' })]));
+const LightBulbIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M9 21h6' }), h('path', { d: 'M12 17v4' }), h('path', { d: 'M12 3a5 5 0 0 1 5 5c0 1.5-.5 3-2 4l-3 1-3-1c-1.5-1-2-2.5-2-4a5 5 0 0 1 5-5z' })]));
 
 
-// --- ESTRUCTURA DEL MENÚ (RESTAURADA) ---
-const menuStructure = [
-    {
-        title: 'Principal',
-        items: [
-            { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
-            { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: can.view_users },
-            { name: 'Importar/Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: can.view_users },
-        ]
-    },
-    {
-        title: 'Menu Administrador',
-        items: [
-            { name: 'Gestión de Roles', icon: ShieldCheckIcon, href: route('roles.index'), current: route().current('roles.*'), permission: can.manage_roles },
-            { name: 'Gestión de Empresas', icon: BuildingIcon, href: route('companies.index'), current: route().current('companies.*'), permission: can.manage_companies },
-            { name: 'Empleados/Usuarios', icon: UsersIcon, href: route('employees_users.index'), current: route().current('employees_users.*'), permission: can.view_users },
-        ]
-    },
-    {
-        title: 'Menu Contabilidad',
-        items: [
-            { name: 'Órdenes', icon: BriefcaseIcon, href: route('orders.index'), current: route().current('orders.*'), permission: true },
-            { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
-            { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
-            { name: 'Gestión de Pagos', icon: DollarSignIcon, href: route('payments.index'), current: route().current('payments.*'), permission: can.view_payments },
-        ]
+// --- ESTRUCTURA DEL MENÚ ---
+const menuStructure = computed(() => {
+    if (isTechnician.value) {
+        // Menú simplificado para técnicos
+        return [
+            {
+                title: 'Principal',
+                items: [
+                    { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
+                ]
+            },
+            {
+                title: 'Menu Contabilidad',
+                items: [
+                    { name: 'Órdenes', icon: BriefcaseIcon, href: route('orders.index'), current: route().current('orders.*'), permission: true },
+                    { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
+                    { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
+                ]
+            },
+            {
+                title: 'Soporte',
+                items: [
+                    { 
+                        name: 'Reportar Problema', 
+                        icon: ExclamationTriangleIcon, 
+                        href: 'https://forms.google.com/tu-formulario-aqui', 
+                        current: false, 
+                        permission: true,
+                        external: true
+                    },
+                    { 
+                        name: 'Enviar Sugerencia', 
+                        icon: LightBulbIcon, 
+                        href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
+                        current: false, 
+                        permission: true,
+                        external: true
+                    },
+                ]
+            }
+        ];
     }
-];
+    
+    // Menú completo para otros roles
+    return [
+        {
+            title: 'Principal',
+            items: [
+                { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
+                { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: true },
+                { name: 'Importar/Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: true },
+            ]
+        },
+        {
+            title: 'Menu Administrador',
+            items: [
+                { name: 'Gestión de Roles', icon: ShieldCheckIcon, href: route('roles.index'), current: route().current('roles.*'), permission: can.manage_roles },
+                { name: 'Gestión de Empresas', icon: BuildingIcon, href: route('companies.index'), current: route().current('companies.*'), permission: can.manage_companies },
+                { name: 'Empleados/Usuarios', icon: UsersIcon, href: route('employees_users.index'), current: route().current('employees_users.*'), permission: can.view_users },
+            ]
+        },
+        {
+            title: 'Menu Contabilidad',
+            items: [
+                { name: 'Órdenes', icon: BriefcaseIcon, href: route('orders.index'), current: route().current('orders.*'), permission: true },
+                { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
+                { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
+                { name: 'Gestión de Pagos', icon: DollarSignIcon, href: route('payments.index'), current: route().current('payments.*'), permission: can.view_payments },
+            ]
+        },
+        {
+            title: 'Soporte',
+            items: [
+                { 
+                    name: 'Reportar Problema', 
+                    icon: ExclamationTriangleIcon, 
+                    href: 'https://forms.google.com/tu-formulario-aqui', 
+                    current: false, 
+                    permission: true,
+                    external: true
+                },
+                { 
+                    name: 'Enviar Sugerencia', 
+                    icon: LightBulbIcon, 
+                    href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
+                    current: false, 
+                    permission: true,
+                    external: true
+                },
+            ]
+        }
+    ];
+});
 
 // --- MENÚ FILTRADO POR PERMISOS ---
 const filteredMenuItems = computed(() => {
-    return menuStructure
+    return menuStructure.value
         .map(section => ({ ...section, items: section.items.filter(item => item.permission) }))
         .filter(section => section.items.length > 0);
 });
@@ -105,13 +177,27 @@ const filteredMenuItems = computed(() => {
                 <div v-for="menu in filteredMenuItems" :key="menu.title" class="mb-4">
                     <p class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ menu.title }}
                     </p>
-                    <Link v-for="item in menu.items" :key="item.name" :href="item.href" :class="[
-                        'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
-                    ]">
-                    <component :is="item.icon" class="h-5 w-5" />
-                    <span>{{ item.name }}</span>
-                    </Link>
+                    <template v-for="item in menu.items" :key="item.name">
+                        <!-- Enlaces externos -->
+                        <a v-if="item.external" :href="item.href" target="_blank" rel="noopener noreferrer" :class="[
+                            'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
+                            item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                        ]">
+                            <component :is="item.icon" class="h-5 w-5" />
+                            <span>{{ item.name }}</span>
+                            <svg class="ml-auto h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                        </a>
+                        <!-- Enlaces internos -->
+                        <Link v-else :href="item.href" :class="[
+                            'flex items-center space-x-3 py-2 px-4 rounded-lg transition-colors duration-200',
+                            item.current ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                        ]">
+                            <component :is="item.icon" class="h-5 w-5" />
+                            <span>{{ item.name }}</span>
+                        </Link>
+                    </template>
                 </div>
             </nav>
 
@@ -123,6 +209,38 @@ const filteredMenuItems = computed(() => {
                 <div class="mt-3 space-y-1 border-t border-gray-700 pt-3">
                     <DropdownLink :href="route('profile.edit')"
                         class="text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"> Perfil </DropdownLink>
+                    
+                    <!-- Sección de Soporte para Móvil -->
+                    <div class="py-2">
+                        <p class="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                            Centro de Soporte
+                        </p>
+                        <a href="https://forms.google.com/tu-formulario-bugs-aqui" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="flex items-center space-x-3 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150">
+                            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                            <span>Reportar Problema</span>
+                            <svg class="ml-auto h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                        </a>
+                        <a href="https://forms.google.com/tu-formulario-sugerencias-aqui" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="flex items-center space-x-3 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150">
+                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            <span>Enviar Sugerencia</span>
+                            <svg class="ml-auto h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    
                     <DropdownLink :href="route('logout')" method="post" as="button"
                         class="text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"> Cerrar Sesión
                     </DropdownLink>
@@ -170,6 +288,39 @@ const filteredMenuItems = computed(() => {
                                     </template>
                                     <template #content>
                                         <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
+                                        <div class="border-t border-gray-100"></div>
+                                        <div class="px-4 py-2 text-xs text-gray-500 uppercase tracking-wider font-semibold">
+                                            Centro de Soporte
+                                        </div>
+                                        <a href="https://forms.google.com/tu-formulario-bugs-aqui" 
+                                           target="_blank" 
+                                           rel="noopener noreferrer"
+                                           class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:bg-red-50 focus:text-red-700 transition duration-150 ease-in-out">
+                                            <div class="flex items-center space-x-2">
+                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                                </svg>
+                                                <span>Reportar Problema</span>
+                                                <svg class="ml-auto h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                </svg>
+                                            </div>
+                                        </a>
+                                        <a href="https://forms.google.com/tu-formulario-sugerencias-aqui" 
+                                           target="_blank" 
+                                           rel="noopener noreferrer"
+                                           class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus:bg-blue-50 focus:text-blue-700 transition duration-150 ease-in-out">
+                                            <div class="flex items-center space-x-2">
+                                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                                </svg>
+                                                <span>Enviar Sugerencia</span>
+                                                <svg class="ml-auto h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                </svg>
+                                            </div>
+                                        </a>
+                                        <div class="border-t border-gray-100"></div>
                                         <DropdownLink :href="route('logout')" method="post" as="button"> Cerrar Sesión
                                         </DropdownLink>
                                     </template>

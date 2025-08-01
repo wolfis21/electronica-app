@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 
 class AnalyticsController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
+        // Verificar si el usuario es técnico y redirigir al dashboard
+        if (Auth::user()->role_id === 3) {
+            return redirect()->route('dashboard')->with('error', 'No tienes acceso a las analíticas.');
+        }
+
         // --- FILTROS DE PERÍODO ---
         $days = $request->input('period', 30);
         $startDate = Carbon::now()->subDays($days)->startOfDay();
@@ -42,6 +48,15 @@ class AnalyticsController extends Controller
         // --- ANÁLISIS DE ÓRDENES Y PAGOS ---
         $totalOrders = DB::table('orders')->whereBetween('created_at', [$startDate, $endDate])->count();
         $ordersByStatus = DB::table('orders')->whereBetween('created_at', [$startDate, $endDate])->select('status', DB::raw('count(*) as count'))->groupBy('status')->get();
+
+        // --- ANÁLISIS DE PAGOS ---
+        $totalRevenue = DB::table('payments')->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+        $averageTicket = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+        $paymentsByMethod = DB::table('payments')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->select('payment_method', DB::raw('count(*) as count'), DB::raw('SUM(amount) as total_amount'))
+            ->groupBy('payment_method')
+            ->get();
 
         // --- ANÁLISIS DE RENDIMIENTO DE EMPLEADOS (Lógica modificada para role_id = 3 y MySQL TIMESTAMPDIFF) ---
         // 1. Determinar el driver de la base de datos actual
@@ -98,6 +113,14 @@ class AnalyticsController extends Controller
                 'by_status' => [
                     'labels' => $ordersByStatus->pluck('status')->map(fn ($status) => str_replace('_', ' ', ucfirst($status))),
                     'data' => $ordersByStatus->pluck('count'),
+                ],
+            ],
+            'paymentsAnalysis' => [
+                'total_revenue' => $totalRevenue,
+                'average_ticket' => $averageTicket,
+                'by_method' => [
+                    'labels' => $paymentsByMethod->pluck('payment_method')->map(fn ($method) => str_replace('_', ' ', ucfirst($method))),
+                    'data' => $paymentsByMethod->pluck('total_amount'),
                 ],
             ],
             'salesAnalysis' => [
