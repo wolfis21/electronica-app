@@ -46,19 +46,30 @@ onUnmounted(() => {
 
     <div class="relative min-h-screen bg-gray-900 font-sans text-white flex items-center justify-center p-4 overflow-hidden">
         
-        <img class="absolute inset-0 h-full w-full object-cover z-0" src="/images/taller.jpg" alt="Taller de electrónica">
+        <!-- Imagen optimizada con lazy loading y múltiples formatos -->
+        <picture class="absolute inset-0 z-0">
+            <source srcset="/images/taller.webp" type="image/webp">
+            <source srcset="/images/taller.avif" type="image/avif">
+            <img 
+                class="h-full w-full object-cover" 
+                src="/images/taller.jpg" 
+                alt="Taller de electrónica"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+            >
+        </picture>
         <div class="absolute inset-0 bg-black/60 z-10"></div>
 
-        <div class="relative z-20 w-full max-w-md">
-            <div class="bg-gray-900/80 backdrop-blur-sm p-6 md:p-12 rounded-2xl border border-gray-700/50 shadow-2xl">
+        <div class="relative z-20 w-full max-w-sm sm:max-w-md">
+            <div class="bg-gray-900/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-2xl mx-4">
                 
                 <div class="text-center mb-8">
-                    <h1 class="text-2xl sm:text-4xl font-black tracking-wider">
-                        <span class="text-white">ELECTRÓNICA</span>
-                        <span class="text-cyan-400">TPLKG</span>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight break-words">
+                        <span class="text-white">ELECTRÓNICA</span><span class="text-cyan-400">TPLKG</span>
                     </h1>
                     <br>
-                    <p class="mt-2 text-white-400">Bienvenido de nuevo</p>
+                    <p class="mt-2 text-gray-400">Bienvenido de nuevo</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-6">

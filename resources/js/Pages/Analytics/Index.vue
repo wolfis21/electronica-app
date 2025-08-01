@@ -62,23 +62,29 @@ const periodText = computed(() => {
     <Head title="Analíticas" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Analíticas - {{ periodText }}
-                </h2>
-                <div class="flex space-x-2">
-                    <Link v-for="period in [7, 30, 90]" :key="period"
-                        :href="route('analytics.index', { period: period })"
-                        :class="['px-4 py-2 text-sm font-semibold rounded-lg transition-colors', props.filters?.period === period ? 'bg-indigo-600 text-white shadow-md' : 'bg-white shadow-sm hover:bg-gray-50 text-gray-700']"
-                        preserve-scroll>
-                        {{ period }}d
-                    </Link>
-                </div>
-            </div>
-        </template>
+        <template #header>Analíticas</template>
 
         <div class="space-y-6">
+            <!-- Header y Filtros -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
+                    <div class="flex-1">
+                        <h2 class="font-bold text-3xl text-gray-900 leading-tight mb-2">
+                            Panel de Analíticas
+                        </h2>
+                        <p class="text-lg text-gray-600">{{ periodText }}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 lg:flex-shrink-0">
+                        <Link v-for="period in [7, 30, 90]" :key="period"
+                            :href="route('analytics.index', { period: period })"
+                            :class="['px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200 min-w-[60px] text-center', props.filters?.period === period ? 'bg-indigo-600 text-white shadow-lg ring-2 ring-indigo-300' : 'bg-white shadow-md hover:bg-gray-50 hover:shadow-lg text-gray-700 border border-gray-200']"
+                            preserve-scroll>
+                            {{ period }}d
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
             <!-- Resumen de KPIs -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg text-white">
@@ -139,73 +145,73 @@ const periodText = computed(() => {
             </div>
 
             <!-- Gráficos de Órdenes y Pagos -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Órdenes por Estado</h3>
-                        <div class="p-2 bg-blue-100 rounded-lg">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Órdenes por Estado</h3>
+                        <div class="p-2 bg-blue-100 rounded-lg self-start sm:self-center">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="h-80">
+                    <div class="h-64 sm:h-80">
                         <PieChart v-if="hasOrdersData" :chart-data="props.ordersAnalysis.by_status" />
                         <div v-else class="flex flex-col items-center justify-center h-full text-gray-500">
-                            <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <p class="text-center">No hay datos de órdenes en este período</p>
+                            <p class="text-center text-sm sm:text-base">No hay datos de órdenes en este período</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Ingresos por Método de Pago</h3>
-                        <div class="p-2 bg-green-100 rounded-lg">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Ingresos por Método de Pago</h3>
+                        <div class="p-2 bg-green-100 rounded-lg self-start sm:self-center">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="h-80">
+                    <div class="h-64 sm:h-80">
                         <PieChart v-if="hasPaymentsData" :chart-data="props.paymentsAnalysis.by_method" />
                         <div v-else class="flex flex-col items-center justify-center h-full text-gray-500">
-                            <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                             </svg>
-                            <p class="text-center">No hay datos de pagos en este período</p>
+                            <p class="text-center text-sm sm:text-base">No hay datos de pagos en este período</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Rendimiento de Técnicos -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800">Rendimiento de Técnicos</h3>
-                    <div class="p-2 bg-orange-100 rounded-lg">
-                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Rendimiento de Técnicos</h3>
+                    <div class="p-2 bg-orange-100 rounded-lg self-start sm:self-center">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
                 </div>
                 
-                <div v-if="hasEmployeeData" class="overflow-x-auto">
+                <div v-if="hasEmployeeData" class="overflow-x-auto -mx-4 sm:mx-0">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Técnico
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Órdenes Completadas
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Órdenes
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Tiempo Promedio
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Rendimiento
                                 </th>
                             </tr>
@@ -213,34 +219,34 @@ const periodText = computed(() => {
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr v-for="(employee, index) in props.employeePerformance" :key="employee.id"
                                 :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 sm:px-6 py-4">
                                     <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                            <span class="text-sm font-medium text-indigo-600">{{ employee.name.charAt(0) }}</span>
+                                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                            <span class="text-xs sm:text-sm font-medium text-indigo-600">{{ employee.name.charAt(0) }}</span>
                                         </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ employee.name }}</div>
+                                        <div class="ml-2 sm:ml-4">
+                                            <div class="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-20 sm:max-w-none">{{ employee.name }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <span class="text-2xl font-bold text-gray-900">{{ employee.orders_count }}</span>
-                                        <span class="ml-2 text-sm text-gray-500">órdenes</span>
+                                <td class="px-3 sm:px-6 py-4">
+                                    <div class="flex flex-col sm:flex-row sm:items-center">
+                                        <span class="text-lg sm:text-2xl font-bold text-gray-900">{{ employee.orders_count }}</span>
+                                        <span class="text-xs sm:text-sm text-gray-500 sm:ml-2">órdenes</span>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <td class="hidden sm:table-cell px-6 py-4 text-sm text-gray-900">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         {{ employee.avg_completion_time_formatted }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 sm:px-6 py-4">
                                     <div class="flex items-center">
-                                        <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
-                                            <div class="bg-green-600 h-2.5 rounded-full" 
+                                        <div class="w-full bg-gray-200 rounded-full h-2 sm:h-2.5 mr-2">
+                                            <div class="bg-green-600 h-2 sm:h-2.5 rounded-full" 
                                                  :style="`width: ${Math.min((employee.orders_count / Math.max(...props.employeePerformance.map(e => e.orders_count))) * 100, 100)}%`"></div>
                                         </div>
-                                        <span class="text-sm font-medium text-gray-900">
+                                        <span class="text-xs sm:text-sm font-medium text-gray-900">
                                             {{ Math.round((employee.orders_count / Math.max(...props.employeePerformance.map(e => e.orders_count))) * 100) }}%
                                         </span>
                                     </div>
@@ -250,56 +256,56 @@ const periodText = computed(() => {
                     </table>
                 </div>
                 
-                <div v-else class="flex flex-col items-center justify-center py-12 text-gray-500">
-                    <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div v-else class="flex flex-col items-center justify-center py-8 sm:py-12 text-gray-500">
+                    <svg class="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <p class="text-center">No hay datos de rendimiento en este período</p>
+                    <p class="text-center text-sm sm:text-base">No hay datos de rendimiento en este período</p>
                 </div>
             </div>
 
             <!-- Análisis de Ventas -->
-            <div v-if="hasSalesData" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Top 5 Productos por Ingresos</h3>
-                        <div class="p-2 bg-purple-100 rounded-lg">
-                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div v-if="hasSalesData" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Top 5 Productos por Ingresos</h3>
+                        <div class="p-2 bg-purple-100 rounded-lg self-start sm:self-center">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4-8-4m16 0v10l-8 4-8-4V7"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="h-80">
+                    <div class="h-64 sm:h-80">
                         <BarChart v-if="props.salesAnalysis?.top_products_by_revenue?.data?.length > 0"
                             :chart-data="props.salesAnalysis.top_products_by_revenue" />
                         <div v-else class="flex flex-col items-center justify-center h-full text-gray-500">
-                            <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4-8-4m16 0v10l-8 4-8-4V7"></path>
                             </svg>
-                            <p class="text-center">No hay datos de productos en este período</p>
+                            <p class="text-center text-sm sm:text-base">No hay datos de productos en este período</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Top 5 Servicios por Ganancia</h3>
-                        <div class="p-2 bg-indigo-100 rounded-lg">
-                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Top 5 Servicios por Ganancia</h3>
+                        <div class="p-2 bg-indigo-100 rounded-lg self-start sm:self-center">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="h-80">
+                    <div class="h-64 sm:h-80">
                         <BarChart v-if="props.salesAnalysis?.top_services_by_profit?.data?.length > 0"
                             :chart-data="props.salesAnalysis.top_services_by_profit" />
                         <div v-else class="flex flex-col items-center justify-center h-full text-gray-500">
-                            <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <p class="text-center">No hay datos de servicios en este período</p>
+                            <p class="text-center text-sm sm:text-base">No hay datos de servicios en este período</p>
                         </div>
                     </div>
                 </div>

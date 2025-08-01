@@ -40,73 +40,83 @@ const periodText = computed(() => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                        Dashboard de Actividad
-                    </h2>
-                    <p class="text-sm text-gray-600 mt-1">{{ periodText }}</p>
-                </div>
-                <div class="flex space-x-2">
-                    <Link v-for="period in [7, 30, 90]" :key="period" 
-                        :href="route('dashboard', { period: period })"
-                        :class="['px-4 py-2 text-sm font-semibold rounded-lg transition-colors', props.filters?.period === period ? 'bg-indigo-600 text-white shadow-md' : 'bg-white shadow-sm hover:bg-gray-50 text-gray-700']"
-                        preserve-scroll>
-                        {{ period }}d
-                    </Link>
-                </div>
+            <div>
+                <h2 class="font-semibold text-lg sm:text-xl lg:text-2xl text-gray-800 leading-tight">
+                    Dashboard de Actividad
+                </h2>
+                <p class="text-xs sm:text-sm text-gray-600 mt-1">{{ periodText }}</p>
             </div>
         </template>
 
-        <div class="space-y-6">
+                <div class="space-y-6 sm:space-y-8">
             <!-- KPIs Principales -->
-            <div :class="['grid gap-6', props.isTechnician ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3']">
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg text-white">
+            <div :class="['grid gap-4 sm:gap-6 lg:gap-8', props.isTechnician ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3']">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl text-white transform hover:scale-105 transition-all duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-blue-100 text-sm">Nuevas Órdenes</p>
-                            <p class="text-3xl font-bold">{{ props.kpis?.new_orders || 0 }}</p>
+                        <div class="ml-3 sm:ml-4">
+                            <p class="text-blue-100 text-xs sm:text-sm">Nuevas Órdenes</p>
+                            <p class="text-2xl sm:text-3xl lg:text-4xl font-bold">{{ props.kpis?.new_orders || 0 }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-xl shadow-lg text-white">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl text-white transform hover:scale-105 transition-all duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-green-100 text-sm">Órdenes Completadas</p>
-                            <p class="text-3xl font-bold">{{ props.kpis?.completed_orders || 0 }}</p>
+                        <div class="ml-3 sm:ml-4">
+                            <p class="text-green-100 text-xs sm:text-sm">Órdenes Completadas</p>
+                            <p class="text-2xl sm:text-3xl lg:text-4xl font-bold">{{ props.kpis?.completed_orders || 0 }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tarjeta de ingresos solo para usuarios no técnicos -->
-                <div v-if="!props.isTechnician" class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-xl shadow-lg text-white">
+                <div v-if="!props.isTechnician" class="bg-gradient-to-r from-purple-500 to-purple-600 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl text-white transform hover:scale-105 transition-all duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                             </svg>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-purple-100 text-sm">Ingresos Totales</p>
-                            <p class="text-2xl font-bold">${{ formattedRevenue }}</p>
+                        <div class="ml-3 sm:ml-4">
+                            <p class="text-purple-100 text-xs sm:text-sm">Ingresos Totales</p>
+                            <p class="text-xl sm:text-2xl lg:text-3xl font-bold">${{ formattedRevenue }}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Gráficos de Análisis -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="space-y-6">
+                <!-- Filtros de Período -->
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-800">Análisis de Datos</h3>
+                            <p class="text-xs sm:text-sm text-gray-600 mt-1">Filtra por período de tiempo</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <Link v-for="period in [7, 30, 90]" :key="period" 
+                                :href="route('dashboard', { period: period })"
+                                :class="['px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 min-w-[60px] text-center', props.filters?.period === period ? 'bg-indigo-600 text-white shadow-md transform scale-105' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:shadow-sm']"
+                                preserve-scroll>
+                                {{ period }} días
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
                 <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Órdenes por Estado</h3>
@@ -146,15 +156,16 @@ const periodText = computed(() => {
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
 
             <!-- Órdenes y Empleados Activos -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-semibold text-gray-800">Últimas Órdenes en Curso</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                <div class="bg-white p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-gray-800">Últimas Órdenes en Curso</h3>
                         <div class="p-2 bg-yellow-100 rounded-lg">
-                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
