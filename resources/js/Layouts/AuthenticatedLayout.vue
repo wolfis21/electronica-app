@@ -9,6 +9,11 @@ const isSidebarOpen = ref(false);
 const page = usePage();
 const can = page.props.auth.user?.can || {};
 
+// Verificar si el usuario es técnico
+const isTechnician = computed(() => {
+    return page.props.auth.user?.role_id === 3;
+});
+
 // --- LÓGICA PARA FECHA Y HORA (AÑADIDA AQUÍ) ---
 const currentTime = ref('');
 const currentDate = computed(() => {
@@ -50,59 +55,103 @@ const ExclamationTriangleIcon = createIcon(() => h('svg', { class: 'h-5 w-5', vi
 const LightBulbIcon = createIcon(() => h('svg', { class: 'h-5 w-5', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, [h('path', { d: 'M9 21h6' }), h('path', { d: 'M12 17v4' }), h('path', { d: 'M12 3a5 5 0 0 1 5 5c0 1.5-.5 3-2 4l-3 1-3-1c-1.5-1-2-2.5-2-4a5 5 0 0 1 5-5z' })]));
 
 
-// --- ESTRUCTURA DEL MENÚ (RESTAURADA) ---
-const menuStructure = [
-    {
-        title: 'Principal',
-        items: [
-            { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
-            { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: true },
-            { name: 'Importar/Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: true },
-        ]
-    },
-    {
-        title: 'Menu Administrador',
-        items: [
-            { name: 'Gestión de Roles', icon: ShieldCheckIcon, href: route('roles.index'), current: route().current('roles.*'), permission: can.manage_roles },
-            { name: 'Gestión de Empresas', icon: BuildingIcon, href: route('companies.index'), current: route().current('companies.*'), permission: can.manage_companies },
-            { name: 'Empleados/Usuarios', icon: UsersIcon, href: route('employees_users.index'), current: route().current('employees_users.*'), permission: can.view_users },
-        ]
-    },
-    {
-        title: 'Menu Contabilidad',
-        items: [
-            { name: 'Órdenes', icon: BriefcaseIcon, href: route('orders.index'), current: route().current('orders.*'), permission: true },
-            { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
-            { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
-            { name: 'Gestión de Pagos', icon: DollarSignIcon, href: route('payments.index'), current: route().current('payments.*'), permission: can.view_payments },
-        ]
-    },
-    {
-        title: 'Soporte',
-        items: [
-            { 
-                name: 'Reportar Problema', 
-                icon: ExclamationTriangleIcon, 
-                href: 'https://forms.google.com/tu-formulario-aqui', 
-                current: false, 
-                permission: true,
-                external: true
+// --- ESTRUCTURA DEL MENÚ ---
+const menuStructure = computed(() => {
+    if (isTechnician.value) {
+        // Menú simplificado para técnicos
+        return [
+            {
+                title: 'Principal',
+                items: [
+                    { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
+                ]
             },
-            { 
-                name: 'Enviar Sugerencia', 
-                icon: LightBulbIcon, 
-                href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
-                current: false, 
-                permission: true,
-                external: true
+            {
+                title: 'Menu Contabilidad',
+                items: [
+                    { name: 'Órdenes', icon: BriefcaseIcon, href: route('orders.index'), current: route().current('orders.*'), permission: true },
+                    { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
+                    { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
+                ]
             },
-        ]
+            {
+                title: 'Soporte',
+                items: [
+                    { 
+                        name: 'Reportar Problema', 
+                        icon: ExclamationTriangleIcon, 
+                        href: 'https://forms.google.com/tu-formulario-aqui', 
+                        current: false, 
+                        permission: true,
+                        external: true
+                    },
+                    { 
+                        name: 'Enviar Sugerencia', 
+                        icon: LightBulbIcon, 
+                        href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
+                        current: false, 
+                        permission: true,
+                        external: true
+                    },
+                ]
+            }
+        ];
     }
-];
+    
+    // Menú completo para otros roles
+    return [
+        {
+            title: 'Principal',
+            items: [
+                { name: 'Dashboard', icon: DashboardIcon, href: route('dashboard'), current: route().current('dashboard'), permission: true },
+                { name: 'Analítica', icon: ChartBarIcon, href: route('analytics.index'), current: route().current('analytics.index'), permission: true },
+                { name: 'Importar/Exportar Datos', icon: downloadIcon, href: route('export.index'), current: route().current('export.index'), permission: true },
+            ]
+        },
+        {
+            title: 'Menu Administrador',
+            items: [
+                { name: 'Gestión de Roles', icon: ShieldCheckIcon, href: route('roles.index'), current: route().current('roles.*'), permission: can.manage_roles },
+                { name: 'Gestión de Empresas', icon: BuildingIcon, href: route('companies.index'), current: route().current('companies.*'), permission: can.manage_companies },
+                { name: 'Empleados/Usuarios', icon: UsersIcon, href: route('employees_users.index'), current: route().current('employees_users.*'), permission: can.view_users },
+            ]
+        },
+        {
+            title: 'Menu Contabilidad',
+            items: [
+                { name: 'Órdenes', icon: BriefcaseIcon, href: route('orders.index'), current: route().current('orders.*'), permission: true },
+                { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
+                { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
+                { name: 'Gestión de Pagos', icon: DollarSignIcon, href: route('payments.index'), current: route().current('payments.*'), permission: can.view_payments },
+            ]
+        },
+        {
+            title: 'Soporte',
+            items: [
+                { 
+                    name: 'Reportar Problema', 
+                    icon: ExclamationTriangleIcon, 
+                    href: 'https://forms.google.com/tu-formulario-aqui', 
+                    current: false, 
+                    permission: true,
+                    external: true
+                },
+                { 
+                    name: 'Enviar Sugerencia', 
+                    icon: LightBulbIcon, 
+                    href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
+                    current: false, 
+                    permission: true,
+                    external: true
+                },
+            ]
+        }
+    ];
+});
 
 // --- MENÚ FILTRADO POR PERMISOS ---
 const filteredMenuItems = computed(() => {
-    return menuStructure
+    return menuStructure.value
         .map(section => ({ ...section, items: section.items.filter(item => item.permission) }))
         .filter(section => section.items.length > 0);
 });

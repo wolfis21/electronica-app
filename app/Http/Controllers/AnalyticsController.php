@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 
 class AnalyticsController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
+        // Verificar si el usuario es técnico y redirigir al dashboard
+        if (Auth::user()->role_id === 3) {
+            return redirect()->route('dashboard')->with('error', 'No tienes acceso a las analíticas.');
+        }
+
         // --- FILTROS DE PERÍODO ---
         $days = $request->input('period', 30);
         $startDate = Carbon::now()->subDays($days)->startOfDay();

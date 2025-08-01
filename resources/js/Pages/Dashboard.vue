@@ -10,6 +10,7 @@ const props = defineProps({
     kpis: Object,
     lists: Object,
     filters: Object,
+    isTechnician: Boolean,
 });
 
 const statusColors = {
@@ -59,7 +60,7 @@ const periodText = computed(() => {
 
         <div class="space-y-6">
             <!-- KPIs Principales -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div :class="['grid gap-6', props.isTechnician ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3']">
                 <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg text-white">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -88,7 +89,8 @@ const periodText = computed(() => {
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-xl shadow-lg text-white">
+                <!-- Tarjeta de ingresos solo para usuarios no técnicos -->
+                <div v-if="!props.isTechnician" class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-xl shadow-lg text-white">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">

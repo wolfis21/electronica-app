@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -18,6 +19,9 @@ class DashboardController extends Controller
         $days = $request->input('period', 30);
         $startDate = Carbon::now()->subDays($days)->startOfDay();
         $endDate = Carbon::now()->endOfDay();
+
+        // Verificar si el usuario es técnico
+        $isTechnician = Auth::user()->role_id === 3;
 
         // --- 2. GRÁFICAS ---
         // Gráfica 1: Órdenes por Estado en el período
@@ -33,12 +37,16 @@ class DashboardController extends Controller
             ->select('users.name', DB::raw('count(orders.id) as count'))
             ->groupBy('users.name')->get();
 
-        // --- 3. INDICADORES (KPIs) Y ANÁLISIS DE PAGOS ---
+        // --- 3. INDICADORES (KPIs) ---
         $kpis = [
             'new_orders' => DB::table('orders')->whereBetween('created_at', [$startDate, $endDate])->count(),
             'completed_orders' => DB::table('orders')->where('status', 'Completado')->whereBetween('updated_at', [$startDate, $endDate])->count(),
-            'total_revenue' => DB::table('payments')->whereBetween('created_at', [$startDate, $endDate])->sum('amount'),
         ];
+
+        // Solo agregar datos financieros si NO es técnico
+        if (!$isTechnician) {
+            $kpis['total_revenue'] = DB::table('payments')->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+        }
         
         // --- 4. LISTAS ---
         $listOrdersInProgress = Order::with('user')
@@ -71,6 +79,7 @@ class DashboardController extends Controller
                 'active_employees'   => $activeEmployees,
             ],
             'filters' => ['period' => intval($days)],
+            'isTechnician' => $isTechnician, // Enviar flag a la vista
         ]);
     }
 }
