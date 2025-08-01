@@ -142,12 +142,6 @@ class OrderController extends Controller
                 'extra_notes' => $request->extra_notes,
                 'status' => $request->status,
             ]);
-
-            // Buscamos al usuario responsable y le enviamos la notificación.
-            $responsibleUser = User::find($request->users_id);
-            if ($responsibleUser) {
-                $responsibleUser->notify(new OrderAssigned($order));
-            }
         });
 
         return redirect()->route('orders.index')->with('success', 'Orden y cliente (si es nuevo) creados exitosamente.');
