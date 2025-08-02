@@ -35,6 +35,10 @@ const confirmDelete = () => {
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
                     <div class="mb-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Información de la Revisión</h3>
+                        <p class="mt-4 text-gray-700">
+                            <strong>Responsable:</strong>
+                            <span class="font-semibold ml-2">{{ review.user ? review.user.name : 'No asignado' }}</span>
+                        </p>
                         <p class="text-gray-700"><strong>Diagnóstico Técnico:</strong></p>
                         <p class="mt-1 p-3 bg-gray-50 rounded-md whitespace-pre-wrap">{{ review.description_tec }}</p>
                         <p class="mt-4 text-gray-700"><strong>Presupuesto Total:</strong> <span class="font-bold text-green-700 text-xl">{{ parseFloat(review.budget).toFixed(2) }} $</span></p>

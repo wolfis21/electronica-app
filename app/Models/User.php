@@ -95,4 +95,8 @@ class User extends Authenticatable
         // El segundo argumento 'users_id' es la clave foránea en la tabla 'orders'
         return $this->hasMany(Order::class, 'users_id');
     }
+        public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
 }

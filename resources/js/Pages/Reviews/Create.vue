@@ -11,11 +11,13 @@ import DangerButton from '@/Components/DangerButton.vue';
 
 const props = defineProps({
     order: Object,
-    products: Array, // Lista de todos los productos/servicios disponibles
+    products: Array,
+    users: Array, 
 });
 
 const form = useForm({
     description_tec: '',
+    user_id: null,
     selected_products: [], // Array de objetos {id: product_id, quantity: N}
 });
 
@@ -106,6 +108,21 @@ const submit = () => {
                                 required
                             ></textarea>
                             <InputError class="mt-2" :message="form.errors.description_tec" />
+                        </div>
+
+                        <div class="mb-6">
+                            <InputLabel for="user_id" value="Responsable de la Revisión" />
+                            <select
+                                id="user_id"
+                                v-model="form.user_id"
+                                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option :value="null" disabled>Seleccione un responsable</option>
+                                <option v-for="user in users" :key="user.id" :value="user.id">
+                                    {{ user.name }}
+                                </option>
+                            </select>
+                            <InputError class="mt-2" :message="form.errors.user_id" />
                         </div>
 
                         <h3 class="text-lg font-medium text-gray-900 mt-6 mb-4">Productos y Servicios para la Revisión</h3>

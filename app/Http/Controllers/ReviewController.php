@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\Product; // Importar el modelo Product
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB; // Para transacciones
 
@@ -34,10 +35,12 @@ class ReviewController extends Controller
 
         // Obtener solo productos y servicios activos o disponibles para seleccionar
         $products = Product::select('id', 'name', 'code', 'price_sale', 'is_service', 'stock')->orderBy('name')->get();
+        $users = User::select('id', 'name')->orderBy('name')->get();
 
         return Inertia::render('Reviews/Create', [
             'order' => $order,
             'products' => $products,
+            'users' => $users,
         ]);
     }
 
@@ -53,6 +56,7 @@ class ReviewController extends Controller
         $request->validate([
             'description_tec' => ['required', 'string', 'max:5000'],
             // 'budget' se calculará en el backend
+            'user_id' => ['required', 'exists:users,id'],
             'selected_products' => ['nullable', 'array'], // Array de objetos {id, quantity, price_sale}
             'selected_products.*.id' => ['required', 'exists:products,id'],
             'selected_products.*.quantity' => ['required', 'integer', 'min:1'],
@@ -97,6 +101,7 @@ class ReviewController extends Controller
             $review = $order->reviews()->create([
                 'description_tec' => $request->description_tec,
                 'budget' => $totalBudget,
+                'user_id' => $request->user_id, // Asignar el usuario autenticado como responsable de la revisión
             ]);
 
             // Adjuntar productos/servicios a la revisión
@@ -135,11 +140,11 @@ class ReviewController extends Controller
         }
 
         // Cargar los productos/servicios asociados con la revisión
-        $review->load('products');
+        $review->load('products', 'user');
 
         return Inertia::render('Reviews/Show', [
             'order' => $order,
-            'review' => $review,
+            'review' => $review->load('user'),
             'can' => [ // Add this 'can' array
                 'edit_reviews' => auth()->user()->can('edit_reviews'),
                 'delete_reviews' => auth()->user()->can('delete_reviews'),
@@ -157,13 +162,15 @@ class ReviewController extends Controller
         }
 
         // Cargar los productos/servicios asociados
-        $review->load('products');
+        $review->load('products' , 'user');
         $products = Product::select('id', 'name', 'code', 'price_sale', 'is_service', 'stock')->orderBy('name')->get();
+        $users = User::select('id', 'name')->orderBy('name')->get();
 
         return Inertia::render('Reviews/Edit', [
             'order' => $order,
             'review' => $review,
             'products' => $products,
+            'users' => $users,
         ]);
     }
 
@@ -178,6 +185,7 @@ class ReviewController extends Controller
 
         $request->validate([
             'description_tec' => ['required', 'string', 'max:5000'],
+            'user_id' => ['required', 'exists:users,id'],
             'selected_products' => ['nullable', 'array'],
             'selected_products.*.id' => ['required', 'exists:products,id'],
             'selected_products.*.quantity' => ['required', 'integer', 'min:1'],
@@ -229,6 +237,7 @@ class ReviewController extends Controller
             $review->update([
                 'description_tec' => $request->description_tec,
                 'budget' => $totalBudget,
+                'user_id' => $request->user_id,
             ]);
 
             // Sincronizar los productos/servicios (elimina los viejos y adjunta los nuevos)
