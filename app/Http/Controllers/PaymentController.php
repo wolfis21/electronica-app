@@ -97,9 +97,9 @@ class PaymentController extends Controller
         $totalPaid = $order->payments->sum('amount');
         $pendingBalance = $totalDue - $totalPaid;
 
-        if ($request->amount > $pendingBalance + 0.001) {
+/*         if ($request->amount > $pendingBalance + 0.001) {
             throw ValidationException::withMessages(['amount' => 'El monto del pago no puede ser mayor que el saldo pendiente de $' . number_format($pendingBalance, 2)]);
-        }
+        } */
 
         DB::transaction(function () use ($request, $order) {
             // --- CAMBIO 2: Usar los valores del request en lugar de los hardcodeados ---

@@ -106,7 +106,13 @@ const pendingBalanceInVes = computed(() => {
 });
 
 const setFullPayment = () => {
-    form.amount = pendingBalance.value.toFixed(2);
+    // Si la moneda es VES y tenemos la tasa, llena con el monto en VES
+    if (form.currency === 'VES' && pendingBalanceInVes.value) {
+        form.amount = pendingBalanceInVes.value.toFixed(2);
+    } else {
+        // De lo contrario, llena con el monto en USD
+        form.amount = pendingBalance.value.toFixed(2);
+    }
 };
 
 const resetAll = () => {
@@ -139,6 +145,17 @@ const formatVes = (amount) => {
     if (amount === null || typeof amount === 'undefined') return 'N/A';
     return new Intl.NumberFormat('es-VE', { style: 'currency', currency: 'VES' }).format(amount);
 };
+
+// NUEVA PROPIEDAD CALCULADA
+const maxPaymentAmount = computed(() => {
+    // Si la moneda seleccionada es VES y tenemos la tasa de cambio
+    if (form.currency === 'VES' && pendingBalanceInVes.value) {
+        // El máximo permitido es el saldo pendiente en Bolívares
+        return pendingBalanceInVes.value.toFixed(2);
+    }
+    // Para cualquier otro caso (USD o si no hay tasa), el máximo es el saldo en dólares
+    return pendingBalance.value.toFixed(2);
+});
 </script>
 
 <template>
@@ -244,8 +261,8 @@ const formatVes = (amount) => {
                                 <div>
                                     <InputLabel for="amount" value="Monto a Pagar" />
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <TextInput type="number" id="amount" v-model="form.amount" required step="0.01" :max="pendingBalance"
-                                               class="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                        <TextInput type="number" id="amount" v-model="form.amount" required step="0.01" 
+                                                :max="maxPaymentAmount"  class="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
                                         <button type="button" @click="setFullPayment"
                                                 class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                             Pagar Completo
