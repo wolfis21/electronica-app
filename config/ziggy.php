@@ -104,6 +104,11 @@ return [
             'support.index',
             'support.create',
             'support.store',
+
+            // Commissions
+            'commissions.index',
+            'commissions.payout',
+        
         ],
     ],
 ];

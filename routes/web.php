@@ -20,6 +20,7 @@ use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CommissionController;
 
 
 /* Route::get('/', function () {
@@ -109,6 +110,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/exportar/descargar', [ExportController::class, 'download'])->name('export.download');
     Route::post('/importar', [ImportController::class, 'import'])->name('import.store');
 
+Route::get('/commissions', [CommissionController::class, 'index'])->name('commissions.index');
+Route::post('/commission/payout', [CommissionController::class, 'payout'])->name('commissions.payout');
+Route::get('/commissions/details', [CommissionController::class, 'getDetails'])->name('commissions.details');
 
 });
 

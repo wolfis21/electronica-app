@@ -123,6 +123,7 @@ const menuStructure = computed(() => {
                 { name: 'Clientes', icon: UsersIcon, href: route('customers.index'), current: route().current('customers.*'), permission: can.view_customers },
                 { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
                 { name: 'Gestión de Pagos', icon: DollarSignIcon, href: route('payments.index'), current: route().current('payments.*'), permission: can.view_payments },
+                { name: 'Gestión de Comisiones', icon: DollarSignIcon, href: route('commissions.index'), current: route().current('comissions.*'), permission: can.view_payments }, //mantener este permiso provisionalmente
             ]
         },
         {
