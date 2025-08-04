@@ -108,6 +108,8 @@ return [
             // Commissions
             'commissions.index',
             'commissions.payout',
+            'commissions.details'
+            
         
         ],
     ],
