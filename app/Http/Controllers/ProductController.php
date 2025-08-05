@@ -72,8 +72,17 @@ class ProductController extends Controller
             $validated['stock'] = null;
         }
 
-        Product::create($validated);
+        $product = Product::create($validated);
 
+        // --- INICIO DE LA MODIFICACIÓN ---
+        // Si la petición viene de un cliente que espera JSON (como nuestro modal con axios/fetch),
+        // devolvemos el producto creado y un código de éxito (201).
+        if ($request->wantsJson()) {
+            return response()->json($product, 201);
+        }
+        // --- FIN DE LA MODIFICACIÓN ---
+
+        // Si es una petición normal, mantenemos la redirección.
         return redirect()->route('products.index')->with('success', 'Producto/Servicio creado exitosamente.');
     }
 
