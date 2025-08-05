@@ -130,6 +130,18 @@ const submitNewProduct = () => {
             }
         });
 };
+
+
+const isService = ref(false);
+const costPrice = ref(0);
+
+watch(() => form.price, (newValue) => {
+    costPrice.value = newValue || 0; // Sincronizar precio de costo con costPrice
+});
+
+const calculatedSalePrice = computed(() => {
+    return isService.value ? 0 : (costPrice.value / 0.70).toFixed(2); // Calcular precio con ganancia del 30%
+});
 </script>
 
 <template>
@@ -241,7 +253,7 @@ const submitNewProduct = () => {
                             <InputError :message="newProductForm.errors.code" class="mt-2" />
                         </div>
                         <div>
-                            <InputLabel for="new_price" value="Precio de Costo (Opcional)" />
+                            <InputLabel for="new_price" value="Precio de Costo" />
                             <TextInput id="new_price" v-model="newProductForm.price" type="number" step="0.01" min="0" class="mt-1 block w-full" />
                             <InputError :message="newProductForm.errors.price" class="mt-2" />
                         </div>
@@ -249,6 +261,10 @@ const submitNewProduct = () => {
                             <InputLabel for="new_price_sale" value="Precio de Venta" />
                             <TextInput id="new_price_sale" v-model="newProductForm.price_sale" type="number" step="0.01" min="0" class="mt-1 block w-full" required />
                             <InputError :message="newProductForm.errors.price_sale" class="mt-2" />
+                            <!-- Precio Calculado -->
+                            <div v-if="!form.is_service">
+                                <p class="text-sm text-gray-500">Precio de Venta Calculado: <span class="font-bold text-gray-800">${{ calculatedSalePrice }}</span></p>
+                            </div>
                         </div>
                         <div class="md:col-span-2">
                             <InputLabel for="new_description" value="Descripción" />

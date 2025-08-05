@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { watch } from 'vue';
+import { watch, ref, computed } from 'vue';
 
 const props = defineProps({
     product: Object,
@@ -33,9 +33,22 @@ watch(() => form.is_service, (newValue) => {
 const submit = () => {
     form.put(route('products.update', props.product.id));
 };
+
+
+const isService = ref(false);
+const costPrice = ref(0);
+
+watch(() => form.price, (newValue) => {
+    costPrice.value = newValue || 0; // Sincronizar precio de costo con costPrice
+});
+
+const calculatedSalePrice = computed(() => {
+    return isService.value ? 0 : (costPrice.value / 0.70).toFixed(2); // Calcular precio con ganancia del 30%
+});
 </script>
 
 <template>
+
     <Head :title="`Editar Producto/Servicio: ${product.name}`" />
 
     <AuthenticatedLayout>
@@ -52,63 +65,41 @@ const submit = () => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <InputLabel for="name" value="Nombre" />
-                                <TextInput
-                                    id="name"
-                                    v-model="form.name"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    required
-                                    autofocus
-                                />
+                                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required
+                                    autofocus />
                                 <InputError class="mt-2" :message="form.errors.name" />
                             </div>
 
                             <div>
                                 <InputLabel for="code" value="Código (EAN/SKU)" />
-                                <TextInput
-                                    id="code"
-                                    v-model="form.code"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                />
+                                <TextInput id="code" v-model="form.code" type="text" class="mt-1 block w-full" />
                                 <InputError class="mt-2" :message="form.errors.code" />
                             </div>
 
                             <div>
-                                <InputLabel for="price" value="Precio de Costo (Opcional)" />
-                                <TextInput
-                                    id="price"
-                                    v-model="form.price"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    class="mt-1 block w-full"
-                                />
+                                <InputLabel for="price" value="Precio de Costo" />
+                                <TextInput id="price" v-model="form.price" type="number" step="0.01" min="0"
+                                    class="mt-1 block w-full" />
                                 <InputError class="mt-2" :message="form.errors.price" />
                             </div>
 
                             <div>
                                 <InputLabel for="price_sale" value="Precio de Venta" />
-                                <TextInput
-                                    id="price_sale"
-                                    v-model="form.price_sale"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    class="mt-1 block w-full"
-                                    required
-                                />
+                                <TextInput id="price_sale" v-model="form.price_sale" type="number" step="0.01" min="0"
+                                    class="mt-1 block w-full" required />
                                 <InputError class="mt-2" :message="form.errors.price_sale" />
+                                <!-- Precio Calculado -->
+                                <div v-if="!form.is_service">
+                                    <p class="text-sm text-gray-500">Precio de Venta Calculado: <span
+                                            class="font-bold text-gray-800">${{ calculatedSalePrice }}</span></p>
+                                </div>
                             </div>
 
                             <div class="col-span-1 md:col-span-2">
                                 <InputLabel for="description" value="Descripción" />
-                                <textarea
-                                    id="description"
-                                    v-model="form.description"
+                                <textarea id="description" v-model="form.description"
                                     class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                    rows="3"
-                                ></textarea>
+                                    rows="3"></textarea>
                                 <InputError class="mt-2" :message="form.errors.description" />
                             </div>
 
@@ -122,14 +113,8 @@ const submit = () => {
 
                             <div v-if="!form.is_service">
                                 <InputLabel for="stock" value="Stock" />
-                                <TextInput
-                                    id="stock"
-                                    v-model="form.stock"
-                                    type="number"
-                                    min="0"
-                                    class="mt-1 block w-full"
-                                    :required="!form.is_service"
-                                />
+                                <TextInput id="stock" v-model="form.stock" type="number" min="0"
+                                    class="mt-1 block w-full" :required="!form.is_service" />
                                 <InputError class="mt-2" :message="form.errors.stock" />
                             </div>
                         </div>
