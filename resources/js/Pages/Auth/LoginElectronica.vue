@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import axios from 'axios'; // Importar Axios para realizar solicitudes al backend
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -39,17 +40,37 @@ onMounted(() => {
 onUnmounted(() => {
     clearInterval(timerId);
 });
+
+const availableFormats = ref([]); // Almacena los formatos disponibles
+
+const fetchAvailableFormats = async () => {
+    try {
+        const response = await axios.get('/api/available-image-formats'); // Endpoint del backend
+        availableFormats.value = response.data.formats;
+    } catch (error) {
+        console.error('Error fetching image formats:', error);
+    }
+};
+
+onMounted(() => {
+    fetchAvailableFormats(); // Obtener formatos disponibles al montar el componente
+    updateTime();
+    timerId = setInterval(updateTime, 1000);
+});
+onUnmounted(() => {
+    clearInterval(timerId);
+});
 </script>
 
 <template>
     <Head title="Iniciar Sesión" />
 
     <div class="relative min-h-screen bg-gray-900 font-sans text-white flex items-center justify-center p-4 overflow-hidden">
-        
         <!-- Imagen optimizada con lazy loading y múltiples formatos -->
         <picture class="absolute inset-0 z-0">
-            <source srcset="/images/taller.webp" type="image/webp">
-            <source srcset="/images/taller.avif" type="image/avif">
+            <template v-for="format in availableFormats" :key="format">
+                <source :srcset="`/images/taller.${format}`" :type="`image/${format}`" />
+            </template>
             <img 
                 class="h-full w-full object-cover" 
                 src="/images/taller.jpg" 

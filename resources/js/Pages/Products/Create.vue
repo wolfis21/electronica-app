@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { watch } from 'vue';
+import { watch, ref, computed } from 'vue';
 
 const form = useForm({
     name: '',
@@ -31,6 +31,18 @@ const submit = () => {
         onFinish: () => form.reset(),
     });
 };
+
+
+const isService = ref(false);
+const costPrice = ref(0);
+
+watch(() => form.price, (newValue) => {
+    costPrice.value = newValue || 0; // Sincronizar precio de costo con costPrice
+});
+
+const calculatedSalePrice = computed(() => {
+    return isService.value ? 0 : (costPrice.value / 0.70).toFixed(2); // Calcular precio con ganancia del 30%
+});
 </script>
 
 <template>
@@ -60,7 +72,7 @@ const submit = () => {
                             </div>
 
                             <div>
-                                <InputLabel for="code" value="Código (EAN/SKU)" /> <!-- Nuevo campo -->
+                                <InputLabel for="code" value="Código (EAN/SKU)" />
                                 <TextInput
                                     id="code"
                                     v-model="form.code"
@@ -71,7 +83,7 @@ const submit = () => {
                             </div>
 
                             <div>
-                                <InputLabel for="price" value="Precio de Costo (Opcional)" /> <!-- Ahora opcional -->
+                                <InputLabel for="price" value="Precio de Costo" />
                                 <TextInput
                                     id="price"
                                     v-model="form.price"
@@ -84,7 +96,7 @@ const submit = () => {
                             </div>
 
                             <div>
-                                <InputLabel for="price_sale" value="Precio de Venta" /> <!-- Nuevo campo, requerido -->
+                                <InputLabel for="price_sale" value="Precio de Venta" />
                                 <TextInput
                                     id="price_sale"
                                     v-model="form.price_sale"
@@ -95,6 +107,10 @@ const submit = () => {
                                     required
                                 />
                                 <InputError class="mt-2" :message="form.errors.price_sale" />
+                                <!-- Precio Calculado -->
+                            <div v-if="!form.is_service">
+                                <p class="text-sm text-gray-500">Precio de Venta Calculado: <span class="font-bold text-gray-800">${{ calculatedSalePrice }}</span></p>
+                            </div>
                             </div>
 
                             <div class="col-span-1 md:col-span-2">
@@ -128,6 +144,8 @@ const submit = () => {
                                 />
                                 <InputError class="mt-2" :message="form.errors.stock" />
                             </div>
+
+                            
                         </div>
 
                         <div class="flex items-center justify-end mt-4">
