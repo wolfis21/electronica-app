@@ -74,27 +74,6 @@ const menuStructure = computed(() => {
                     { name: 'Productos/Servicios', icon: BriefcaseIcon, href: route('products.index'), current: route().current('products.*'), permission: can.view_products },
                 ]
             },
-            {
-                title: 'Soporte',
-                items: [
-                    { 
-                        name: 'Reportar Problema', 
-                        icon: ExclamationTriangleIcon, 
-                        href: 'https://forms.google.com/tu-formulario-aqui', 
-                        current: false, 
-                        permission: true,
-                        external: true
-                    },
-                    { 
-                        name: 'Enviar Sugerencia', 
-                        icon: LightBulbIcon, 
-                        href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
-                        current: false, 
-                        permission: true,
-                        external: true
-                    },
-                ]
-            }
         ];
     }
     
@@ -125,27 +104,6 @@ const menuStructure = computed(() => {
                 { name: 'Gestión de Pagos', icon: DollarSignIcon, href: route('payments.index'), current: route().current('payments.*'), permission: can.view_payments },
             ]
         },
-        {
-            title: 'Soporte',
-            items: [
-                { 
-                    name: 'Reportar Problema', 
-                    icon: ExclamationTriangleIcon, 
-                    href: 'https://forms.google.com/tu-formulario-aqui', 
-                    current: false, 
-                    permission: true,
-                    external: true
-                },
-                { 
-                    name: 'Enviar Sugerencia', 
-                    icon: LightBulbIcon, 
-                    href: 'https://forms.google.com/tu-formulario-sugerencias-aqui', 
-                    current: false, 
-                    permission: true,
-                    external: true
-                },
-            ]
-        }
     ];
 });
 
