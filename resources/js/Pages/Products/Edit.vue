@@ -30,7 +30,21 @@ watch(() => form.is_service, (newValue) => {
     }
 });
 
+const salePriceError = ref('');
+
+watch(() => form.price_sale, (newValue) => {
+    if (parseFloat(newValue) <= parseFloat(form.price)) {
+        salePriceError.value = 'El precio de venta debe ser mayor al precio de costo.';
+    } else {
+        salePriceError.value = '';
+    }
+});
+
 const submit = () => {
+    if (parseFloat(form.price_sale) <= parseFloat(form.price)) {
+        alert('El precio de venta debe ser mayor al precio de costo.');
+        return;
+    }
     form.put(route('products.update', props.product.id));
 };
 
@@ -87,7 +101,7 @@ const calculatedSalePrice = computed(() => {
                                 <InputLabel for="price_sale" value="Precio de Venta" />
                                 <TextInput id="price_sale" v-model="form.price_sale" type="number" step="0.01" min="0"
                                     class="mt-1 block w-full" required />
-                                <InputError class="mt-2" :message="form.errors.price_sale" />
+                                <InputError class="mt-2" :message="form.errors.price_sale || salePriceError" />
                                 <!-- Precio Calculado -->
                                 <div v-if="!form.is_service">
                                     <p class="text-sm text-gray-500">Precio de Venta Calculado: <span
