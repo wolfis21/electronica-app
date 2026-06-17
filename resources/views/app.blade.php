@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{ asset('logo_electronica_tplkg.ico') }}">
-    <title inertia>{{ config('app.name', 'Electronica Tp-Link') }}</title>
+    <link rel="icon" href="{{ asset('logito-electronica.ico') }}">
+    <title inertia>{{ config('app.name', 'SM Soluciones Electronicas') }}</title>
 
     <!-- Fonts -->
     <!--<link rel="preconnect" href="https://fonts.bunny.net">
