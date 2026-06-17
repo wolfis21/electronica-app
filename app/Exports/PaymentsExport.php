@@ -33,7 +33,7 @@ class PaymentsExport implements FromCollection, WithHeadings, WithMapping
         return [
             $payment->id,
             $payment->orders_id,
-            $payment->order->customer->fullname ?? 'N/A',
+            $payment->order?->customer?->fullname ?? 'N/A',
             $payment->payment_date,
             $payment->amount,
             $payment->currency,

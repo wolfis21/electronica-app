@@ -45,7 +45,7 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping
             $customer->orders_count, // Usamos la propiedad generada por withCount
             $customer->payments_count, // Usamos la propiedad generada por withCount
             $customer->payments->pluck('payment_method')->unique()->implode(', '),
-            $customer->created_at->format('Y-m-d'),
+            $customer->created_at?->format('Y-m-d') ?? 'N/A',
         ];
     }
 }

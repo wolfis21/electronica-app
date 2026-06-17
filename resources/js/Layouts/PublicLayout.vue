@@ -63,7 +63,7 @@ onUnmounted(() => {
             </div>
 
             <div class="hidden md:block">
-                <Link :href="route('register')" class="px-5 py-2 rounded-md font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105">
+                <Link :href="route('contact')" class="px-5 py-2 rounded-md font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105">
                     Solicitar Acceso
                 </Link>
             </div>
@@ -81,11 +81,11 @@ onUnmounted(() => {
             <button @click="toggleMenu" class="absolute top-8 right-7 text-white focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <Link @click="toggleMenu" :href="route('inicio')" class="text-3xl font-bold text-white hover:text-orq-gold transition-colors">Inicio</Link>
+            <Link @click="toggleMenu" :href="route('welcome')" class="text-3xl font-bold text-white hover:text-orq-gold transition-colors">Inicio</Link>
             <Link @click="toggleMenu" :href="route('pricing')" class="text-3xl font-bold text-white hover:text-orq-gold transition-colors">Precios</Link>
             <Link @click="toggleMenu" :href="route('about')" class="text-3xl font-bold text-white hover:text-orq-gold transition-colors">Nosotros</Link>
             <Link @click="toggleMenu" :href="route('contact')" class="text-3xl font-bold text-white hover:text-orq-gold transition-colors">Contacto</Link>
-            <Link @click="toggleMenu" :href="route('register')" class="mt-8 px-8 py-4 rounded-lg text-xl font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105">
+            <Link @click="toggleMenu" :href="route('contact')" class="mt-8 px-8 py-4 rounded-lg text-xl font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105">
                 Solicitar Acceso
             </Link>
         </div>

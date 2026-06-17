@@ -14,11 +14,11 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         Company::create([
-            'name' => 'Electrónica Tplkg C.A.',
+            'name' => 'SM Soluciones Electronicas C.A.',
             'description' => 'Sede principal de reparaciones electrónicas.',
             'phone' => '+58424-9342951',
-            'email' => 'info@electronicatplkg.com',
-            'address' => 'C.C Altavista 1, Puerto Ordaz, Bolívar',
+            'email' => 'smsoluciones@gmail.com',
+            'address' => 'Puerto Ordaz, Bolívar',
         ]);
 
     }

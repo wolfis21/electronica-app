@@ -121,7 +121,7 @@ class CommissionController extends Controller
             ->get();
 
         $commissionsByUser = [];
-        $commissionRate = 0.30;
+        $commissionRate = config('app.commission_rate', 0.30);
 
         foreach ($reviews as $review) {
             if (!$review->user) continue;

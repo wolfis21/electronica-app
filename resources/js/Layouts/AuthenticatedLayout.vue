@@ -119,10 +119,10 @@ const filteredMenuItems = computed(() => {
 <template>
     <div class="relative min-h-screen lg:flex">
         <div v-show="isSidebarOpen" @click="isSidebarOpen = false"
-            class="fixed inset-0 z-20 bg-black opacity-50 lg:hidden" aria-hidden="true"></div>
+            class="fixed inset-0 z-40 bg-black opacity-50 lg:hidden" aria-hidden="true"></div>
 
         <aside :class="[
-            'fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gray-800 text-white transform transition-transform duration-300 ease-in-out',
+            'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-gray-800 text-white transform transition-transform duration-300 ease-in-out',
             'lg:relative lg:translate-x-0',
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         ]">
@@ -172,7 +172,7 @@ const filteredMenuItems = computed(() => {
                     <!-- Sección de Soporte para Móvil -->
                     <div class="py-2">
                         <p class="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                            Centro de Soporte
+                             Centro de Soporte
                         </p>
                         <a href="https://forms.google.com/tu-formulario-bugs-aqui" 
                            target="_blank" 
@@ -210,13 +210,13 @@ const filteredMenuItems = computed(() => {
         <div class="flex-1 flex flex-col">
             <header class="bg-white border-b border-gray-200 shadow-sm">
                 <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex items-center">
+                    <div class="flex justify-between items-start md:items-center min-h-[4rem] py-3 md:py-0 md:h-16">
+                        <div class="flex items-start md:items-center w-full md:w-auto">
                             <button @click="isSidebarOpen = !isSidebarOpen"
-                                class="lg:hidden mr-4 text-gray-500 hover:text-gray-700">
+                                class="lg:hidden mr-4 text-gray-500 hover:text-gray-700 shrink-0 mt-1 md:mt-0">
                                 <MenuIcon />
                             </button>
-                            <div class="font-semibold text-xl text-gray-800 leading-tight">
+                            <div class="font-semibold text-xl text-gray-800 leading-tight w-full">
                                 <slot name="header" />
                             </div>
                         </div>
@@ -290,9 +290,44 @@ const filteredMenuItems = computed(() => {
                 </div>
             </header>
 
-            <main class="flex-grow p-6 overflow-y-auto bg-gray-100">
+            <main class="flex-grow p-4 md:p-6 pb-24 md:pb-6 overflow-y-auto bg-gray-100">
                 <slot />
             </main>
+
+            <!-- Bottom Navigation for Mobile Devices -->
+            <div class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 lg:hidden shadow-lg flex justify-around items-center h-16 px-4">
+                <Link :href="route('dashboard')" :class="[
+                    'flex flex-col items-center justify-center w-16 h-full transition-colors duration-200',
+                    route().current('dashboard') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'
+                ]">
+                    <component :is="DashboardIcon" class="h-6 w-6" />
+                    <span class="text-[10px] mt-1 font-medium">Inicio</span>
+                </Link>
+                <Link :href="route('orders.index')" :class="[
+                    'flex flex-col items-center justify-center w-16 h-full transition-colors duration-200',
+                    route().current('orders.*') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'
+                ]">
+                    <component :is="BriefcaseIcon" class="h-6 w-6" />
+                    <span class="text-[10px] mt-1 font-medium">Órdenes</span>
+                </Link>
+                <Link v-if="can.view_customers || isTechnician" :href="route('customers.index')" :class="[
+                    'flex flex-col items-center justify-center w-16 h-full transition-colors duration-200',
+                    route().current('customers.*') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'
+                ]">
+                    <component :is="UsersIcon" class="h-6 w-6" />
+                    <span class="text-[10px] mt-1 font-medium">Clientes</span>
+                </Link>
+                <button @click="isSidebarOpen = !isSidebarOpen" :class="[
+                    'flex flex-col items-center justify-center w-16 h-full transition-colors duration-200',
+                    isSidebarOpen ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'
+                ]">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="text-[10px] mt-1 font-medium">Ajustes</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>

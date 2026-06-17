@@ -12,7 +12,9 @@
 </head>
 <body>
     <div class="header">
-        <h1></h1>
+        <h1>{{ $company->name ?? 'Nombre de la Empresa' }}</h1>
+        <p>{{ $company->address ?? '' }}</p>
+        <p><strong>Teléfono:</strong> {{ $company->phone ?? '' }} | <strong>Correo:</strong> {{ $company->email ?? '' }}</p>
     </div>
 
     <h2 style="text-align:center;">Orden de Entrega</h2>
@@ -22,9 +24,9 @@
     
     <div class="details-box">
         <h3>Información de Entrega</h3>
-        <p><strong>Cliente:</strong> {{ $order->customer_name }}</p>
-        <p><strong>Dirección:</strong> {{ $order->delivery_address }}</p>
-        <p><strong>Teléfono:</strong> {{ $order->customer_phone }}</p>
+        <p><strong>Cliente:</strong> {{ $order->customer->fullname }}</p>
+        <p><strong>Dirección:</strong> {{ $order->customer->address ?? 'N/A' }}</p>
+        <p><strong>Teléfono:</strong> {{ $order->customer->phone ?? 'N/A' }}</p>
     </div>
 
     <div class="details-box">
@@ -37,12 +39,18 @@
                 </tr>
             </thead>
             <tbody>
-                 @foreach($order->items as $item)
-                <tr>
-                    <td>{{ $item->description }}</td>
-                    <td>{{ $item->quantity }}</td>
-                </tr>
-                @endforeach
+                 @if($review && $review->products)
+                     @foreach($review->products as $product)
+                     <tr>
+                         <td>{{ $product->name }}</td>
+                         <td>{{ $product->pivot->quantity }}</td>
+                     </tr>
+                     @endforeach
+                 @else
+                     <tr>
+                         <td colspan="2">No hay repuestos o servicios registrados.</td>
+                     </tr>
+                 @endif
             </tbody>
         </table>
     </div>

@@ -224,7 +224,15 @@ class OrderController extends Controller
         ]);
 
         // Actualizar la orden con los nuevos datos
-        $order->update($request->all());
+        $order->update($request->only([
+            'name_equip',
+            'serial',
+            'description',
+            'accessories',
+            'extra_notes',
+            'status',
+            'users_id',
+        ]));
 
     });
         

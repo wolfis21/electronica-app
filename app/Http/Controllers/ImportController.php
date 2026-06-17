@@ -20,20 +20,24 @@ class ImportController extends Controller
 
         $type = $request->input('type');
 
-        // --- ACTUALIZA EL SWITCH ---
-        switch ($type) {
-            case 'orders':
-                Excel::import(new OrdersImport, $request->file('import_file'));
-                break;
-            case 'customers':
-                Excel::import(new CustomersImport, $request->file('import_file'));
-                break;
-            case 'products':
-                Excel::import(new ProductsImport, $request->file('import_file'));
-                break;
-            case 'payments':
-                Excel::import(new PaymentsImport, $request->file('import_file'));
-                break;
+        try {
+            // --- ACTUALIZA EL SWITCH ---
+            switch ($type) {
+                case 'orders':
+                    Excel::import(new OrdersImport, $request->file('import_file'));
+                    break;
+                case 'customers':
+                    Excel::import(new CustomersImport, $request->file('import_file'));
+                    break;
+                case 'products':
+                    Excel::import(new ProductsImport, $request->file('import_file'));
+                    break;
+                case 'payments':
+                    Excel::import(new PaymentsImport, $request->file('import_file'));
+                    break;
+            }
+        } catch (\Throwable $e) {
+            return redirect()->route('export.index')->with('error', 'Error al importar los datos: ' . $e->getMessage());
         }
 
         return redirect()->route('export.index')->with('success', '¡Datos importados exitosamente!');

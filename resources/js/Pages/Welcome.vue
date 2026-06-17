@@ -34,7 +34,7 @@ onMounted(setupScrollAnimations);
                         La plataforma definitiva que silencia el caos y sincroniza tus operaciones. Toma la batuta y dirige tu negocio hacia una nueva melodía de crecimiento.
                     </p>
                     <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link :href="route('register')" class="w-full sm:w-auto text-center px-8 py-4 rounded-lg text-lg font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105 shadow-lg">
+                        <Link :href="route('contact')" class="w-full sm:w-auto text-center px-8 py-4 rounded-lg text-lg font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105 shadow-lg">
                             Comenzar ahora
                         </Link>
                         <Link href="#" class="w-full sm:w-auto text-center font-bold text-orq-blue hover:text-blue-900">

@@ -36,10 +36,32 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $company = \App\Models\Company::first() ?? \App\Models\Company::create([
+            'name' => 'Default Company C.A.',
+            'phone' => '123456',
+            'email' => 'default@company.com',
+            'address' => 'Default Address',
+        ]);
+
+        $employee = \App\Models\Employee::create([
+            'fullname' => $request->name,
+            'dni' => 'V-' . rand(10000000, 99999999),
+            'phone' => null,
+            'address' => null,
+            'companies_id' => $company->id,
+        ]);
+
+        $role = \App\Models\Role::where('name', 'Tecnico')->first() ?? \App\Models\Role::firstOrCreate(
+            ['name' => 'Tecnico'],
+            ['description' => 'Técnico de reparaciones']
+        );
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'employees_id' => $employee->id,
+            'role_id' => $role->id,
         ]);
 
         event(new Registered($user));

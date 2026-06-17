@@ -87,7 +87,7 @@ onUnmounted(() => {
                 
                 <div class="text-center mb-8">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight break-words">
-                        <span class="text-white">ELECTRÓNICA</span><span class="text-cyan-400">TPLKG</span>
+                        <span class="text-white">SM Soluciones</span><span class="text-cyan-400">Electronicas</span>
                     </h1>
                     <br>
                     <p class="mt-2 text-gray-400">Bienvenido de nuevo</p>

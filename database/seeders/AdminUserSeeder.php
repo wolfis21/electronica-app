@@ -36,7 +36,7 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@electronica.com'], // Usar email como identificador único para el usuario
             [
                 'name' => 'admin',
-                'email' => 'admin@electronicatplkg.com',
+                'email' => 'admin@electronica.com',
                 'password' => Hash::make('123456789'), // ¡CAMBIA ESTA CONTRASEÑA EN PRODUCCIÓN!
                 'employees_id' => $adminEmployee->id,
                 'role_id' => $adminRole->id,

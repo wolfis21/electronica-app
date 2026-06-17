@@ -34,7 +34,7 @@ use App\Http\Controllers\CommissionController;
     ]);
 }); */
 
-Route::redirect('/', '/login');
+Route::redirect('/', '/login')->name('welcome');
 
 
 Route::get('/dashboard', DashboardController::class)
@@ -114,7 +114,6 @@ Route::get('/commissions/details', [CommissionController::class, 'getDetails'])-
 
 
 // Rutas públicas
-Route::get('/', [PageController::class, 'welcome'])->name('welcome');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
 Route::get('/precios', [PageController::class, 'pricing'])->name('pricing');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');

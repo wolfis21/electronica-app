@@ -49,10 +49,10 @@ class OrdersExport implements FromCollection, WithHeadings, WithMapping
         return [
             $order->id,
             $order->name_equip,
-            $order->customer->fullname, // Obtenemos el nombre del cliente desde la relación
-            $order->user->name,         // Obtenemos el nombre del empleado desde la relación
+            $order->customer->fullname ?? 'N/A', // Obtenemos el nombre del cliente desde la relación
+            $order->user?->name ?? 'Sin asignar',         // Obtenemos el nombre del empleado desde la relación
             $order->status,
-            $order->created_at->format('Y-m-d H:i:s'), // Formateamos la fecha
+            $order->created_at?->format('Y-m-d H:i:s') ?? 'N/A', // Formateamos la fecha
         ];
     }
 }

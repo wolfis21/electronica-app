@@ -82,17 +82,15 @@
         <table style="width:100%;">
             <tr>
                 <td style="width:60%;">
-                    <h1></h1>
-                    <p><strong>Razón Social:</strong> </p>
-                    <p></p>
-                    <p></p>
-                    <p><strong>RUC:</strong> </p>
-                    <p><strong>Teléfono:</strong> </p>
-                    <p><strong>Correo:</strong> </p>
+                    <h1>{{ $company->name ?? 'Nombre de la Empresa' }}</h1>
+                    <p><strong>Razón Social:</strong> {{ $company->description ?? '' }}</p>
+                    <p>{{ $company->address ?? '' }}</p>
+                    <p><strong>Teléfono:</strong> {{ $company->phone ?? '' }}</p>
+                    <p><strong>Correo:</strong> {{ $company->email ?? '' }}</p>
                 </td>
                 <td style="width:40%; text-align: right; vertical-align: top;">
                     <h2>FACTURA</h2>
-                    <p><strong>No. Factura:</strong> {{ $order->invoice_number ?? $order->id }}</p>
+                    <p><strong>No. Factura:</strong> {{ $order->id }}</p>
                     <p><strong>Fecha:</strong> {{ $order->created_at->format('d-M-Y') }}</p>
                 </td>
             </tr>
@@ -106,12 +104,12 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>{{ $order->customer_name }}</p>
-                        <p><strong>ID:</strong> {{ $order->customer_id_number }}</p>
+                        <p>{{ $order->customer->fullname }}</p>
+                        <p><strong>ID:</strong> {{ $order->customer->dni }}</p>
                     </td>
                     <td>
-                        <p><strong>Método de pago:</strong> {{ $order->payment_method }}</p>
-                        <p><strong>Total Pagado:</strong> ${{ number_format($order->total, 2) }}</p>
+                        <p><strong>Método de pago:</strong> {{ $order->payments->last()?->payment_method ?? 'N/A' }}</p>
+                        <p><strong>Total Pagado:</strong> ${{ number_format($total, 2) }}</p>
                     </td>
                 </tr>
             </table>
@@ -128,20 +126,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($review->products as $product)
-                        <tr>
-                            <td>
-                                <strong>{{ $product->name }}</strong>
-                                <br>
-                                <small style="color: #6c757d;">{{ $product->description }}</small>
-                            </td>
-                            <td>{{ $product->pivot->quantity }}</td>
-                            <td>${{ number_format($product->pivot->price_at_time_of_review, 2) }}</td>
-                            <td>${{ number_format($product->pivot->quantity * $product->pivot->price_at_time_of_review, 2) }}
-                            </td>
-                        </tr>
-                    @endforeach
-
+                    @if($review && $review->products)
+                        @foreach ($review->products as $product)
+                            <tr>
+                                <td>
+                                    <strong>{{ $product->name }}</strong>
+                                    <br>
+                                    <small style="color: #6c757d;">{{ $product->description }}</small>
+                                </td>
+                                <td>${{ number_format($product->pivot->price_at_time_of_review, 2) }}</td>
+                                <td>{{ $product->pivot->quantity }}</td>
+                                <td>${{ number_format($product->pivot->quantity * $product->pivot->price_at_time_of_review, 2) }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -150,23 +148,22 @@
             <table>
                 <tr>
                     <td><strong>Sub Total:</strong></td>
-                    <td style="text-align:right;">${{ number_format($order->subtotal, 2) }}</td>
+                    <td style="text-align:right;">${{ number_format($subtotal, 2) }}</td>
                 </tr>
                 <tr>
                     <td><strong>Impuesto (ITBMS 7%):</strong></td>
-                    <td style="text-align:right;">${{ number_format($order->tax, 2) }}</td>
+                    <td style="text-align:right;">${{ number_format($tax, 2) }}</td>
                 </tr>
                 <tr>
                     <td>
                         <h3>Total:</h3>
                     </td>
                     <td style="text-align:right;">
-                        <h3>${{ number_format($order->total, 2) }}</h3>
+                        <h3>${{ number_format($total, 2) }}</h3>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
 </body>
-
 </html>

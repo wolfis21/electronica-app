@@ -18,11 +18,7 @@
 
 
     <!-- Scripts -->
-    @auth
-        @routes(['public', 'auth'])
-    @else
-        @routes('public')
-    @endauth
+    @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>

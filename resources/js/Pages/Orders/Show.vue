@@ -30,45 +30,45 @@ const formatDate = (dateString) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+                <div class="flex items-center gap-3">
                     <Link :href="route('orders.index')"
-                        class="p-2 rounded-full text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors"
+                        class="p-2 rounded-full text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors shrink-0"
                         title="Volver al listado">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
                     </Link>
                     
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    <h2 class="font-bold text-lg md:text-xl text-gray-900 leading-tight">
                         Detalles de Orden #{{ order.id }}
                     </h2>
                 </div>
 
-                <div class="flex items-center space-x-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <Link v-if="can.edit_orders"
                         :href="route('orders.edit', order.id)"
-                        class="inline-flex items-center px-3 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 transition">
+                        class="inline-flex justify-center items-center px-3 py-2 bg-yellow-500 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 transition shadow-sm flex-1 sm:flex-initial text-center">
                         Editar
                     </Link>
 
-                    <div v-if="!hasReview" class="relative inline-block group">
-                        <span class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest opacity-50 cursor-not-allowed">
-                            Confirmar Retiro
+                    <div v-if="!hasReview" class="relative inline-block group flex-1 sm:flex-initial">
+                        <span class="inline-flex w-full justify-center items-center px-3 py-2 bg-green-600 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-widest opacity-50 cursor-not-allowed shadow-sm text-center">
+                            Retiro
                         </span>
-                        <div class="absolute top-full right-0 mt-2 w-max invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 z-10">
+                        <div class="absolute bottom-full right-0 mb-2 w-max invisible group-hover:visible bg-gray-900 text-white text-[10px] rounded py-1 px-2 z-10 shadow-lg">
                             Debes crear una revisión primero
                         </div>
                     </div>
                     <a v-else :href="route('orders.confirmPickup', order.id)" target="_blank"
                     :class="{ 'opacity-50 cursor-not-allowed pointer-events-none': order.status === 'Cancelado' }"
-                    class="inline-flex items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 transition">
-                        Confirmar Retiro
+                    class="inline-flex justify-center items-center px-3 py-2 bg-green-600 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-widest hover:bg-green-700 transition shadow-sm flex-1 sm:flex-initial text-center">
+                        Retiro
                     </a>
 
                     <a :href="route('orders.pdf', order.id)" target="_blank"
-                    class="inline-flex items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6m-6-4v-4m6 4v-4m-6-8H6a2 2 0 00-2 2v2a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2z" /></svg>
+                    class="inline-flex justify-center items-center px-3 py-2 bg-blue-600 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition shadow-sm flex-1 sm:flex-initial text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6m-6-4v-4m6 4v-4m-6-8H6a2 2 0 00-2 2v2a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2z" /></svg>
                         Imprimir
                     </a>
                 </div>

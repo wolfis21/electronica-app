@@ -23,12 +23,34 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $company = \App\Models\Company::first() ?? \App\Models\Company::create([
+            'name' => 'Default Company C.A.',
+            'phone' => '123456',
+            'email' => 'default@company.com',
+            'address' => 'Default Address',
+        ]);
+
+        $employee = \App\Models\Employee::create([
+            'fullname' => fake()->name(),
+            'dni' => 'V-' . fake()->unique()->randomNumber(8),
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'companies_id' => $company->id,
+        ]);
+
+        $role = \App\Models\Role::firstOrCreate(
+            ['name' => 'Administrador'],
+            ['description' => 'Administrador del sistema']
+        );
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'employees_id' => $employee->id,
+            'role_id' => $role->id,
         ];
     }
 
