@@ -13,7 +13,11 @@ RUN npm run build
 # ==========================================
 FROM composer:2.7 as backend
 WORKDIR /app
-COPY composer.json composer.lock* ./
+
+# IMPORTANTE: Copiamos todo el código fuente primero
+# Esto evita que 'composer install' falle buscando el archivo 'artisan'
+COPY . .
+
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --ignore-platform-reqs
 
 # ==========================================
@@ -21,7 +25,7 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-d
 # ==========================================
 FROM php:8.2-apache
 
-# Instalar dependencias del sistema y extensiones de PHP necesarias para Laravel
+# Instalar dependencias del sistema necesarias para Laravel
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
     libzip-dev unzip git \
@@ -29,26 +33,24 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd pdo pdo_mysql zip pcntl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Habilitar mod_rewrite de Apache para las URLs amigables de Laravel
+# Habilitar mod_rewrite de Apache para las URLs amigables
 RUN a2enmod rewrite
 
-# Cambiar el DocumentRoot de Apache a la carpeta public de Laravel
+# Cambiar el DocumentRoot de Apache a la carpeta public
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 WORKDIR /var/www/html
 
-# Copiar archivos del proyecto
+# Copiar archivos base del proyecto
 COPY . .
 
-# Copiar la carpeta vendor desde la Etapa 2 (Backend)
+# Copiar dependencias y assets compilados desde las etapas anteriores
 COPY --from=backend /app/vendor/ /var/www/html/vendor/
-
-# Copiar los assets compilados desde la Etapa 1 (Frontend)
 COPY --from=frontend /app/public/build/ /var/www/html/public/build/
 
-# Configurar los permisos correctos para Laravel
+# Dar permisos a las carpetas de Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
