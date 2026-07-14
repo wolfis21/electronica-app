@@ -1,24 +1,26 @@
 # ==========================================
-# Etapa 1: Construcción del Frontend (Node)
+# Etapa 1: Dependencias del Backend (Composer)
+# ==========================================
+FROM composer:2.7 as backend
+WORKDIR /app
+# Copiamos todo el código fuente primero
+COPY . .
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --ignore-platform-reqs
+
+# ==========================================
+# Etapa 2: Construcción del Frontend (Node)
 # ==========================================
 FROM node:22-alpine as frontend
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 COPY . .
+
+# IMPORTANTE: Copiamos la carpeta vendor desde la Etapa 1
+# Esto permite que Vite/Rollup encuentre el paquete Ziggy al compilar
+COPY --from=backend /app/vendor/ ./vendor/
+
 RUN npm run build
-
-# ==========================================
-# Etapa 2: Dependencias del Backend (Composer)
-# ==========================================
-FROM composer:2.7 as backend
-WORKDIR /app
-
-# IMPORTANTE: Copiamos todo el código fuente primero
-# Esto evita que 'composer install' falle buscando el archivo 'artisan'
-COPY . .
-
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --ignore-platform-reqs
 
 # ==========================================
 # Etapa 3: Imagen Final de Producción
