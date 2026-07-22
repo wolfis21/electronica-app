@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
             AdminEmployeeSeeder::class, // Luego el empleado administrador
             AdminUserSeeder::class,     // Y finalmente el usuario administrador
+            DemoUserSeeder::class,      // Usuario Demo para visitantes
             ProductSeeder::class, // Inicializacion de servicios
             OrderSeeder::class, // Orders y customers de test
         ]);

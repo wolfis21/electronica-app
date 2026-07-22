@@ -52,5 +52,22 @@ class RolePermissionSeeder extends Seeder
             $technicianPermissionIds = Permission::whereIn('name', $technicianPermissions)->pluck('id')->toArray();
             $technicianRole->permissions()->sync($technicianPermissionIds);
         }
+
+        $demoRole = Role::where('name', 'Demo')->first();
+
+        // Asignar permisos al Demo
+        if ($demoRole) {
+            $demoPermissions = [
+                'initiate_session',
+                'view_users',
+                'view_orders',
+                'view_customers',
+                'view_reviews',
+                'view_payments',
+                'view_products',
+            ];
+            $demoPermissionIds = Permission::whereIn('name', $demoPermissions)->pluck('id')->toArray();
+            $demoRole->permissions()->sync($demoPermissionIds);
+        }
     }
 }

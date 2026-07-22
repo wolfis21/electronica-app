@@ -1,61 +1,122 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="300" alt="Laravel Logo">
+  
+  <br />
+  <br />
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+  <h1>🔧 Electrónica App</h1>
+  <p><b>Plataforma Integral de Gestión para Talleres de Servicio Técnico</b></p>
+  
+  <p>
+    <a href="https://laravel.com"><img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel"></a>
+    <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vue.js" alt="Vue.js"></a>
+    <a href="https://inertiajs.com/"><img src="https://img.shields.io/badge/Inertia.js-2.0-9553E9?style=for-the-badge&logo=inertia" alt="Inertia.js"></a>
+    <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/TailwindCSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS"></a>
+    <a href="#"><img src="https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql" alt="MySQL"></a>
+  </p>
+</div>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Demo en Vivo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Puedes probar la aplicación en vivo utilizando las credenciales de demostración. Este usuario tiene acceso de **solo lectura** para explorar las funcionalidades del sistema de manera segura.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **URL:** [https://electronica-app.isaacsdev.online/](https://electronica-app.isaacsdev.online/)
+- **Usuario:** `demo@electronica.com`
+- **Contraseña:** `123456789`
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📖 Sobre el Proyecto
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Electrónica App** es una solución de software completa diseñada específicamente para talleres de reparación y servicio técnico. Permite digitalizar y automatizar los procesos diarios de un negocio de servicio, abarcando desde la recepción de equipos, diagnóstico y cotización, hasta la entrega final y el cálculo de comisiones para los técnicos. 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+El sistema está enfocado en mejorar la eficiencia operativa, proporcionar analíticas claras sobre el rendimiento del taller y ofrecer una experiencia de usuario fluida y reactiva mediante una arquitectura SPA (Single Page Application) moderna.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ✨ Características Principales
 
-### Premium Partners
+- **Gestión de Órdenes de Servicio:** Flujo completo de estados (`Pendiente` → `Diagnóstico` → `Presupuestado` → `Completado` → `Entregado`).
+- **Nómina y Comisiones:** Cálculo automatizado de comisiones por quincena para el personal técnico, basado en porcentajes configurables.
+- **Dashboard Analítico:** Panel de control con KPIs financieros, ingresos mensuales, eficiencia de técnicos y volumen de órdenes.
+- **Control Multi-divisa:** Soporte integrado para cobros mixtos (Efectivo, Tarjeta, Transferencias y distintas monedas).
+- **Generación Documental (PDF):** Creación automática de recibos de entrada, constancias de diagnóstico y actas de entrega.
+- **Importación y Exportación:** Integración completa con Excel para la gestión masiva de catálogos de servicios, productos y usuarios.
+- **Control de Acceso (ACL):** Sistema robusto de Roles y Permisos (Spattie) para delimitar las acciones entre Administradores, Gerentes y Técnicos.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 🛠️ Stack Tecnológico
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+La aplicación está construida utilizando tecnologías modernas de desarrollo web, asegurando rendimiento, escalabilidad y mantenibilidad.
 
-## Code of Conduct
+| Capa | Tecnología / Paquete | Propósito |
+|---|---|---|
+| **Backend** | `Laravel 12` + `PHP 8.2` | Lógica de negocio, API e interacciones con la Base de Datos. |
+| **Frontend** | `Vue 3` + `Inertia.js 2.0` | Arquitectura SPA monorepo sin necesidad de construir una API separada. |
+| **Estilos** | `Tailwind CSS 4` | Diseño moderno, responsivo y utilitario (incluyendo modo oscuro/ciberpunk). |
+| **Autenticación**| `Laravel Breeze` | scaffolding de autenticación robusto. |
+| **Roles/Permisos**| `Spatie/laravel-permission`| Gestión avanzada de control de acceso (ACL). |
+| **Reportes** | `Barryvdh/DomPDF` | Generación de facturas y comprobantes en PDF. |
+| **Gráficos** | `Chart.js` + `vue-chartjs` | Visualización de datos estadísticos interactivos. |
+| **Hojas de Cálculo**| `Maatwebsite/Excel` | Exportación e importación avanzada en formatos `.xlsx` / `.csv`. |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🌐 Infraestructura y Despliegue (DevOps)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+El entorno de producción de este proyecto destaca por utilizar una infraestructura de alojamiento propio **(Homelab)**, demostrando conocimientos avanzados en redes y administración de servidores:
 
-## License
+- **Host:** Servidor Bare Metal (Homelab) alojado y administrado de forma privada.
+- **Redes & Seguridad:** Expuesto a la internet pública a través de **Cloudflare Tunnels** (Zero Trust), garantizando encriptación SSL/TLS sin necesidad de abrir puertos entrantes en el firewall local, previniendo ataques directos (DDoS).
+- **Entorno seguro:** Se utiliza una variable de entorno `DEMO_MODE=true` en producción para salvaguardar la base de datos contra modificaciones destructivas durante las pruebas de reclutadores y usuarios invitados.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## ⚙️ Instalación Local
+
+Si deseas correr este proyecto en tu entorno de desarrollo local, sigue estos pasos:
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/tu-usuario/electronica-app.git
+cd electronica-app
+```
+
+### 2. Instalar dependencias de PHP y Node
+```bash
+composer install
+npm install
+```
+
+### 3. Configurar entorno
+Copia el archivo de entorno de ejemplo y genera la clave de tu aplicación:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+Configura tus credenciales de base de datos (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) en el archivo `.env`.
+
+### 4. Migraciones y Seeders
+Este comando creará la estructura de la base de datos y la poblará con datos de prueba, permisos y los usuarios base (incluyendo al usuario *Demo*):
+```bash
+php artisan migrate:fresh --seed
+```
+
+### 5. Compilar Assets y Levantar Servidor
+Ejecuta el servidor de desarrollo de Vite (para compilar Vue y Tailwind) y el servidor de PHP de Laravel (en pestañas separadas de tu terminal):
+```bash
+# Pestaña 1
+npm run dev
+
+# Pestaña 2
+php artisan serve
+```
+
+---
+
+<div align="center">
+  <i>Desarrollado con pasión por la tecnología y la eficiencia operativa.</i>
+</div>
