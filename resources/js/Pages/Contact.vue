@@ -155,7 +155,7 @@ const submitForm = () => {
                                     </div>
                                 </div>
                             </div>
-                            <a class="mt-10 flex items-center justify-center gap-3 bg-[#25D366] text-surface-container-lowest py-4 rounded-lg font-bold text-lg hover:brightness-110 transition-all shadow-md active:scale-95" href="https://wa.me/541112345678" target="_blank">
+                            <a class="mt-10 flex items-center justify-center gap-3 bg-[#25D366] text-surface-container-lowest py-4 rounded-lg font-bold text-lg hover:brightness-110 transition-all shadow-md active:scale-95" href="https://wa.me/+584249342951" target="_blank">
                                 <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.523.904 3.13 1.379 4.799 1.38h.005c5.454 0 9.893-4.439 9.895-9.895.001-2.645-1.029-5.131-2.902-7.005-1.873-1.874-4.359-2.903-7.004-2.903-5.454 0-9.894 4.44-9.896 9.896-.001 1.83.5 3.568 1.446 5.054l-1.077 3.931 4.034-1.058zm12.846-7.235c-.345-.173-2.042-1.007-2.359-1.122-.317-.115-.548-.173-.779.173-.231.346-.893 1.123-1.095 1.353-.201.23-.404.259-.75.086-.345-.173-1.458-.537-2.777-1.714-1.026-.915-1.719-2.045-1.92-2.39-.202-.346-.022-.533.15-.705.155-.154.345-.404.519-.606.173-.202.23-.346.346-.577.115-.231.058-.433-.029-.606-.086-.173-.779-1.874-1.066-2.566-.28-.673-.564-.582-.779-.593-.201-.01-.432-.012-.664-.012-.231 0-.606.086-.923.433-.317.346-1.211 1.183-1.211 2.883 0 1.7 1.24 3.345 1.413 3.576.173.231 2.441 3.728 5.912 5.228.825.357 1.47.57 1.972.729.828.263 1.58.226 2.176.137.664-.099 2.042-.835 2.331-1.643.288-.808.288-1.5.202-1.643-.086-.144-.317-.23-.664-.403z"></path></svg>
                                 Escríbenos por WhatsApp
                             </a>
@@ -180,7 +180,7 @@ const submitForm = () => {
                             <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Nuestro Centro Técnico</h2>
                             <p class="font-body-md text-body-md text-on-surface-variant">Visítanos en el corazón de la ciudad para una atención personalizada.</p>
                         </div>
-                        <a href="https://maps.google.com" target="_blank" class="bg-surface-container-lowest border border-outline-variant text-on-surface px-8 py-3 rounded-lg font-label-md text-label-md hover:border-electric-cyan hover:text-electric-cyan transition-all flex items-center gap-2 uppercase tracking-wider font-bold">
+                        <a href="https://maps.app.goo.gl/HcuTA55itzTeQA9z8" target="_blank" class="bg-surface-container-lowest border border-outline-variant text-on-surface px-8 py-3 rounded-lg font-label-md text-label-md hover:border-electric-cyan hover:text-electric-cyan transition-all flex items-center gap-2 uppercase tracking-wider font-bold">
                             <span class="material-symbols-outlined">directions</span>
                             Cómo llegar
                         </a>
