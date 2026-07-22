@@ -1,153 +1,214 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
-import { onMounted } from 'vue';
-
-// Se añaden categorías a las características para agruparlas en la tabla
-const features = [
-    { category: 'General', name: 'Usuarios Incluidos', soloista: '2', director: '10', sinfonia: 'Ilimitados' },
-    { category: 'General', name: 'Soporte Técnico', soloista: 'Email', director: 'Email y Chat Prioritario', sinfonia: 'Gerente de Cuenta Dedicado' },
-    { category: 'Operaciones', name: 'Gestión de Órdenes', soloista: true, director: true, sinfonia: true },
-    { category: 'Operaciones', name: 'Campos Personalizados', soloista: false, director: true, sinfonia: true },
-    { category: 'Clientes', name: 'Base de Datos de Clientes', soloista: true, director: true, sinfonia: true },
-    { category: 'Clientes', name: 'Historial de Interacciones', soloista: false, director: true, sinfonia: true },
-    { category: 'Finanzas', name: 'Facturación y Pagos', soloista: true, director: true, sinfonia: true },
-    { category: 'Finanzas', name: 'Facturación Recurrente', soloista: false, director: true, sinfonia: true },
-    { category: 'Crecimiento', name: 'Informes Personalizables', soloista: false, director: true, sinfonia: true },
-    { category: 'Crecimiento', name: 'Acceso a API', soloista: false, director: false, sinfonia: true },
-];
-
-// Lógica para las animaciones de scroll
-const setupScrollAnimations = () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in-up');
-            }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
-};
-onMounted(setupScrollAnimations);
 </script>
 
 <template>
-    <Head title="Planes y Precios" />
+    <Head title="Precios - SM Soluciones Electrónicas" />
 
     <PublicLayout>
-        <section class="pt-32 pb-20 md:pt-40 md:pb-24 bg-white text-center">
-            <div class="container mx-auto px-6">
-                <h1 class="font-serif text-4xl md:text-6xl font-bold text-orq-dark-gray leading-tight">
-                    El Plan Perfecto para tu Orquesta.
-                </h1>
-                <p class="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-                    Sin sorpresas, sin contratos a largo plazo. Solo crecimiento.
+        <main class="pt-24 pb-20 cyber-grid min-h-screen">
+            <!-- Hero Header -->
+            <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-surface-container-high border border-electric-cyan/30 text-electric-cyan mb-6">
+                    <span class="material-symbols-outlined text-[20px]">payments</span>
+                    <span class="font-label-sm uppercase tracking-widest">Tarifas Transparentes</span>
+                </div>
+                <h1 class="font-headline-xl text-on-surface mb-6">Transparencia en Precios</h1>
+                <p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    Sin cargos ocultos ni sorpresas. Proporcionamos una estructura de costos clara y profesional con un enfoque técnico de alta precisión.
                 </p>
-            </div>
-        </section>
+            </section>
 
-        <section class="py-16 md:py-24 bg-orq-blue">
-             <div class="container mx-auto px-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    
-                    <div class="scroll-animate bg-white rounded-xl p-8 text-center flex flex-col border border-gray-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                        <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Soloista</h3>
-                        <p class="text-gray-500 mt-2 flex-grow">Para quienes inician su melodía de negocio.</p>
-                        <div class="my-8"><span class="text-5xl font-bold text-orq-dark-gray">$29</span><span class="text-gray-500">/ mes</span></div>
-                        <Link href="#" class="mt-auto block w-full py-3 px-6 border border-orq-blue text-orq-blue font-bold rounded-lg hover:bg-orq-blue hover:text-white transition-colors">
-                            Empezar con Soloista
-                        </Link>
+            <!-- Pricing Bento Grid -->
+            <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter">
+                <!-- Diagnóstico Section (Feature Card) -->
+                <div class="md:col-span-12 lg:col-span-4 bg-surface-container-low p-8 rounded-xl technical-shadow bento-card border-t-4 border-t-electric-cyan">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <h2 class="font-headline-lg text-on-surface">Diagnóstico</h2>
+                            <p class="font-body-md text-on-surface-variant">Análisis técnico inicial</p>
+                        </div>
+                        <span class="material-symbols-outlined text-electric-cyan text-[32px]">biotech</span>
                     </div>
-
-                    <div class="scroll-animate relative bg-white rounded-xl p-8 text-center flex flex-col border-2 border-orq-gold shadow-2xl transform lg:scale-110">
-                         <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2"><span class="px-4 py-1 bg-orq-blue text-white text-sm font-bold rounded-full uppercase tracking-wider">Recomendado</span></div>
-                        <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Director</h3>
-                        <p class="text-gray-500 mt-2 flex-grow">La solución completa para dirigir y escalar tu operación.</p>
-                        <div class="my-8"><span class="text-5xl font-bold text-orq-dark-gray">$79</span><span class="text-gray-500">/ mes</span></div>
-                        <Link href="#" class="mt-auto block w-full py-3 px-6 bg-orq-gold text-orq-blue font-bold rounded-lg hover:scale-105 transition-transform shadow-lg">
-                            Elegir Plan Director
-                        </Link>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-electric-cyan font-bold text-[32px]">$</span>
+                        <span class="text-on-surface font-bold text-[48px]">15.000</span>
+                        <span class="text-on-surface-variant font-label-sm ml-2">Tarifa base</span>
                     </div>
+                    <div class="bg-surface-container-highest/30 p-4 rounded border border-outline-variant/50 mb-8">
+                        <p class="font-label-sm text-electric-cyan font-bold flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">info</span>
+                            DEDUCTIBLE DE LA REPARACIÓN
+                        </p>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 font-body-md">
+                            <span class="material-symbols-outlined text-electric-cyan text-[20px]">check_circle</span>
+                            Revisión integral de hardware
+                        </li>
+                        <li class="flex items-center gap-3 font-body-md">
+                            <span class="material-symbols-outlined text-electric-cyan text-[20px]">check_circle</span>
+                            Presupuesto detallado de partes
+                        </li>
+                        <li class="flex items-center gap-3 font-body-md">
+                            <span class="material-symbols-outlined text-electric-cyan text-[20px]">check_circle</span>
+                            Tiempo estimado de entrega
+                        </li>
+                    </ul>
+                </div>
 
-                    <div class="scroll-animate bg-white rounded-xl p-8 text-center flex flex-col border border-gray-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                        <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Sinfonía</h3>
-                        <p class="text-gray-500 mt-2 flex-grow">Personalización y soporte avanzado para empresas establecidas.</p>
-                        <div class="my-6"><span class="text-4xl font-bold text-orq-dark-gray">Personalizado</span></div>
-                        <Link :href="route('contact')" class="mt-auto block w-full py-3 px-6 border border-orq-dark-gray text-orq-dark-gray font-bold rounded-lg hover:bg-orq-dark-gray hover:text-white transition-colors">
-                            Contactar para Cotización
-                        </Link>
+                <!-- Mantenimiento Section -->
+                <div class="md:col-span-12 lg:col-span-8 bg-surface-container-low p-8 rounded-xl technical-shadow bento-card">
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="material-symbols-outlined text-on-surface text-[32px]">settings_suggest</span>
+                        <h2 class="font-headline-lg text-on-surface">Mantenimiento Preventivo</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                        <!-- Basic Cleaning -->
+                        <div class="p-6 rounded bg-surface-container-high border border-outline-variant transition-colors hover:border-electric-cyan/50">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-label-md text-on-surface font-bold">Limpieza Básica</span>
+                                <span class="font-headline-lg text-electric-cyan">$25.000</span>
+                            </div>
+                            <p class="font-body-md text-on-surface-variant mb-6">Ideal para equipos en entornos de oficina con poco polvo.</p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2 font-body-md">
+                                    <span class="material-symbols-outlined text-[16px] text-outline">arrow_forward</span>
+                                    Soplado de componentes
+                                </div>
+                                <div class="flex items-center gap-2 font-body-md">
+                                    <span class="material-symbols-outlined text-[16px] text-outline">arrow_forward</span>
+                                    Limpieza externa
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Deep Cleaning -->
+                        <div class="p-6 rounded bg-surface-container-lowest border border-electric-cyan/20 ring-1 ring-electric-cyan/20">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-label-md text-electric-cyan font-bold">Limpieza Profunda</span>
+                                <span class="font-headline-lg text-on-surface">$45.000</span>
+                            </div>
+                            <p class="font-body-md text-on-surface-variant mb-6">Restauración térmica y limpieza de circuitos para alto rendimiento.</p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2 font-body-md text-on-surface">
+                                    <span class="material-symbols-outlined text-[16px] text-electric-cyan">check</span>
+                                    Cambio de pasta térmica premium
+                                </div>
+                                <div class="flex items-center gap-2 font-body-md text-on-surface">
+                                    <span class="material-symbols-outlined text-[16px] text-electric-cyan">check</span>
+                                    Desarme completo y baño químico
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <h2 class="text-center font-serif text-4xl font-bold text-orq-dark-gray mb-12 scroll-animate">Compara las Características en Detalle</h2>
-                
-                <div class="max-w-6xl mx-auto scroll-animate">
+            <!-- Reparaciones Comunes Section -->
+            <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-12">
+                <div class="md:col-span-12 bg-surface-container-low rounded-xl technical-shadow overflow-hidden border border-outline-variant">
+                    <div class="p-8 border-b border-outline-variant bg-surface-container flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-on-surface text-[32px]">build</span>
+                            <h2 class="font-headline-lg text-on-surface">Reparaciones Comunes</h2>
+                        </div>
+                        <div class="flex items-center gap-2 text-primary-container bg-primary-container/10 px-3 py-1 rounded border border-primary-container/20">
+                            <span class="material-symbols-outlined text-[18px]">priority_high</span>
+                            <span class="font-label-sm">Precios base sugeridos</span>
+                        </div>
+                    </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-gray-500">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 rounded-tl-lg">Característica</th>
-                                    <th scope="col" class="px-6 py-3 text-center">Soloista</th>
-                                    <th scope="col" class="px-6 py-3 text-center bg-orq-blue/10">Director</th>
-                                    <th scope="col" class="px-6 py-3 text-center rounded-tr-lg">Sinfonía</th>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface-container-high">
+                                    <th class="px-8 py-4 font-label-md text-on-surface-variant uppercase tracking-widest">Servicio</th>
+                                    <th class="px-8 py-4 font-label-md text-on-surface-variant uppercase tracking-widest">Descripción</th>
+                                    <th class="px-8 py-4 font-label-md text-on-surface-variant uppercase tracking-widest">Desde</th>
+                                    <th class="px-8 py-4 font-label-md text-on-surface-variant uppercase tracking-widest text-right">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <template v-for="(feature, index) in features" :key="feature.name">
-                                    <tr v-if="index === 0 || features[index-1].category !== feature.category">
-                                        <th colspan="4" class="px-6 py-4 font-bold text-orq-blue bg-gray-100/50">
-                                            {{ feature.category }}
-                                        </th>
-                                    </tr>
-                                    <tr class="bg-white border-b">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ feature.name }}</th>
-                                        <td class="px-6 py-4 text-center">{{ feature.soloista === true ? '✓' : feature.soloista === false ? '—' : feature.soloista }}</td>
-                                        <td class="px-6 py-4 text-center font-bold text-orq-blue bg-orq-blue/10">{{ feature.director === true ? '✓' : feature.director === false ? '—' : feature.director }}</td>
-                                        <td class="px-6 py-4 text-center">{{ feature.sinfonia === true ? '✓' : feature.sinfonia === false ? '—' : feature.sinfonia }}</td>
-                                    </tr>
-                                </template>
+                            <tbody class="divide-y divide-outline-variant">
+                                <tr class="hover:bg-surface-container-high transition-colors">
+                                    <td class="px-8 py-6 font-body-md font-bold text-on-surface">Cambio de Pantalla</td>
+                                    <td class="px-8 py-6 font-body-md text-on-surface-variant">Reemplazo de display original o compatible tipo AAA</td>
+                                    <td class="px-8 py-6 font-headline-lg text-electric-cyan">$80.000</td>
+                                    <td class="px-8 py-6 text-right">
+                                        <Link :href="route('contact')" class="text-electric-cyan font-label-md hover:underline decoration-electric-cyan/30 underline-offset-4">Consultar stock</Link>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-high transition-colors">
+                                    <td class="px-8 py-6 font-body-md font-bold text-on-surface">Cambio de Batería</td>
+                                    <td class="px-8 py-6 font-body-md text-on-surface-variant">Instalación de batería de alta densidad con garantía</td>
+                                    <td class="px-8 py-6 font-headline-lg text-electric-cyan">$35.000</td>
+                                    <td class="px-8 py-6 text-right">
+                                        <Link :href="route('contact')" class="text-electric-cyan font-label-md hover:underline decoration-electric-cyan/30 underline-offset-4">Consultar stock</Link>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-high transition-colors">
+                                    <td class="px-8 py-6 font-body-md font-bold text-on-surface">Puerto de Carga</td>
+                                    <td class="px-8 py-6 font-body-md text-on-surface-variant">Microsoldadura o cambio de flex de carga</td>
+                                    <td class="px-8 py-6 font-headline-lg text-electric-cyan">$30.000</td>
+                                    <td class="px-8 py-6 text-right">
+                                        <Link :href="route('contact')" class="text-electric-cyan font-label-md hover:underline decoration-electric-cyan/30 underline-offset-4">Consultar stock</Link>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-high transition-colors">
+                                    <td class="px-8 py-6 font-body-md font-bold text-on-surface">Optimización OS</td>
+                                    <td class="px-8 py-6 font-body-md text-on-surface-variant">Formateo, backup y actualización de controladores</td>
+                                    <td class="px-8 py-6 font-headline-lg text-electric-cyan">$40.000</td>
+                                    <td class="px-8 py-6 text-right">
+                                        <Link :href="route('contact')" class="text-electric-cyan font-label-md hover:underline decoration-electric-cyan/30 underline-offset-4">Ver detalles</Link>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-6 max-w-3xl">
-                <h2 class="text-center font-serif text-4xl font-bold text-orq-dark-gray mb-12 scroll-animate">Preguntas Frecuentes</h2>
-                <div class="space-y-8">
-                    <div class="scroll-animate">
-                        <h4 class="font-bold text-lg text-orq-dark-gray">¿Puedo cambiar de plan más adelante?</h4>
-                        <p class="text-gray-600 mt-2">¡Por supuesto! Puedes mejorar o reducir tu plan en cualquier momento desde tu panel de control. Los cambios se aplicarán en tu siguiente ciclo de facturación.</p>
-                    </div>
-                    <div class="scroll-animate">
-                        <h4 class="font-bold text-lg text-orq-dark-gray">¿Qué tipo de soporte ofrecen?</h4>
-                        <p class="text-gray-600 mt-2">Todos nuestros planes incluyen soporte por correo electrónico. El plan Director añade chat prioritario y el plan Sinfonía te asigna un gerente de cuenta dedicado para un soporte personalizado.</p>
-                    </div>
-                     <div class="scroll-animate">
-                        <h4 class="font-bold text-lg text-orq-dark-gray">¿Hay algún contrato o permanencia?</h4>
-                        <p class="text-gray-600 mt-2">No. Orquestra es un servicio de pago por uso y puedes cancelar tu suscripción cuando quieras, sin penalizaciones.</p>
+            <!-- Technical Note -->
+            <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-12">
+                <div class="bg-surface-container-low border border-outline-variant p-6 rounded flex items-start gap-4">
+                    <span class="material-symbols-outlined text-electric-cyan">done_outline</span>
+                    <p class="font-body-md text-on-surface-variant italic">
+                        Todos los precios están sujetos a inspección técnica detallada. Los valores finales pueden variar dependiendo del modelo exacto, disponibilidad de repuestos y grado de complejidad de la reparación. Los precios incluyen IVA.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-20 text-center">
+                <div class="bg-surface-container-lowest text-on-surface rounded-xl p-12 relative overflow-hidden border border-outline-variant ring-1 ring-electric-cyan/10">
+                    <div class="absolute inset-0 opacity-5 pointer-events-none cyber-grid"></div>
+                    <h2 class="font-headline-xl mb-4 relative z-10">¿Tienes un caso especial?</h2>
+                    <p class="font-body-lg text-on-surface-variant mb-8 max-w-xl mx-auto relative z-10">Solicita una cotización personalizada para servidores, redes empresariales o reparaciones por volumen.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                        <Link :href="route('contact')" class="bg-electric-cyan text-surface-container-lowest px-8 py-4 rounded font-label-md font-bold hover:brightness-110 transition-all active:scale-95 uppercase tracking-widest">Solicitar Presupuesto</Link>
+                        <Link :href="route('contact')" class="border border-outline text-on-surface px-8 py-4 rounded font-label-md font-bold hover:bg-white/5 transition-all active:scale-95 uppercase tracking-widest">Hablar con Soporte</Link>
                     </div>
                 </div>
-            </div>
-        </section>
-
+            </section>
+        </main>
     </PublicLayout>
 </template>
 
 <style>
-.scroll-animate {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+.technical-shadow {
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.4);
 }
-.scroll-animate.animate-fade-in-up {
-    opacity: 1;
-    transform: translateY(0);
+.bento-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #3a494b;
+}
+.bento-card:hover {
+    transform: translateY(-4px);
+    border-color: #00f2ff;
+    box-shadow: 0px 10px 30px rgba(0, 242, 255, 0.15);
+}
+.cyber-grid {
+    background-image: radial-gradient(circle at 1px 1px, #3a494b 1px, transparent 0);
+    background-size: 32px 32px;
 }
 </style>

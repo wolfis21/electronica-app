@@ -1,174 +1,159 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 
-
-const setupScrollAnimations = () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in-up');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
-};
-
-onMounted(setupScrollAnimations);
+defineProps({
+    canLogin: Boolean,
+    canRegister: Boolean,
+});
 </script>
 
 <template>
-    <Head title="Orquesta: El Conductor de tu Negocio" />
+    <Head title="SM Soluciones Electrónicas | Soporte Técnico Profesional" />
 
     <PublicLayout>
-        
-        <section class="relative pt-24 pb-20 md:pt-32 md:pb-24 bg-orq-light-gray">
-            <div class="container mx-auto px-6 relative z-10">
-                <div class="max-w-3xl text-center mx-auto">
-                    <h1 class="font-serif text-4xl sm:text-5xl md:text-7xl font-bold text-orq-dark-gray leading-tight">
-                        Orquestando la eficiencia de tu negocio.
+        <!-- Section 1: Hero -->
+        <section class="relative w-full overflow-hidden bg-surface-container-lowest">
+            <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+                <div class="z-10">
+                    <h1 class="font-headline-xl text-headline-xl text-on-surface mb-6">
+                        Soporte Técnico Profesional para tu Tecnología
                     </h1>
-                    <p class="mt-6 text-lg md:text-xl text-gray-600">
-                        La plataforma definitiva que silencia el caos y sincroniza tus operaciones. Toma la batuta y dirige tu negocio hacia una nueva melodía de crecimiento.
-                    </p>
-                    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link :href="route('contact')" class="w-full sm:w-auto text-center px-8 py-4 rounded-lg text-lg font-bold text-orq-blue bg-orq-gold transition-transform hover:scale-105 shadow-lg">
-                            Comenzar ahora
-                        </Link>
-                        <Link href="#" class="w-full sm:w-auto text-center font-bold text-orq-blue hover:text-blue-900">
-                            Solicitar una demo
-                        </Link>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-lg">Especialistas en reparación de dispositivos. Rápido, confiable y garantizado. Resolvemos tus problemas técnicos con precisión industrial.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-primary text-on-primary px-8 py-4 rounded-lg font-label-md text-label-md font-bold shadow-[0_0_20px_rgba(0,242,255,0.4)] hover:brightness-110 transition-all active:scale-95">
+                            Ver Servicios
+                        </button>
+                        <button class="border-2 border-primary text-primary px-8 py-4 rounded-lg font-label-md text-label-md font-bold hover:bg-primary/10 transition-all active:scale-95">
+                            Rastrear Orden
+                        </button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-primary/20 rounded-xl -rotate-2 blur-2xl"></div>
+                    <div class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-square border border-surface-container-highest">
+                        <div class="w-full h-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAwfGJ9B9N_NNe-eXCwZMgQZ5F6jxoFAGKj_FmycRiRURwYdas3Ypd1R4ZtwV4stY5_niLodl2gh0Thxl6IxJlL4G8Gj_KAUCpzkstzbNjsNPwhP9-Sw-dJqH8InZcBSeBGfRqN8wcMN4GbN7HHcxVE27BIcTnyT_U1kYx8Tr5JQKWOr0_xaOUFKy9esztLhBXegTVp2dh1cfZe-jvwi9L7_Go4zfgxJBX7z6nHnPR1GssLr06IrUU4JQ9lgartqxd2FZAen5EhEkLU')"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-       <section class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto scroll-animate">
-                <h2 class="font-serif text-3xl md:text-5xl font-bold text-orq-dark-gray">Un Plan para Cada Director</h2>
-                <p class="mt-4 text-lg text-gray-600">Desde el solista que recién comienza hasta la sinfonía empresarial completa. Encuentra el ritmo perfecto para tu negocio.</p>
-            </div>
-
-            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-
-                <div class="scroll-animate border border-gray-200 rounded-xl p-8 text-center flex flex-col transition-transform hover:scale-105">
-                    <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Soloista</h3>
-                    <p class="text-gray-500 mt-2">Ideal para empezar a organizarte.</p>
-                    <div class="my-8">
-                        <span class="text-5xl font-bold text-orq-dark-gray">$29</span>
-                        <span class="text-gray-500">/ mes</span>
-                    </div>
-                    <ul class="space-y-3 text-gray-600 text-left flex-grow">
-                        <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hasta 2 Usuarios</li>
-                        <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Gestión de Órdenes</li>
-                        <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte por Email</li>
-                    </ul>
-                    <Link :href="route('pricing')" class="mt-8 block w-full py-3 px-6 border border-orq-blue text-orq-blue font-bold rounded-lg hover:bg-orq-blue hover:text-white transition-colors">
-                        Ver Detalles
-                    </Link>
-                </div>
-
-                <div class="scroll-animate relative border-2 border-orq-blue rounded-xl p-8 text-center flex flex-col shadow-2xl transform lg:scale-105">
-                    <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
-                        <span class="px-4 py-1 bg-orq-blue text-white text-sm font-bold rounded-full">MÁS POPULAR</span>
-                    </div>
-                    <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Director</h3>
-                    <p class="text-gray-500 mt-2">Para negocios en pleno crecimiento.</p>
-                    <div class="my-8">
-                        <span class="text-5xl font-bold text-orq-dark-gray">$79</span>
-                        <span class="text-gray-500">/ mes</span>
-                    </div>
-                    <ul class="space-y-3 text-gray-600 text-left flex-grow">
-                        <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hasta 10 Usuarios</li>
-                        <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Informes Personalizables</li>
-                        <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte Prioritario y Chat</li>
-                    </ul>
-                    <Link :href="route('pricing')" class="mt-8 block w-full py-3 px-6 bg-orq-blue text-white font-bold rounded-lg hover:bg-blue-900 transition-colors shadow-lg">
-                        Elegir Plan
-                    </Link>
-                </div>
-
-                <div class="scroll-animate border border-gray-200 rounded-xl p-8 text-center flex flex-col transition-transform hover:scale-105">
-                    <h3 class="font-serif text-3xl font-bold text-orq-dark-gray">Sinfonía</h3>
-                    <p class="text-gray-500 mt-2">Soluciones a la medida de tu empresa.</p>
-                    <div class="my-8">
-                        <span class="text-4xl font-bold text-orq-dark-gray">Personalizado</span>
-                    </div>
-                    <ul class="space-y-3 text-gray-600 text-left flex-grow">
-                         <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Usuarios Ilimitados</li>
-                         <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Automatización y API</li>
-                         <li class="flex items-center"><svg class="w-5 h-5 text-orq-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Gerente de Cuenta Dedicado</li>
-                    </ul>
-                    <Link :href="route('contact')" class="mt-8 block w-full py-3 px-6 border border-orq-dark-gray text-orq-dark-gray font-bold rounded-lg hover:bg-orq-dark-gray hover:text-white transition-colors">
-                        Contactar
-                    </Link>
-                </div>
-
-            </div>
-        </div>
-       </section>
-        
-        <section class="py-16 md:py-24 bg-orq-blue text-white">
-             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-                 <div class="scroll-animate text-center md:text-left">
-                     <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">El Conductor de tu Negocio</h2>
-                     <p class="text-lg text-blue-100/90">
-                        Cada negocio es una orquesta. Pero con demasiada frecuencia, suena a caos. Orquestra es el director que toma cada instrumento —cada cliente, cada venta, cada tarea— y lo pone en perfecta armonía. Te damos la batuta para que dirijas con confianza, precisión y calma.
-                     </p>
-                 </div>
-                 <div class="scroll-animate hidden md:flex items-center justify-center h-80 rounded-2xl bg-black/20">
-                     <p class="text-2xl font-bold text-white/30">Placeholder para Imagen de Marca</p>
-                 </div>
-             </div>
-        </section>
-
-        <section class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto scroll-animate">
-                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-orq-dark-gray">Nuestra Composición de Servicios</h2>
-                    <p class="mt-4 text-lg text-gray-600">Cada módulo de Orquestra es un instrumento afinado, diseñado para trabajar en perfecta armonía.</p>
-                </div>
-                <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="scroll-animate p-8 text-center bg-orq-light-gray rounded-lg">
-                        <div class="w-16 h-16 rounded-full bg-orq-gold/20 flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-8 h-8 text-orq-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+        <!-- Section 2: Value Proposition -->
+        <section class="bg-surface-container-low py-20">
+            <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card Velocidad -->
+                    <div class="bento-card bg-surface-container-high p-8 rounded-xl flex flex-col items-start gap-4">
+                        <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'opsz' 32;">speed</span>
                         </div>
-                        <h4 class="text-xl font-bold text-orq-dark-gray">Gestión de Órdenes</h4>
-                        <p class="mt-2 text-gray-600">Centraliza y dirige cada orden de trabajo en tiempo real.</p>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">Velocidad</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Diagnóstico en 24 horas y reparaciones urgentes para que nunca pierdas el ritmo de tu trabajo o vida personal.</p>
                     </div>
-                     <div class="scroll-animate p-8 text-center bg-orq-light-gray rounded-lg">
-                         <div class="w-16 h-16 rounded-full bg-orq-gold/20 flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-8 h-8 text-orq-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <!-- Card Calidad -->
+                    <div class="bento-card bg-surface-container-high p-8 rounded-xl flex flex-col items-start gap-4 border-t-4 border-t-primary">
+                        <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'opsz' 32;">verified</span>
                         </div>
-                        <h4 class="text-xl font-bold text-orq-dark-gray">Portal de Clientes</h4>
-                        <p class="mt-2 text-gray-600">Dale a tus clientes un asiento en primera fila para ver el estado de sus órdenes.</p>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">Calidad</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Utilizamos repuestos originales y procesos estandarizados de grado industrial para asegurar la durabilidad de cada solución.</p>
                     </div>
-                     <div class="scroll-animate p-8 text-center bg-orq-light-gray rounded-lg">
-                         <div class="w-16 h-16 rounded-full bg-orq-gold/20 flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-8 h-8 text-orq-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2v.5a.5.5 0 01-1 0V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v.5a.5.5 0 01-1 0V5z"></path></svg>
+                    <!-- Card Transparencia -->
+                    <div class="bento-card bg-surface-container-high p-8 rounded-xl flex flex-col items-start gap-4">
+                        <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'opsz' 32;">visibility</span>
                         </div>
-                        <h4 class="text-xl font-bold text-orq-dark-gray">Análisis e Informes</h4>
-                        <p class="mt-2 text-gray-600">Dirige con datos, no con suposiciones. Transforma números en decisiones.</p>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">Transparencia</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Presupuestos claros sin costos ocultos y seguimiento en tiempo real del estado de tu reparación a través de nuestro portal.</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Section 3: Track Order -->
+        <section class="py-20 bg-surface">
+            <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+                <div class="bg-surface-container-highest rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 overflow-hidden relative border border-primary/20">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="flex-1 text-on-surface z-10">
+                        <h2 class="font-headline-lg text-headline-lg mb-4">¿Ya tienes una orden con nosotros?</h2>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Ingresa tu número de seguimiento para consultar el progreso de tu reparación o instalación de red.</p>
+                    </div>
+                    <div class="w-full md:w-auto z-10">
+                        <form class="flex flex-col sm:flex-row gap-4 bg-surface-container-low p-2 rounded-xl backdrop-blur-sm border border-surface-container-highest">
+                            <input class="flex-1 bg-surface-container-high border-none rounded-lg px-6 py-3 font-body-md text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary outline-none min-w-[240px]" placeholder="ID de Orden (Ej: SM-1234)" type="text">
+                            <button class="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-md text-label-md font-bold hover:brightness-110 transition-all whitespace-nowrap shadow-[0_0_10px_rgba(0,242,255,0.2)]" type="button">
+                                Consultar Estado
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Services Preview -->
+        <section class="py-20 bg-surface-container-lowest">
+            <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                    <div class="max-w-2xl">
+                        <span class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-2 block">Nuestra Experiencia</span>
+                        <h2 class="font-headline-lg text-headline-lg text-on-surface">Soluciones Integrales de Ingeniería Electrónica</h2>
+                    </div>
+                    <a class="text-primary font-label-md text-label-md flex items-center gap-2 hover:underline" href="#">
+                        Ver todos los servicios <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Service 1 -->
+                    <div class="md:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container border border-surface-container-highest aspect-video md:aspect-[2/1]">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6czMnjQsF6JAtImM5nDrEJRdzbl46DQrdOVtlhMONZuBEu9gnBOSPEFMHjC_hS7vZwlWPdVz3HM2TeyHuQ7aam-3Qjenf5rrgmgtds6Su19HJb1EpeSAE5Ql_85i3N2jGhYMJt6yhvtZXOMYtLanZyosA1CCgWP0dEsZzWWqrVt9M8BnEfeoTHZcqmbcrRTzGUcagbxTMGZG_lNUK5IpAQwHof_Zt69E2xiYYryIgSvWDapcsblSMO-faJdKzcUyR8CkEFX36SmKY')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface/95 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-8 text-on-surface">
+                            <h3 class="font-headline-md text-headline-md mb-2">Reparación de Hardware</h3>
+                            <p class="font-body-md text-body-md text-on-surface-variant max-w-md">Intervención a nivel de componentes en laptops, desktops y dispositivos móviles con tecnología de punta.</p>
+                        </div>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container border border-surface-container-highest aspect-square">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&amp;w=1000&amp;auto=format&amp;fit=crop')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface/95 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-8 text-on-surface">
+                            <div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                                <span class="material-symbols-outlined text-primary">volume_up</span>
+                            </div>
+                            <h3 class="font-headline-md text-headline-md mb-2">Audio y Vídeo</h3>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Mantenimiento de plantas de sonido, parlantes y sistemas de audio profesional.</p>
+                        </div>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container border border-surface-container-highest aspect-square">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBBw0O9LdV_qKmfNbAc4XwJZPJ97YmBLryIIjjqrdZdGoCDyOzluPmAlH_pDvdu68BiagfXOIgE9OVSE_DBZimxt5tTyTgxFkS79QZfuPevlVeo2sleDCmZykbhJeMWwnYigCB-ew8UOYbhHRs6irpsnBVtP3u0UUVSmAkg5ilGqy-C2lsti3UnElbkez5wSIXV0EKZQK55zOpZu-Um6vbO_eO_Vu4kPgEJShlWUdRscUpuGo7xHxTKvLqCaaE5HUeCMZcS2yG-d37-')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface/95 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-8 text-on-surface">
+                            <h3 class="font-headline-md text-headline-md mb-2">Software</h3>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Optimización de sistemas y seguridad digital.</p>
+                        </div>
+                    </div>
+                    <!-- Service 4 -->
+                    <div class="md:col-span-8 bg-primary p-8 rounded-xl flex flex-col justify-between border border-primary">
+                        <div>
+                            <h3 class="font-headline-md text-headline-md text-on-primary mb-4">¿Necesitas una cotización personalizada?</h3>
+                            <p class="font-body-md text-body-md text-on-primary/90">Contamos con planes especiales para mantenimiento preventivo empresarial y soporte remoto inmediato.</p>
+                        </div>
+                        <div class="flex mt-6">
+                            <button class="bg-surface text-on-surface px-8 py-3 rounded-lg font-label-md text-label-md font-bold hover:bg-surface-container-highest transition-all shadow-lg">
+                                Solicitar Cotización
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </PublicLayout>
 </template>
 
 <style>
-/* Los estilos de animación no necesitan cambios */
-.scroll-animate {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-.scroll-animate.animate-fade-in-up {
-    opacity: 1;
-    transform: translateY(0);
-}
+/* Scoped styles needed for Welcome page if any */
+.bento-card { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: 1px solid rgba(0, 242, 255, 0.1); }
+.bento-card:hover { transform: translateY(-4px); box-shadow: 0px 4px 20px rgba(0, 242, 255, 0.15); border-color: rgba(0, 242, 255, 0.4); }
 </style>

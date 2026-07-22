@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Electronica Tp-Link'),
+    'name' => env('APP_NAME', 'SM Soluciones Electronicas'),
 
     /*
     |--------------------------------------------------------------------------

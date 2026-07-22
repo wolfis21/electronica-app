@@ -1,6 +1,6 @@
 # Resumen del Proyecto: Electrónica App
 
-Este documento presenta una radiografía detallada del sistema **Electrónica App** (referenciado internamente en algunas secciones como *Electronica Tp-Link*), un sistema web administrativo y de cara al público para la gestión integral de un centro de servicio técnico de dispositivos electrónicos y de redes, control de inventario, facturación de órdenes y cálculo automatizado de comisiones de técnicos.
+Este documento presenta una radiografía detallada del sistema **Electrónica App** (referenciado internamente en algunas secciones como *SM Soluciones Electronicas*), un sistema web administrativo y de cara al público para la gestión integral de un centro de servicio técnico de dispositivos electrónicos y de redes, control de inventario, facturación de órdenes y cálculo automatizado de comisiones de técnicos.
 
 ---
 

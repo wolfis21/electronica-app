@@ -24,7 +24,7 @@ use App\Http\Controllers\CommissionController;
 
 
 /* Route::get('/', function () {
-    $companyName = 'Electronica Tp-Link';
+    $companyName = 'SM Soluciones Electronicas';
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -34,7 +34,7 @@ use App\Http\Controllers\CommissionController;
     ]);
 }); */
 
-Route::redirect('/', '/login')->name('welcome');
+Route::get('/', [PageController::class, 'welcome'])->name('welcome');
 
 
 Route::get('/dashboard', DashboardController::class)
@@ -106,9 +106,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/exportar/descargar', [ExportController::class, 'download'])->name('export.download');
     Route::post('/importar', [ImportController::class, 'import'])->name('import.store');
 
-Route::get('/commissions', [CommissionController::class, 'index'])->name('commissions.index');
-Route::post('/commission/payout', [CommissionController::class, 'payout'])->name('commissions.payout');
-Route::get('/commissions/details', [CommissionController::class, 'getDetails'])->name('commissions.details');
+    Route::get('/commissions', [CommissionController::class, 'index'])->name('commissions.index');
+    Route::post('/commission/payout', [CommissionController::class, 'payout'])->name('commissions.payout');
+    Route::get('/commissions/details', [CommissionController::class, 'getDetails'])->name('commissions.details');
 
 });
 
